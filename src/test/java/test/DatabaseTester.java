@@ -29,7 +29,7 @@ public class DatabaseTester {
     //@Test
     public void testCreateTable() {
         System.out.println("Now creating table");
-        DatabaseManager.createTable();
+        DatabaseManager.createTables();
     }
     
 }

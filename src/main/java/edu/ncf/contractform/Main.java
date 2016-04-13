@@ -45,7 +45,7 @@ public class Main {
                 = parser.accepts("solve").withRequiredArg().ofType(String.class);
 
         OptionSet options = parser.parse(args);
-        
+
         runSparkServer();
     }
 
@@ -65,7 +65,7 @@ public class Main {
 
         // We render our responses with the FreeMaker template system.
         FreeMarkerEngine freeMarker = createEngine();
-        
+
         try {
             DatabaseManager.createTable();
         } catch (Exception e) {
@@ -87,11 +87,10 @@ public class Main {
         public ModelAndView handle(Request rqst, Response rspns) {
             Set<String> usernamesTaken = DatabaseManager.getUsernames();
             Map<String, Object> variables = new ImmutableMap.Builder<String, Object>()
-                    .put("newUsername","")
-                    
-                    .put("newPassword","")
-                    .put("newFirstName","")
-                    .put("newLastName","")
+                    .put("newUsername", "")
+                    .put("newPassword", "")
+                    .put("newFirstName", "")
+                    .put("newLastName", "")
                     .put("title", "Boggle: Play")
                     .put("usernamesTaken", usernamesTaken.toString())
                     .put("currentTotalScore", 0)
@@ -110,7 +109,7 @@ public class Main {
 
         @Override
         public ModelAndView handle(Request req, Response res) {
-            
+
             //Get codes from results in order to keep them in the next round
             QueryParamsMap qm = req.queryMap();
             String timeChosen = qm.value("timeChosen");
@@ -119,32 +118,32 @@ public class Main {
             String averageScoreRead = qm.value("averageScore");
             String maxScoreRead = qm.value("maxScore");
             String numberOfGamesRead = qm.value("numberOfGames");
-            
+
             //New account login information
             String newUsername = qm.value("newUsername");
             String newPassword = qm.value("newPassword");
             String newFirstName = qm.value("newFirstName");
             String newLastName = qm.value("newLastName");
             Set<String> usernamesTaken = DatabaseManager.getUsernames();
-            
+
             //What should be in JavaScript / temp way to quick close the server.
-            if (!usernamesTaken.contains(newUsername)){
-                                  DatabaseManager.insertNewAccount(newUsername, newPassword,
-                               newFirstName, newLastName); 
-                                  
-            } else if(newUsername =="kill") {
+            if (!usernamesTaken.contains(newUsername)) {
+                DatabaseManager.insertNewAccount(newUsername, newPassword,
+                        newFirstName, newLastName);
+
+            } else if (newUsername == "kill") {
                 Spark.stop();
-                
-                            } else {
-                                   newUsername = "Anon";
-                                   Spark.stop();
-                           }
-            
+
+            } else {
+                newUsername = "Anon";
+                Spark.stop();
+            }
+
             int time = Integer.parseInt(timeChosen);
             Map<String, Object> variables = new ImmutableMap.Builder<String, Object>()
                     .put("title", "Boggle: Results")
                     .put("time", time)
-                    .put("username",newUsername)
+                    .put("username", newUsername)
                     .put("currentTotalScore", currentTotalScoreRead)
                     .put("percentScore", percentScoreRead)
                     .put("averageScore", averageScoreRead)
@@ -163,7 +162,7 @@ public class Main {
         @Override
         public ModelAndView handle(Request req, Response res) {
             QueryParamsMap qm = req.queryMap();
-            
+
             Iterable<String> guesses
                     = BREAKWORDS.split(qm.value("guesses").toLowerCase());
 
@@ -176,10 +175,10 @@ public class Main {
             String maxScoreReadAttempt = qm.value("maxScore");
             String numberOfGamesReadAttempt = qm.value("numberOfGames");
             String username = qm.value("username");
-            if (username.equals("Anon") || username.equals("") ) {
+            if (username.equals("Anon") || username.equals("")) {
                 username = "Anon";
-            } 
-                        
+            }
+
             if (currentTotalScoreReadAttempt.equals("")
                     && averageScoreReadAttempt.equals("")
                     && maxScoreReadAttempt.equals("")
@@ -188,12 +187,12 @@ public class Main {
                         = maxScoreReadAttempt = numberOfGamesReadAttempt
                         = percentScoreReadAttempt = "0";
             }
-            
+
             Map<String, Object> variables = new ImmutableMap.Builder<String, Object>()
                     .put("title", "Boggle: Results")
                     .put("good", good)
                     .put("bad", bad)
-                    .put("username",username)
+                    .put("username", username)
                     .put("time", qm.value("timeChosen")).build();
             return new ModelAndView(variables, "results.ftl");
         }

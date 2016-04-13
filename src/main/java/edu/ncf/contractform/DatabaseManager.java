@@ -8,13 +8,13 @@ import java.util.Set;
 import java.util.HashSet;
 
 public class DatabaseManager {
-    
+
     public static Set<String> getUsernames() {
         Connection c = null;
         Statement stmt = null;
         try {
             Class.forName("org.sqlite.JDBC");
-            c = DriverManager.getConnection("jdbc:sqlite:Accounts.db");
+            c = DriverManager.getConnection("jdbc:sqlite:Contracts.db");
             System.out.println("Opened database successfully");
 
             stmt = c.createStatement();
@@ -40,7 +40,7 @@ public class DatabaseManager {
         Statement stmt = null;
         try {
             Class.forName("org.sqlite.JDBC");
-            c = DriverManager.getConnection("jdbc:sqlite:Accounts.db");
+            c = DriverManager.getConnection("jdbc:sqlite:Contracts.db");
             System.out.println("Opened database successfully");
 
             stmt = c.createStatement();
@@ -64,15 +64,15 @@ public class DatabaseManager {
         Statement stmt = null;
         try {
             Class.forName("org.sqlite.JDBC");
-            c = DriverManager.getConnection("jdbc:sqlite:Accounts.db");
+            c = DriverManager.getConnection("jdbc:sqlite:Contracts.db");
             c.setAutoCommit(false);
             System.out.println("Opened database successfully");
 
             stmt = c.createStatement();
             String sql = "INSERT INTO "
                     + "Accounts (Username,Password,FirstName,LastName) "
-                    + "VALUES (\'" + username + "\',\'" + password + "\',\'" +
-                    firstName + "\',\'" + lastName + "\');";
+                    + "VALUES (\'" + username + "\',\'" + password + "\',\'"
+                    + firstName + "\',\'" + lastName + "\');";
             stmt.executeUpdate(sql);
 
             stmt.close();
@@ -93,13 +93,13 @@ public class DatabaseManager {
         Statement stmt = null;
         try {
             Class.forName("org.sqlite.JDBC");
-            c = DriverManager.getConnection("jdbc:sqlite:Accounts.db");
+            c = DriverManager.getConnection("jdbc:sqlite:Contracts.db");
             c.setAutoCommit(false);
             System.out.println("Opened database successfully");
 
             stmt = c.createStatement();
-            String sql = "UPDATE Accounts set \'" + field + "\' = \'" +
-                    value + "\' " + "where Username = \'" + username + "\';";
+            String sql = "UPDATE Accounts set \'" + field + "\' = \'"
+                    + value + "\' " + "where Username = \'" + username + "\';";
             stmt.executeUpdate(sql);
             c.commit();
 

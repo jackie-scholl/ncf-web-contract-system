@@ -1,0 +1,5 @@
+Jackie: add login, add HTML-form to PDF-form translation
+Devon: create the SQLite database that can store incomplete forms,
+    add important SQLite queries.
+Tommy: create HTML form, create submission button that redirects to
+    a filled out PDF.

@@ -130,10 +130,6 @@ public class Main {
             if (!usernamesTaken.contains(newUsername)) {
                 DatabaseManager.insertNewAccount(newUsername, newPassword,
                         newFirstName, newLastName);
-
-            } else if (newUsername == "kill") {
-                Spark.stop();
-
             } else {
                 newUsername = "Anon";
                 Spark.stop();

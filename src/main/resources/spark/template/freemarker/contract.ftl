@@ -8,7 +8,6 @@
 
 <form id="submit" action="/play" method="post">
 <input type='submit'>Go!<br/> <br/>
-
     Semester <select name='Semester'> 
         <option value='Spring'>Spring</option>
         <option value='Fall'>Fall</option>
@@ -30,7 +29,120 @@
 <textarea id="newFirstName" name="newFirstName" placeholder=""></textarea> First Name <br>
 <textarea id="newLastName" name="newLastName" placeholder=""></textarea> Last Name <br>
 <textarea id="n_number" name="n_number" placeholder=""></textarea> N number <br>
-<textarea id="newPassword" name="newPassword" placeholder=""></textarea> Password <br>
+<textarea id="box number" name="box number" placeholder=""></textarea> Box Number <br>
+
+<textarea id="goals" name="goals" placeholder=""></textarea> Goals<br> 
+
+
+
+<!-- where the course material lies-->
+<pre>Course               Course name       Internship  Session    Name of instructor/evaluator</pre>
+<textarea id="course1" name="course1" placeholder=""></textarea> 
+<textarea id="course name1" name="course name1" placeholder=""></textarea> 
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" id ="internship1" name="internship1" value="">
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <select id = "session1" name="session1">
+        <option value='A'>full term</option>
+        <option value='M1'>module 1</option>
+        <option value='M2'>module 2</option>
+        <option value='1MC'>full term for module credit</option>
+        </select> 
+<textarea id="instructor1" name="instructor1" placeholder=""></textarea> 
+<br/>
+<textarea id="course1" name="course1" placeholder=""></textarea> 
+<textarea id="course name1" name="course name1" placeholder=""></textarea> 
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" id ="internship1" name="internship1" value="">
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <select id = "session1" name="session1">
+        <option value='A'>full term</option>
+        <option value='M1'>module 1</option>
+        <option value='M2'>module 2</option>
+        <option value='1MC'>full term for module credit</option>
+        </select> 
+<textarea id="instructor1" name="instructor1" placeholder=""></textarea> 
+<br/>
+<textarea id="course1" name="course1" placeholder=""></textarea> 
+<textarea id="course name1" name="course name1" placeholder=""></textarea> 
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" id ="internship1" name="internship1" value="">
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <select id = "session1" name="session1">
+        <option value='A'>full term</option>
+        <option value='M1'>module 1</option>
+        <option value='M2'>module 2</option>
+        <option value='1MC'>full term for module credit</option>
+        </select> 
+<textarea id="instructor1" name="instructor1" placeholder=""></textarea> 
+<br/>
+<textarea id="course1" name="course1" placeholder=""></textarea> 
+<textarea id="course name1" name="course name1" placeholder=""></textarea> 
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" id ="internship1" name="internship1" value="">
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <select id = "session1" name="session1">
+        <option value='A'>full term</option>
+        <option value='M1'>module 1</option>
+        <option value='M2'>module 2</option>
+        <option value='1MC'>full term for module credit</option>
+        </select> 
+<textarea id="instructor1" name="instructor1" placeholder=""></textarea> 
+<br/>
+<textarea id="course1" name="course1" placeholder=""></textarea> 
+<textarea id="course name1" name="course name1" placeholder=""></textarea> 
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" id ="internship1" name="internship1" value="">
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <select id = "session1" name="session1">
+        <option value='A'>full term</option>
+        <option value='M1'>module 1</option>
+        <option value='M2'>module 2</option>
+        <option value='1MC'>full term for module credit</option>
+        </select> 
+<textarea id="instructor1" name="instructor1" placeholder=""></textarea> 
+<br/>
+<textarea id="course1" name="course1" placeholder=""></textarea> 
+<textarea id="course name1" name="course name1" placeholder=""></textarea> 
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" id ="internship1" name="internship1" value="">
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <select id = "session1" name="session1">
+        <option value='A'>full term</option>
+        <option value='M1'>module 1</option>
+        <option value='M2'>module 2</option>
+        <option value='1MC'>full term for module credit</option>
+        </select> 
+<textarea id="instructor1" name="instructor1" placeholder=""></textarea> 
+<br/>
+<textarea id="course1" name="course1" placeholder=""></textarea> 
+<textarea id="course name1" name="course name1" placeholder=""></textarea> 
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" id ="internship1" name="internship1" value="">
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <select id = "session1" name="session1">
+        <option value='A'>full term</option>
+        <option value='M1'>module 1</option>
+        <option value='M2'>module 2</option>
+        <option value='1MC'>full term for module credit</option>
+        </select> 
+<textarea id="instructor1" name="instructor1" placeholder=""></textarea> 
+<br/>
+<br>
+
+
+
+<textarea id="cert" name="cert" placeholder=""></textarea> Certification Criteria<br>
+<textarea id="other" name="other" placeholder=""></textarea> Descriptions and other activities <br>
+Advisor <br>
+<textarea id="advisor name" name="advisor name" placeholder=""></textarea> name 
+<textarea id="signature" name="advisor signature" placeholder=""></textarea> signature
+<br>
+Student signature <br>
+<textarea id="student signature" name="signature" placeholder=""></textarea> signature
+<br>
+
+
 <br>
 
 
@@ -44,16 +156,7 @@
  
 
 
-<button id='login' onclick="login()">
-        login
-</button>
 
-<button id="create"
-onclick="createUser()">
-<!--   ${newUsername},${newPassword}, ${newFirstName}, 
-${newLastName}}-->
-        create user
-</button>
 
 
 

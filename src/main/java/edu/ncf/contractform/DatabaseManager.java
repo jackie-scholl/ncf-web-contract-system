@@ -2,6 +2,7 @@ package edu.ncf.contractform;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.Set;
@@ -44,9 +45,9 @@ public class DatabaseManager {
             System.out.println("Opened database successfully");
 
             stmt = c.createStatement();
-            
+            /*
             String createStudentsTable = "CREATE TABLE Contracts ("
-                    + "GoogleID              VarChar    NOT NULL, "
+                    + "GoogleID              VarChar    PRIMARY KEY     NOT NULL, "
                     + "StudentID             int, "
                     + "FirstName             VarChar(20), "
                     + "LastName              VarChar(20), "
@@ -62,11 +63,11 @@ public class DatabaseManager {
                     + "AdvisorSignature      VarChar(256), "
                     + "AdvisorSignDate       Date, "
                     + "StudentSignature      VarChar(256), "
-                    + "StudentSignDate       Date, "
-                    + "PRIMARY KEY (GoogleID)"
-                    + ");";
+                    + "StudentSignDate       Date" //, "
+                    //+ "PRIMARY KEY (GoogleID)"
+                    + ")";
             stmt.executeUpdate(createStudentsTable);
-            
+            /*
             String createClassesTable = "CREATE TABLE Classes ("
                     + "G_ID                  VarChar         NOT NULL, "
                     + "Sem                   VarChar(6)      NOT NULL, "
@@ -80,14 +81,15 @@ public class DatabaseManager {
                     + "FOREIGN KEY (G_ID) REFERENCES Students(GoogleID), "
                     + "FOREIGN KEY (Sem) REFERENCES Students(Semester), "
                     + "FOREIGN KEY (Yr) REFERENCES Students(Year) "
-                    + ");";
-            stmt.executeUpdate(createClassesTable);
-            
+                    + ")";
+            stmt.execute(createClassesTable);
+            */
             stmt.close();
             c.close();
             System.out.println("Tables created successfully");
         } catch (Exception e) {
-            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            //System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            e.printStackTrace();
         }
     }
 

@@ -66,15 +66,15 @@ public class Main {
         // We render our responses with the FreeMaker template system.
         FreeMarkerEngine freeMarker = createEngine();
 
-        try {
-            DatabaseManager.createTables();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    //    try {
+      //      DatabaseManager.createTables();
+       // } catch (Exception e) {
+        //    e.printStackTrace();
+        //}
 
-        Spark.get("/welcome", new WelcomePageStarter(), freeMarker);
+        Spark.get("/contract", new WelcomePageStarter(), freeMarker);
         Spark.post("/play", new PlayHandler(), freeMarker);
-        Spark.post("/results", new ResultsHandler(), freeMarker);
+       // Spark.post("/results", new ResultsHandler(), freeMarker);
     }
 
     /**
@@ -85,20 +85,20 @@ public class Main {
 
         @Override
         public ModelAndView handle(Request rqst, Response rspns) {
-            Set<String> usernamesTaken = DatabaseManager.getUsernames();
+            //Set<String> usernamesTaken = DatabaseManager.getUsernames();
             Map<String, Object> variables = new ImmutableMap.Builder<String, Object>()
                     .put("newUsername", "")
                     .put("newPassword", "")
                     .put("newFirstName", "")
                     .put("newLastName", "")
                     .put("title", "Boggle: Play")
-                    .put("usernamesTaken", usernamesTaken.toString())
+                    //.put("usernamesTaken", usernamesTaken.toString())
                     .put("currentTotalScore", 0)
                     .put("percentScore", 0)
                     .put("averageScore", 0)
                     .put("maxScore", 0)
                     .put("numberOfGames", 0).build();
-            return new ModelAndView(variables, "welcome.ftl");
+            return new ModelAndView(variables, "contract.ftl");
         }
     }
 

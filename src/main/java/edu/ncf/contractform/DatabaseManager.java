@@ -45,15 +45,15 @@ public class DatabaseManager {
             System.out.println("Opened database successfully");
 
             stmt = c.createStatement();
-            /*
+            
             String createStudentsTable = "CREATE TABLE Contracts ("
-                    + "GoogleID              VarChar    PRIMARY KEY     NOT NULL, "
+                    + "GoogleID              VarChar           NOT NULL, "
                     + "StudentID             int, "
                     + "FirstName             VarChar(20), "
                     + "LastName              VarChar(20), "
                     + "Semester              VarChar(6), "
                     + "Year                  int, "
-                    + "On-Campus_Study       VarChar(5), "
+                    + "onCampusStudy       VarChar(5), "
                     + "ExpectedGraduationYear int, "
                     + "BoxNumber             int, "
                     + "Goals                 Text, "
@@ -63,11 +63,11 @@ public class DatabaseManager {
                     + "AdvisorSignature      VarChar(256), "
                     + "AdvisorSignDate       Date, "
                     + "StudentSignature      VarChar(256), "
-                    + "StudentSignDate       Date" //, "
-                    //+ "PRIMARY KEY (GoogleID)"
+                    + "StudentSignDate       Date, "
+                    + "PRIMARY KEY (GoogleID)"
                     + ")";
             stmt.executeUpdate(createStudentsTable);
-            /*
+            
             String createClassesTable = "CREATE TABLE Classes ("
                     + "G_ID                  VarChar         NOT NULL, "
                     + "Sem                   VarChar(6)      NOT NULL, "
@@ -83,7 +83,7 @@ public class DatabaseManager {
                     + "FOREIGN KEY (Yr) REFERENCES Students(Year) "
                     + ")";
             stmt.execute(createClassesTable);
-            */
+            
             stmt.close();
             c.close();
             System.out.println("Tables created successfully");

@@ -66,11 +66,11 @@ public class Main {
         // We render our responses with the FreeMaker template system.
         FreeMarkerEngine freeMarker = createEngine();
 
-    //    try {
-      //      DatabaseManager.createTables();
-       // } catch (Exception e) {
-        //    e.printStackTrace();
-        //}
+        try {
+            DatabaseManager.createTables();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         Spark.get("/contract", new WelcomePageStarter(), freeMarker);
         Spark.post("/play", new PlayHandler(), freeMarker);

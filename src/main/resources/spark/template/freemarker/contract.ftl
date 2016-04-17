@@ -8,18 +8,23 @@
 
 <form id="submit" action="/play" method="post">
 <input type='submit'>Go!<br/> <br/>
-    Semester <select name='Semester'> 
+    Semester
+    <select name='Semester'> 
         <option value='Spring'>Spring</option>
         <option value='Fall'>Fall</option>
-    </select>  </br>         
-    Year <select name="year">
+    </select>  <br/>   
+    
+    Year
+    <select name="year">
         <option value='2016'>2016</option>
         <option value='2017'>2017</option>
         <option value='2018'>2018</option>
         <option value='2019'>2019</option>
         <option value='2020'>2020</option>
-        </select> </br>
-    Location <select name='location'> 
+        </select> <br/>
+        
+    Location
+    <select name='location'> 
         <option value='On campus'>On campus</option>
         <option value='Off campus'>Off campus</option>
     </select>           

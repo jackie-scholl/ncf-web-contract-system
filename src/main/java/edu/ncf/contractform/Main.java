@@ -91,7 +91,7 @@ public class Main {
                     .put("newPassword", "")
                     .put("newFirstName", "")
                     .put("newLastName", "")
-                    .put("title", "Boggle: Play")
+                    .put("title", "Contract Form")
                     //.put("usernamesTaken", usernamesTaken.toString())
                     .put("currentTotalScore", 0)
                     .put("percentScore", 0)

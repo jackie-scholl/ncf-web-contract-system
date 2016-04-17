@@ -20,12 +20,6 @@ public class DatabaseTester {
         DatabaseManager.insertNewAccount("Bob2", "PassForBob", "Bob", "Ross");
     }
     
-    @Test
-    public void testGetUsernames() {
-        System.out.println("Now getting usernames");
-        System.out.println(DatabaseManager.getUsernames());
-    }
-    
     //@Test
     public void testCreateTable() {
         System.out.println("Now creating table");

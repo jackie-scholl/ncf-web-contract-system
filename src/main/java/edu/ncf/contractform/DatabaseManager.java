@@ -9,12 +9,12 @@ import java.util.Set;
 import java.util.HashSet;
 
 public class DatabaseManager {
-
+    
+    /* Don't use this
     public static Set<String> getUsernames() {
         Connection c = null;
         Statement stmt = null;
         try {
-            Class.forName("org.sqlite.JDBC");
             c = DriverManager.getConnection("jdbc:sqlite:ContractsNCF.db");
             System.out.println("Opened database successfully");
 
@@ -35,12 +35,13 @@ public class DatabaseManager {
         System.out.println("Table created successfully");
         return null;
     }
+    */
 
     public static void createTables() {
         Connection c = null;
         Statement stmt = null;
         try {
-            Class.forName("org.sqlite.JDBC");
+            //Class.forName("org.sqlite.JDBC");
             c = DriverManager.getConnection("jdbc:sqlite:ContractsNCF.db");
             System.out.println("Opened database successfully");
 
@@ -53,7 +54,7 @@ public class DatabaseManager {
                     + "LastName              VarChar(20), "
                     + "Semester              VarChar(6), "
                     + "Year                  int, "
-                    + "onCampusStudy       VarChar(5), "
+                    + "onCampusStudy         VarChar(5), "
                     + "ExpectedGraduationYear int, "
                     + "BoxNumber             int, "
                     + "Goals                 Text, "
@@ -88,8 +89,7 @@ public class DatabaseManager {
             c.close();
             System.out.println("Tables created successfully");
         } catch (Exception e) {
-            //System.err.println(e.getClass().getName() + ": " + e.getMessage());
-            e.printStackTrace();
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
     }
 
@@ -98,7 +98,6 @@ public class DatabaseManager {
         Connection c = null;
         Statement stmt = null;
         try {
-            Class.forName("org.sqlite.JDBC");
             c = DriverManager.getConnection("jdbc:sqlite:ContractsNCF.db");
             c.setAutoCommit(false);
             System.out.println("Opened database successfully");
@@ -127,7 +126,6 @@ public class DatabaseManager {
         Connection c = null;
         Statement stmt = null;
         try {
-            Class.forName("org.sqlite.JDBC");
             c = DriverManager.getConnection("jdbc:sqlite:ContractsNCF.db");
             c.setAutoCommit(false);
             System.out.println("Opened database successfully");

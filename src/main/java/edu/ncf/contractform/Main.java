@@ -91,13 +91,7 @@ public class Main {
                     .put("newPassword", "")
                     .put("newFirstName", "")
                     .put("newLastName", "")
-                    .put("title", "Contract Form")
-                    //.put("usernamesTaken", usernamesTaken.toString())
-                    .put("currentTotalScore", 0)
-                    .put("percentScore", 0)
-                    .put("averageScore", 0)
-                    .put("maxScore", 0)
-                    .put("numberOfGames", 0).build();
+                    .put("title", "Contract Form").build();
             return new ModelAndView(variables, "contract.ftl");
         }
     }
@@ -109,42 +103,13 @@ public class Main {
 
         @Override
         public ModelAndView handle(Request req, Response res) {
-
-            //Get codes from results in order to keep them in the next round
             QueryParamsMap qm = req.queryMap();
-            String timeChosen = qm.value("timeChosen");
-            String currentTotalScoreRead = qm.value("currentTotalScore");
-            String percentScoreRead = qm.value("percentScore");
-            String averageScoreRead = qm.value("averageScore");
-            String maxScoreRead = qm.value("maxScore");
-            String numberOfGamesRead = qm.value("numberOfGames");
-
-            //New account login information
-            String newUsername = qm.value("newUsername");
-            String newPassword = qm.value("newPassword");
-            String newFirstName = qm.value("newFirstName");
-            String newLastName = qm.value("newLastName");
-            Set<String> usernamesTaken = DatabaseManager.getUsernames();
-
-            //What should be in JavaScript / temp way to quick close the server.
-            if (!usernamesTaken.contains(newUsername)) {
-                DatabaseManager.insertNewAccount(newUsername, newPassword,
-                        newFirstName, newLastName);
-            } else {
-                newUsername = "Anon";
-                Spark.stop();
-            }
-
-            int time = Integer.parseInt(timeChosen);
+            
+            //Add database stuff here
+            
             Map<String, Object> variables = new ImmutableMap.Builder<String, Object>()
                     .put("title", "Boggle: Results")
-                    .put("time", time)
-                    .put("username", newUsername)
-                    .put("currentTotalScore", currentTotalScoreRead)
-                    .put("percentScore", percentScoreRead)
-                    .put("averageScore", averageScoreRead)
-                    .put("maxScore", maxScoreRead)
-                    .put("numberOfGames", numberOfGamesRead).build();
+                    .put("time", 5).build();
             return new ModelAndView(variables, "play.ftl");
         }
     }
@@ -158,38 +123,12 @@ public class Main {
         @Override
         public ModelAndView handle(Request req, Response res) {
             QueryParamsMap qm = req.queryMap();
-
-            Iterable<String> guesses
-                    = BREAKWORDS.split(qm.value("guesses").toLowerCase());
-
-            SortedSet<String> good = new TreeSet<>();
-            SortedSet<String> bad = new TreeSet<>();
-
-            String currentTotalScoreReadAttempt = qm.value("currentTotalScore");
-            String percentScoreReadAttempt = qm.value("percentScore");
-            String averageScoreReadAttempt = qm.value("averageScore");
-            String maxScoreReadAttempt = qm.value("maxScore");
-            String numberOfGamesReadAttempt = qm.value("numberOfGames");
-            String username = qm.value("username");
-            if (username.equals("Anon") || username.equals("")) {
-                username = "Anon";
-            }
-
-            if (currentTotalScoreReadAttempt.equals("")
-                    && averageScoreReadAttempt.equals("")
-                    && maxScoreReadAttempt.equals("")
-                    && numberOfGamesReadAttempt.equals("")) {
-                currentTotalScoreReadAttempt = averageScoreReadAttempt
-                        = maxScoreReadAttempt = numberOfGamesReadAttempt
-                        = percentScoreReadAttempt = "0";
-            }
+            
+            //Put more code here
 
             Map<String, Object> variables = new ImmutableMap.Builder<String, Object>()
                     .put("title", "Boggle: Results")
-                    .put("good", good)
-                    .put("bad", bad)
-                    .put("username", username)
-                    .put("time", qm.value("timeChosen")).build();
+                    .put("time", 5).build();
             return new ModelAndView(variables, "results.ftl");
         }
 

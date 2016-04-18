@@ -1,5 +1,7 @@
 <#assign content>
 
+
+
 <h1>Welcome to the NCF contract form</h1>
 <p> To save your completed contract press submit. To save for later, press save. </p>
 
@@ -41,6 +43,15 @@
 
 
 <!-- where the course material lies-->
+
+
+<#include "coursesTable.ftl">
+
+
+
+
+
+
 <pre>Course               Course name       Internship  Session    Name of instructor/evaluator</pre>
 <textarea id="course1" name="course1" placeholder=""></textarea> 
 <textarea id="course name1" name="course name1" placeholder=""></textarea> 

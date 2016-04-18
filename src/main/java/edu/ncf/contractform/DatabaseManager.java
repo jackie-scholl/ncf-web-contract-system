@@ -43,6 +43,10 @@ public class DatabaseManager {
     public static void saveNewContract(QueryParamsMap qm) {
         
     }
+    
+    public static void saveNewContract(String googleID, ContractData contractData) {
+    	
+    }
 
     public static void createTables() {
         Connection c = null;

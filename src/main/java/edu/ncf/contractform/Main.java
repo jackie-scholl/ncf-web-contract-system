@@ -97,6 +97,7 @@ public class Main {
 			Optional<String> googleId = getGoogleID(qm.value("id_token"));
 			
 			ContractData contractData = getContractDataFromParams(qm);
+			googleId.ifPresent(id -> DatabaseManager.saveNewContract(id, contractData));
 			
 			res.raw().setContentType("application/pdf");
 			try {

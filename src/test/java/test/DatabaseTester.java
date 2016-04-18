@@ -2,7 +2,7 @@ package test;
 
 
 import org.junit.Test;
-import edu.ncf.contractform.DatabaseManager;
+import edu.ncf.contractform.JsonDatabaseManager;
 
 /**
  *
@@ -13,10 +13,11 @@ public class DatabaseTester {
     public DatabaseTester() {
     }
     
+    
     //@Test
     public void testCreateTable() {
         System.out.println("Now creating table");
-        DatabaseManager.createTables();
+        JsonDatabaseManager.createTables();
     }
     
 }

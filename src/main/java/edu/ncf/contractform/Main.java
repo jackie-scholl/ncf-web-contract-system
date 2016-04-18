@@ -61,8 +61,7 @@ public class Main {
 		FreeMarkerEngine freeMarker = createEngine();
 
 		try {
-			DatabaseManager.dropTables();
-			DatabaseManager.createTables();
+			JsonDatabaseManager.createTables();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -99,7 +98,8 @@ public class Main {
 			
 			ContractData contractData = getContractDataFromParams(qm,
                                 googleId.get());
-			googleId.ifPresent(id -> DatabaseManager.saveNewContract(id, contractData));
+			googleId.ifPresent(id -> JsonDatabaseManager.saveNewContract(id, contractData));
+			JsonDatabaseManager.selectContracts();
 			
 			res.raw().setContentType("application/pdf");
 			try {

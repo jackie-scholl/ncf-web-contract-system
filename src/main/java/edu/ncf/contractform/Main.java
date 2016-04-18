@@ -154,7 +154,7 @@ public class Main {
 		data.courseCode = qm.value("Course number"+index);
 		data.courseName = qm.value("Course name"+index);
 		data.instructorName = qm.value("Instructor"+index);
-		//System.out.println(qm.value("internship"+index));
+		data.isInternship = (qm.value("internship"+index) != null);
 		data.sessionName = qm.value("session"+index);
 		return data;
 	}

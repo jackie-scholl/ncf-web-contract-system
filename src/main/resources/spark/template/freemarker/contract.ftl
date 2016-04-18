@@ -21,12 +21,10 @@
     
     Year
     <select name="year">
-        <option value='2016'>2016</option>
-        <option value='2017'>2017</option>
-        <option value='2018'>2018</option>
-        <option value='2019'>2019</option>
-        <option value='2020'>2020</option>
-        </select> <br/>
+        <#list 2012..2020 as year>
+        	<option value='${year?c}'>${year?c}</option>
+        </#list>
+    </select> <br/>
         
     Location
     <select name='location'> 

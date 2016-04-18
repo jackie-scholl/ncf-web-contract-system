@@ -6,6 +6,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.Set;
+
+import spark.QueryParamsMap;
+
 import java.util.HashSet;
 
 public class DatabaseManager {
@@ -36,6 +39,10 @@ public class DatabaseManager {
         return null;
     }
     */
+    
+    public static void saveNewContract(QueryParamsMap qm) {
+        
+    }
 
     public static void createTables() {
         Connection c = null;

@@ -150,22 +150,7 @@ Student signature <br>
 
 <br>
 
-
-    <!--Score information-->
-  <input type="hidden" id="currentTotalScore" name="currentTotalScore">
-  <input type="hidden" id="averageScore" name="averageScore">
-  <input type="hidden" id="maxScore" name="maxScore">
-  <input type="hidden" id="numberOfGames" name="numberOfGames">
-  <input type="hidden" id="percentScore" name="percentScore">
 </form>            
- 
-
-
-
-
-
-
-
 
 </#assign>
 <#include "main.ftl">

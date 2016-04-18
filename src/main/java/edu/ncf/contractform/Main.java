@@ -87,10 +87,6 @@ public class Main {
         public ModelAndView handle(Request rqst, Response rspns) {
             //Set<String> usernamesTaken = DatabaseManager.getUsernames();
             Map<String, Object> variables = new ImmutableMap.Builder<String, Object>()
-                    .put("newUsername", "")
-                    .put("newPassword", "")
-                    .put("newFirstName", "")
-                    .put("newLastName", "")
                     .put("title", "Contract Form").build();
             return new ModelAndView(variables, "contract.ftl");
         }

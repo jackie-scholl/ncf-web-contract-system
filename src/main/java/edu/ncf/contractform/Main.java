@@ -20,13 +20,7 @@ import joptsimple.OptionSet;
 import joptsimple.OptionSpec;
 
 import freemarker.template.Configuration;
-import spark.ExceptionHandler;
-import spark.Spark;
-import spark.ModelAndView;
-import spark.QueryParamsMap;
-import spark.Request;
-import spark.Response;
-import spark.TemplateViewRoute;
+import spark.*;
 import spark.template.freemarker.FreeMarkerEngine;
 
 public class Main {
@@ -73,7 +67,7 @@ public class Main {
 		}
 
 		Spark.get("/contract", new WelcomePageStarter(), freeMarker);
-		Spark.post("/contract/saved", new SavedContractHandler(), freeMarker);
+		Spark.post("/contract/saved", new SavedContractHandler());
 		// Spark.post("/results", new ResultsHandler(), freeMarker);
 	}
 
@@ -91,31 +85,27 @@ public class Main {
 			return new ModelAndView(variables, "contract.ftl");
 		}
 	}
-
+	
 	/**
-	 * Makes a new board, and loads previous scores.
+	 * Returns the generated PDF.
 	 */
-	private static class SavedContractHandler implements TemplateViewRoute {
-
-		@Override
-		public ModelAndView handle(Request req, Response res) {
-			QueryParamsMap qm = req.queryMap();
-
-			Optional<String> googleId = getGoogleID(qm.value("id_token"));
-
+	private static class SavedContractHandler implements Route {
+		public Object handle(Request req, Response res) {
+		    QueryParamsMap qm = req.queryMap();
 			System.out.println(qm.toMap());
 			
+			Optional<String> googleId = getGoogleID(qm.value("id_token"));
+			
+			ContractData contractData = getContractDataFromParams(qm);
+			
+			res.raw().setContentType("application/pdf");
 			try {
-				PDFCreator.buildPDFToDisk(getContractDataFromParams(qm));
+				PDFCreator.buildPDF(res.raw().getOutputStream(), contractData);
 			} catch (IOException e) {
 				throw new RuntimeException(e);
 			}
-
-			Map<String, Object> variables = new ImmutableMap.Builder<String, Object>()
-					.put("title", "Contract Saved")
-					.put("time", 5).build();
-
-			return new ModelAndView(variables, "contractSaved.ftl");
+		    
+		    return null;
 		}
 	}
 

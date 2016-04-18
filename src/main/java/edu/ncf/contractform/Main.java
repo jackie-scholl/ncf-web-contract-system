@@ -73,7 +73,7 @@ public class Main {
         }
 
         Spark.get("/contract", new WelcomePageStarter(), freeMarker);
-        Spark.post("/play", new PlayHandler(), freeMarker);
+        Spark.post("/saved", new SavedContractHandler(), freeMarker);
        // Spark.post("/results", new ResultsHandler(), freeMarker);
     }
 
@@ -95,18 +95,17 @@ public class Main {
     /**
      * Makes a new board, and loads previous scores.
      */
-    private static class PlayHandler implements TemplateViewRoute {
+    private static class SavedContractHandler implements TemplateViewRoute {
 
         @Override
         public ModelAndView handle(Request req, Response res) {
             QueryParamsMap qm = req.queryMap();
             
-            //Add database stuff here
-            
             Map<String, Object> variables = new ImmutableMap.Builder<String, Object>()
                     .put("title", "Boggle: Results")
                     .put("time", 5).build();
-            return new ModelAndView(variables, "play.ftl");
+            
+            return new ModelAndView(variables, "contractSaved.ftl");
         }
     }
 

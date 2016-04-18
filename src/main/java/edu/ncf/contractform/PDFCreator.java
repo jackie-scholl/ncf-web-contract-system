@@ -172,7 +172,9 @@ public class PDFCreator {
 		setTextField("CERTIFICATION CRITERIA required minimum workload of 3 units", contractData.certificationCriteria);
 		setTextField("DESCRIPTIONS AND OTHER ACTIVITIES", contractData.descriptionsOtherActivities);
 		for (int i = 0; i < classes.length; i++) {
-			fillClass(i + 1, classes[i]);
+			if (classes[i] != null) {
+				fillClass(i + 1, classes[i]);
+			}
 		}
 	}
 

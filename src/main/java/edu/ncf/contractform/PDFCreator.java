@@ -34,7 +34,7 @@ public class PDFCreator {
 				new ClassData("80142", "Distributed Computing", false, Session.ONE_MC, "David Gillman"),
 				new ClassData("80142", "Distributed Computing", true, Session.A, "David Gillman"),
 		};
-		
+
 		buildPDFToDisk(data);
 	}
 
@@ -105,35 +105,34 @@ public class PDFCreator {
 
 	private static void buildPDF(OutputStream outputStream, InputStream formTemplateStream, ContractData contractData)
 			throws IOException {
-		//long startTime = System.nanoTime();
-		
+		// long startTime = System.nanoTime();
+
 		PDDocument pdfDocument = PDDocument.load(formTemplateStream);
 
-		//System.out.printf("pdf loaded; %f milliseconds%n", (System.nanoTime() - startTime) / 1.0e6);
-		
+		// System.out.printf("pdf loaded; %f milliseconds%n", (System.nanoTime() - startTime) / 1.0e6);
+
 		// get the document catalog
 		PDAcroForm acroForm = pdfDocument.getDocumentCatalog().getAcroForm();
 
 		if (acroForm == null) {
 			throw new IllegalArgumentException("Input PDF has no form to fill");
 		}
-		
-		//System.out.printf("Ready to build form; %f milliseconds%n", (System.nanoTime() - startTime) / 1.0e6);
-		
+
+		// System.out.printf("Ready to build form; %f milliseconds%n", (System.nanoTime() - startTime) / 1.0e6);
+
 		PDFCreator creator = new PDFCreator(acroForm);
 		creator.fill(contractData);
-		
-		
-		//System.out.printf("Form created; %f milliseconds%n", (System.nanoTime() - startTime) / 1.0e6);
-		
+
+		// System.out.printf("Form created; %f milliseconds%n", (System.nanoTime() - startTime) / 1.0e6);
+
 		pdfDocument.save(outputStream);
 		pdfDocument.close();
-		
-		//System.out.printf("Form saved; %f milliseconds%n", (System.nanoTime() - startTime) / 1.0e6);
-		
+
+		// System.out.printf("Form saved; %f milliseconds%n", (System.nanoTime() - startTime) / 1.0e6);
+
 		System.out.println("Done!");
 	}
-	
+
 	public static void buildPDF(OutputStream outputStream, ContractData contractData) throws IOException {
 		buildPDF(outputStream, PDFCreator.class.getResourceAsStream("/Contract.pdf"), contractData);
 	}
@@ -142,9 +141,9 @@ public class PDFCreator {
 		buildPDF(new FileOutputStream("target/FillFormField.pdf"),
 				PDFCreator.class.getResourceAsStream("/Contract.pdf"), contractData);
 	}
-	
+
 	public static byte[] buildPDFToBlob(ContractData contractData) throws IOException {
-		ByteArrayOutputStream os = new ByteArrayOutputStream(300*1024);
+		ByteArrayOutputStream os = new ByteArrayOutputStream(300 * 1024);
 		buildPDF(os, contractData);
 		return os.toByteArray();
 	}
@@ -167,7 +166,8 @@ public class PDFCreator {
 			if (ContractData.LEGAL_SEMESTERS.contains(contractData.semester)) {
 				setTextField(contractData.semester, (String) contractData.contractYear);
 			} else {
-				throw new IllegalArgumentException("Semester must be one of the following: "+ContractData.LEGAL_SEMESTERS);
+				throw new IllegalArgumentException(
+						"Semester must be one of the following: " + ContractData.LEGAL_SEMESTERS);
 			}
 		}
 		setTextField("Name", contractData.lastName);
@@ -187,18 +187,19 @@ public class PDFCreator {
 
 	private void fillClass(int classNumber, ClassData classData) throws IOException {
 		setTextField("courses only " + classNumber, classData.courseCode);
-		
+
 		setTextField("Course Name " + classNumber, classData.courseName);
-		
+
 		// The instructor name field is weird, it goes 1MC, 1MC_2, 1MC_3, 1MC_4, etc.
 		String oneMCExtra = (classNumber == 1 ? "" : "_" + classNumber);
 		setTextField("1MC" + oneMCExtra, classData.instructorName);
-		
+
 		if (classData.sessionName != null) {
 			if (ClassData.LEGAL_SESSIONS.contains(classData.sessionName)) {
 				setCheckBox("Session " + classData.sessionName + " " + classNumber, true);
 			} else {
-				throw new IllegalArgumentException("Session name must be one of the following: "+ClassData.LEGAL_SESSIONS);
+				throw new IllegalArgumentException(
+						"Session name must be one of the following: " + ClassData.LEGAL_SESSIONS);
 			}
 		}
 
@@ -254,9 +255,39 @@ class ContractData {
 	public String descriptionsOtherActivities;
 	public ClassData[] classes;
 	public String advisorName;
-	
 
-	public final static Set<String> LEGAL_SEMESTERS = ImmutableSet.copyOf(new String[]{"Fall", "Spring"});
+	public final static Set<String> LEGAL_SEMESTERS = ImmutableSet.copyOf(new String[] { "Fall", "Spring" });
+}
+
+class ClassData {
+	public String courseCode;
+	public String courseName;
+	public Boolean isInternship;
+	public String instructorName;
+	public String sessionName;
+
+	public ClassData() {}
+
+	public ClassData(String courseCode, String courseName, Boolean isInternship, String sessionName,
+			String instructorName) {
+		super();
+		this.courseCode = courseCode;
+		this.courseName = courseName;
+		this.isInternship = isInternship;
+		this.instructorName = instructorName;
+		if (sessionName == null) {} else if (LEGAL_SESSIONS.contains(sessionName)) {
+			this.sessionName = sessionName;
+		} else {
+			throw new IllegalArgumentException("Illegal session name "+sessionName+"; Session name must be one of the following: " + LEGAL_SESSIONS);
+		}
+	}
+
+	public ClassData(String courseCode, String courseName, Boolean isInternship, Session session,
+			String instructorName) {
+		this(courseCode, courseName, isInternship, session.fieldName, instructorName);
+	}
+
+	public final static Set<String> LEGAL_SESSIONS = ImmutableSet.copyOf(new String[] { "A", "M1", "M2", "1MC" });
 }
 
 enum Session {
@@ -279,31 +310,4 @@ enum Session {
 	Session(String fieldName) {
 		this.fieldName = fieldName;
 	}
-}
-
-class ClassData {
-	public String courseCode;
-	public String courseName;
-	public Boolean isInternship;
-	public String instructorName;
-	public String sessionName;
-
-	public ClassData() {}
-	
-	public ClassData(String courseCode, String courseName, Boolean isInternship, String sessionName,
-			String instructorName) {
-		super();
-		this.courseCode = courseCode;
-		this.courseName = courseName;
-		this.isInternship = isInternship;
-		this.instructorName = instructorName;
-		this.sessionName = sessionName;
-	}
-
-	public ClassData(String courseCode, String courseName, Boolean isInternship, Session session,
-			String instructorName) {
-		this(courseCode, courseName, isInternship, session.fieldName, instructorName);
-	}
-	
-	public final static Set<String> LEGAL_SESSIONS = ImmutableSet.copyOf(new String[]{"A", "M1", "M2", "1MC"});
 }

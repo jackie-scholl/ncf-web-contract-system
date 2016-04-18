@@ -1,7 +1,6 @@
 <#assign content>
 
 
-
 <h1>Welcome to the NCF contract form</h1>
 <p> To save your completed contract press submit. To save for later, press save. </p>
 
@@ -34,39 +33,22 @@
     
 
 <br>                     
-<textarea id="newFirstName" name="newFirstName" placeholder=""></textarea> First Name <br>
-<textarea id="newLastName" name="newLastName" placeholder=""></textarea> Last Name <br>
+<textarea id="firstName" name="firstName" placeholder=""></textarea> First Name <br>
+<textarea id="lastName" name="lastName" placeholder=""></textarea> Last Name <br>
 <textarea id="n_number" name="n_number" placeholder=""></textarea> N number <br>
 <textarea id="expected_grad_year" name="expected_grad_year" placeholder=""></textarea> Expected Year of Graduation <br />
 <textarea id="box number" name="box number" placeholder=""></textarea> Box Number <br>
 
 <textarea id="goals" name="goals" placeholder=""></textarea> Goals<br> 
 
-
-
 <!-- where the course material lies-->
-
-
 <#include "coursesTable.ftl">
 
 
-
-
-
-
-
 <br>
-
-
-
 <textarea id="cert" name="cert" placeholder=""></textarea> Certification Criteria<br>
 <textarea id="other" name="other" placeholder=""></textarea> Descriptions and other activities <br>
-Advisor <br>
-<textarea id="advisor name" name="advisor name" placeholder=""></textarea> name 
-
-
-
-<br>
+<textarea id="advisor name" name="advisor name" placeholder=""></textarea> Advisor name <br>
 
 </form>            
 

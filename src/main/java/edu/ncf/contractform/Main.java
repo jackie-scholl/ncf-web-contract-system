@@ -106,8 +106,6 @@ public class Main {
 
 			Optional<String> googleId = getGoogleID(qm.value("id_token"));
 
-			System.out.println(qm.value("year"));
-			System.out.println(qm.value("Semester"));
 			System.out.println(qm.toMap());
 			
 			try {
@@ -132,8 +130,8 @@ public class Main {
 		} else {
 			throw new IllegalArgumentException("Semester must be one of the following: "+ContractData.LEGAL_SEMESTERS);
 		}
-		data.lastName = qm.value("newLastName");
-		data.firstName = qm.value("newFirstName");
+		data.lastName = qm.value("lastName");
+		data.firstName = qm.value("firstName");
 		data.nNumber = qm.value("n_number");
 		data.expectedGradYear = qm.value("expected_grad_year");
 		data.boxNumber = qm.value("box number");
@@ -150,13 +148,8 @@ public class Main {
 	}
 	
 	private static ClassData getClassDataFromParams(QueryParamsMap qm, int index) {
-		ClassData data = new ClassData();
-		data.courseCode = qm.value("Course number"+index);
-		data.courseName = qm.value("Course name"+index);
-		data.instructorName = qm.value("Instructor"+index);
-		data.isInternship = (qm.value("internship"+index) != null);
-		data.sessionName = qm.value("session"+index);
-		return data;
+		return new ClassData(qm.value("Course number"+index), qm.value("Course name"+index),
+				(qm.value("internship"+index) != null), qm.value("session"+index), qm.value("Instructor"+index));
 	}
 
 	private static Optional<String> getGoogleID(String idToken) {

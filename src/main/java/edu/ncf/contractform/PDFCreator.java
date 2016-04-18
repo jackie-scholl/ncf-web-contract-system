@@ -2,6 +2,7 @@ package edu.ncf.contractform;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.interactive.form.PDAcroForm;
@@ -11,12 +12,14 @@ import org.apache.pdfbox.pdmodel.interactive.form.PDTextField;
 
 public class PDFCreator {
 	public static void main(String[] args) throws IOException {
-		//String formTemplate = "src/main/resources/org/apache/pdfbox/examples/interactive/form/FillFormField.pdf";
-		String formTemplate = "/Users/jackie/Downloads/Contract.pdf";
-		//String formTemplate = "/Users/jackie/Documents/contract1.pdf";
+		
+		InputStream formTemplateStream = PDFCreator.class.getResourceAsStream("/Contract.pdf");
+		
+		System.out.println(formTemplateStream);
 
 		// load the document
-		PDDocument pdfDocument = PDDocument.load(new File(formTemplate));
+		//PDDocument pdfDocument = PDDocument.load(new File(formTemplate));
+		PDDocument pdfDocument = PDDocument.load(formTemplateStream);
 
 		// get the document catalog
 		PDAcroForm acroForm = pdfDocument.getDocumentCatalog().getAcroForm();

@@ -37,6 +37,4 @@
     ${content}
     
   </body>
-  <!-- See http://html5boilerplate.com/ for a good place to start
-       dealing with real world issues like old browsers.  -->
 </html>

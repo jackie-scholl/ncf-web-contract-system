@@ -127,28 +127,6 @@ public class Main {
         }
     }
 
-    /**
-     * Makes the results screen using the same board and results from
-     * PlayHandler.
-     */
-    private static class ResultsHandler implements TemplateViewRoute {
-
-        @Override
-        public ModelAndView handle(Request req, Response res) {
-            QueryParamsMap qm = req.queryMap();
-            
-            //Put more code here
-
-            Map<String, Object> variables = new ImmutableMap.Builder<String, Object>()
-                    .put("title", "Boggle: Results")
-                    .put("time", 5).build();
-            return new ModelAndView(variables, "results.ftl");
-        }
-
-        private static final Splitter BREAKWORDS
-                = Splitter.on(Pattern.compile("\\W+")).omitEmptyStrings();
-    }
-
     // You need not worry about understanding what's below here.
     private static FreeMarkerEngine createEngine() {
         Configuration config = new Configuration();

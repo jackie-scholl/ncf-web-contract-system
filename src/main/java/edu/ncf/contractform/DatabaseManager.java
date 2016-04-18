@@ -45,11 +45,25 @@ public class DatabaseManager {
             System.out.println("Opened database successfully");
 
             stmt = c.createStatement();
-            String sql = "INSERT INTO "
-                    + "Accounts (Username,Password,FirstName,LastName) "
-                    + "VALUES (\'" + username + "\',\'" + password + "\',\'"
-                    + firstName + "\',\'" + lastName + "\');";
+            String sql = "INSERT INTO Contracts VALUES ("
+                    + "\'" + googleId + "\', "
+                    + "\'" + cd.nNumber + "\', "
+                    + "\'" + cd.firstName + "\', "
+                    + "\'" + cd.lastName + "\', "
+                    + "\'" + cd.semester + "\', "
+                    + "\'" + cd.contractYear + "\', "
+                    + "\'" + cd.studyLocation + "\', "
+                    + "\'" + cd.expectedGradYear + "\', "
+                    + "\'" + cd.boxNumber + "\', "
+                    + "\'" + cd.goals + "\', "
+                    + "\'" + cd.certificationCriteria + "\', "
+                    + "\'" + cd.descriptionsOtherActivities + "\', "
+                    + "\'" + cd.advisorName + "\');";
             stmt.executeUpdate(sql);
+            
+            //cd.classes;
+            
+            //sql = "INSERT INTO Classes VALUES ("
 
             stmt.close();
             c.commit();

@@ -10,6 +10,7 @@ import org.apache.pdfbox.pdmodel.interactive.form.PDField;
 import org.apache.pdfbox.pdmodel.interactive.form.PDTextField;
 
 import com.google.common.collect.ImmutableSet;
+import com.google.gson.Gson;
 
 public class PDFCreator {
 	public static void main(String[] args) throws IOException {
@@ -256,6 +257,14 @@ class ContractData {
 	public ClassData[] classes;
 	public String advisorName;
 	public String studyLocation;
+	
+	public String toJSON() {
+		return new Gson().toJson(this);
+	}
+	
+	public static ContractData fromJson(String json) {
+		return new Gson().fromJson(json, ContractData.class);
+	}
 
 	public final static Set<String> LEGAL_SEMESTERS = ImmutableSet.copyOf(new String[] { "Fall", "Spring" });
 }

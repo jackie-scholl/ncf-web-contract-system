@@ -37,6 +37,7 @@
 <textarea id="newFirstName" name="newFirstName" placeholder=""></textarea> First Name <br>
 <textarea id="newLastName" name="newLastName" placeholder=""></textarea> Last Name <br>
 <textarea id="n_number" name="n_number" placeholder=""></textarea> N number <br>
+<textarea id="expected_grad_year" name="expected_grad_year" placeholder=""></textarea> Expected Year of Graduation <br />
 <textarea id="box number" name="box number" placeholder=""></textarea> Box Number <br>
 
 <textarea id="goals" name="goals" placeholder=""></textarea> Goals<br> 

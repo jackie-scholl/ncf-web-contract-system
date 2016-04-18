@@ -135,6 +135,7 @@ public class Main {
 		data.lastName = qm.value("newLastName");
 		data.firstName = qm.value("newFirstName");
 		data.nNumber = qm.value("n_number");
+		data.expectedGradYear = qm.value("expected_grad_year");
 		data.boxNumber = qm.value("box number");
 		data.goals = qm.value("goals");
 		data.certificationCriteria = qm.value("cert");

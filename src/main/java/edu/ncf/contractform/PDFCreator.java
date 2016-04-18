@@ -134,7 +134,7 @@ public class PDFCreator {
 	}
 
 	public static void buildPDF(OutputStream outputStream, ContractData contractData) throws IOException {
-		buildPDF(outputStream, PDFCreator.class.getResourceAsStream("/Contract.pdf"), contractData);
+		buildPDF(new BufferedOutputStream(outputStream), PDFCreator.class.getResourceAsStream("/Contract.pdf"), contractData);
 	}
 
 	public static void buildPDFToDisk(ContractData contractData) throws IOException {

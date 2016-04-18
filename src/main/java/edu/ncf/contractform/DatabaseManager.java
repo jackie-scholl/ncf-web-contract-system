@@ -1,14 +1,10 @@
 package edu.ncf.contractform;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
 import java.util.Set;
 
 import spark.QueryParamsMap;
 
+import java.sql.*;
 import java.util.HashSet;
 
 public class DatabaseManager {
@@ -46,6 +42,23 @@ public class DatabaseManager {
     
     public static void saveNewContract(String googleID, ContractData contractData) {
     	
+    }
+    
+    public static void dropTables() {
+    	Connection c = null;
+        Statement stmt = null;
+        try {
+            //Class.forName("org.sqlite.JDBC");
+            c = DriverManager.getConnection("jdbc:sqlite:ContractsNCF.db");
+            System.out.println("Opened database successfully");
+
+            stmt = c.createStatement();
+            
+            stmt.execute("DROP TABLE IF EXISTS Classes;");
+            stmt.execute("DROP TABLE IF EXISTS Contracts;");
+        } catch (SQLException e) {
+        	throw new RuntimeException(e);
+        }
     }
 
     public static void createTables() {

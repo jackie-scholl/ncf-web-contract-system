@@ -61,6 +61,7 @@ public class Main {
 		FreeMarkerEngine freeMarker = createEngine();
 
 		try {
+			DatabaseManager.dropTables();
 			DatabaseManager.createTables();
 		} catch (Exception e) {
 			e.printStackTrace();

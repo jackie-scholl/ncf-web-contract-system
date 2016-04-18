@@ -1,3 +1,40 @@
+var googleUser2 = {};
+
+function hideLogout() {
+	$("#logout").hide();
+}
+
+function signOut() {
+	console.log('Signing out ' + googleUser2.getBasicProfile().getName());
+	//googleUser2.
+	var auth2 = gapi.auth2.getAuthInstance();
+	auth2.disconnect();
+	auth2.signOut().then(function() {
+		console.log('User signed out.');
+	});
+	$("#login").show();
+	$("#logout").hide();
+}
+
+function onSignIn(googleUser) {
+	googleUser2 = googleUser;
+	// Useful data for your client-side scripts:
+	var profile = googleUser.getBasicProfile();
+	console.log('Full Name: ' + profile.getName());
+	
+	$("#login").hide();
+	$("#logout").show();
+	$(".user-full-name").html(profile.getName());
+
+	// The ID token you need to pass to your backend:
+	var id_token = googleUser.getAuthResponse().id_token;
+	$("#google_id_token").val(id_token);
+};
+
+function onSignInFailure() {
+	alert("Sorry, sign-in failed");
+}
+
 function changeColorOfBoardBackground() {
     var color = ID("selectedColor").value;
     var tableBoard = classElems("board")[0];

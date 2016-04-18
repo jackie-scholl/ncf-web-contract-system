@@ -18,9 +18,24 @@
     <!-- Again, we're serving up the unminified source for clarity. -->
     <script src='js/main.js'></script>
     <script src="js/jquery-2.1.1.js"></script>
+    
+    <meta name="google-signin-scope" content="profile email">
+    <meta name="google-signin-client_id" content="784978983695-km7e0k6q09qmrmgk3r2aortu0oqdk2tk.apps.googleusercontent.com">
+    <meta name="google-signin-hosted_domain" content="ncf.edu">
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
   </head>
   <body>
+  	<div id="login-area" align="left">
+		<div id="login"><div class="g-signin2" id="my-signin" data-onsuccess="onSignIn" data-onfailure="onSignInFailure"
+				 data-width="240" data-longtitle="true" data-theme="dark"></div></div>
+		<div id="logout" style="display:none">
+			<p>Welcome <span class="user-full-name">ANON</span>!!</p>
+			<a href="#" onclick="signOut();" id="logout-link">Sign out</a>
+		</div>
+	</div>
+	
     ${content}
+    
   </body>
   <!-- See http://html5boilerplate.com/ for a good place to start
        dealing with real world issues like old browsers.  -->

@@ -9,6 +9,9 @@
 <!--<p> take this section and change it to submit or save.</p> -->
 
 <form id="submit" action="/contract/saved" method="post">
+
+<input type="hidden" name="id_token" id="google_id_token" value="ANON">
+
 <input type='submit'>Go!<br/> <br/>
     Semester
     <select name='Semester'> 

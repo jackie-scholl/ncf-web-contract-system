@@ -4,11 +4,16 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.Map;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.security.GeneralSecurityException;
+import java.util.*;
 import java.util.regex.Pattern;
+
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload;
+import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.gson.GsonFactory;
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Sets;
@@ -101,6 +106,19 @@ public class Main {
         public ModelAndView handle(Request req, Response res) {
             QueryParamsMap qm = req.queryMap();
             
+            String idToken = qm.value("id_token");
+			Optional<Payload> optionalPayload = idToken.equals("ANON")? Optional.empty() : verify(idToken);
+			if (optionalPayload.isPresent()) {
+				Payload payload = optionalPayload.get();
+				System.out.println("Hosted domain: " + payload.getHostedDomain());
+				if (!payload.getHostedDomain().equals("ncf.edu")) {
+					throw new RuntimeException("User signed in with non-NCF google account");
+				}
+				System.out.println("Full name: " + payload.get("name"));
+			} else {
+				System.out.println("Payload not present");
+			}
+            
             Map<String, Object> variables = new ImmutableMap.Builder<String, Object>()
                     .put("title", "Contract Saved")
                     .put("time", 5).build();
@@ -161,5 +179,22 @@ public class Main {
             res.body(stacktrace.toString());
         }
     }
+    
+    public static Optional<Payload> verify(String idTokenString){
+		NetHttpTransport transport = new NetHttpTransport();
+	    JsonFactory jsonFactory = new GsonFactory();
+		GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(transport, jsonFactory)
+			    .setAudience(Arrays.asList("784978983695-km7e0k6q09qmrmgk3r2aortu0oqdk2tk.apps.googleusercontent.com"))
+			    .setIssuer("accounts.google.com")
+			    .build();
+		try {
+			GoogleIdToken idToken = verifier.verify(idTokenString);
+			//System.out.println(idToken);
+			return Optional.ofNullable(idToken).map(x -> x.getPayload());
+		} catch (GeneralSecurityException | IOException e) {
+			e.printStackTrace();
+			return Optional.empty();
+		}
+	}
 
 }

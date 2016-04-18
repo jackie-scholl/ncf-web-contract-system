@@ -255,6 +255,7 @@ class ContractData {
 	public String descriptionsOtherActivities;
 	public ClassData[] classes;
 	public String advisorName;
+	public String studyLocation;
 
 	public final static Set<String> LEGAL_SEMESTERS = ImmutableSet.copyOf(new String[] { "Fall", "Spring" });
 }

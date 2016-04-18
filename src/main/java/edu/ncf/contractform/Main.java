@@ -122,6 +122,7 @@ public class Main {
 		data.firstName = qm.value("firstName");
 		data.nNumber = qm.value("n_number");
 		data.expectedGradYear = qm.value("expected_grad_year");
+		data.studyLocation = qm.value("location");
 		data.boxNumber = qm.value("box number");
 		data.goals = qm.value("goals");
 		data.certificationCriteria = qm.value("cert");

@@ -1,6 +1,7 @@
 package edu.ncf.contractform;
 
 import java.io.*;
+import java.util.Set;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.interactive.form.PDAcroForm;
@@ -8,11 +9,15 @@ import org.apache.pdfbox.pdmodel.interactive.form.PDCheckBox;
 import org.apache.pdfbox.pdmodel.interactive.form.PDField;
 import org.apache.pdfbox.pdmodel.interactive.form.PDTextField;
 
+import com.google.common.collect.ImmutableSet;
+
 public class PDFCreator {
 	public static void main(String[] args) throws IOException {
+		ImmutableSet.builder();
+		
 		oldBuildPDF();
 		ContractData data = new ContractData();
-		data.semester = Semester.FALL;
+		data.semester = "Fall";
 		data.contractYear = "2015";
 		data.lastName = "Scholl";
 		data.firstName = "Jackie";
@@ -161,7 +166,11 @@ public class PDFCreator {
 			throw new IllegalArgumentException("More classes than room on sheet");
 		}
 		if (contractData.semester != null && contractData.contractYear != null) {
-			setTextField(contractData.semester.fieldName, (String) contractData.contractYear);
+			if (ContractData.LEGAL_SEMESTERS.contains(contractData.semester)) {
+				setTextField(contractData.semester, (String) contractData.contractYear);
+			} else {
+				throw new IllegalArgumentException("Semester must be one of the following: "+ContractData.LEGAL_SEMESTERS);
+			}
 		}
 		setTextField("Name", contractData.lastName);
 		setTextField("First", contractData.firstName);
@@ -188,7 +197,11 @@ public class PDFCreator {
 		setTextField("1MC" + oneMCExtra, classData.instructorName);
 		
 		if (classData.sessionName != null) {
-			setCheckBox("Session " + classData.sessionName + " " + classNumber, true);
+			if (ClassData.LEGAL_SESSIONS.contains(classData.sessionName)) {
+				setCheckBox("Session " + classData.sessionName + " " + classNumber, true);
+			} else {
+				throw new IllegalArgumentException("Session name must be one of the following: "+ClassData.LEGAL_SESSIONS);
+			}
 		}
 
 		// The internship check boxes are really weird; the first one is called "Check Box2", and then it goes 2, 3, ...
@@ -231,7 +244,7 @@ enum Semester {
 }
 
 class ContractData {
-	public Semester semester;
+	public String semester;
 	public String contractYear;
 	public String lastName;
 	public String firstName;
@@ -243,6 +256,9 @@ class ContractData {
 	public String descriptionsOtherActivities;
 	public ClassData[] classes;
 	public String advisorName;
+	
+
+	public final static Set<String> LEGAL_SEMESTERS = ImmutableSet.copyOf(new String[]{"Fall", "Spring"});
 }
 
 enum Session {
@@ -290,4 +306,6 @@ class ClassData {
 			String instructorName) {
 		this(courseCode, courseName, isInternship, session.fieldName, instructorName);
 	}
+	
+	public final static Set<String> LEGAL_SESSIONS = ImmutableSet.copyOf(new String[]{"A", "M1", "M2", "1MC"});
 }

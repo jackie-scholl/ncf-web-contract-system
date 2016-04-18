@@ -6,7 +6,7 @@
         <td><pre>Session  </pre></td>
         <td><pre>Name of instructor/evaluator  </pre></td>     
     </tr>
-<#list 0..3 as row>
+<#list 0..8 as row>
   <tr>
       <td><input type="text" id="Course number${row}" name="Course number${row}" placeholder=""></input> </td>
       <td><input type="text" id="course name${row}" name="Course name${row}" placeholder=""></input> </td>

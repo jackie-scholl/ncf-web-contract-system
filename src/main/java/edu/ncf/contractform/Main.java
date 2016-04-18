@@ -139,8 +139,8 @@ public class Main {
 		data.certificationCriteria = qm.value("cert");
 		data.descriptionsOtherActivities = qm.value("other");
 		data.advisorName = qm.value("advisor name");
-		ClassData[] classData = new ClassData[4];
-		for (int i=0; i<4; i++) {
+		ClassData[] classData = new ClassData[8];
+		for (int i=0; i<classData.length; i++) {
 			classData[i] = getClassDataFromParams(qm, i);
 		}
 		data.classes = classData;

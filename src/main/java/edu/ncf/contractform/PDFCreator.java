@@ -13,7 +13,7 @@ public class PDFCreator {
 		oldBuildPDF();
 		ContractData data = new ContractData();
 		data.semester = Semester.FALL;
-		data.year = "2015";
+		data.contractYear = "2015";
 		data.lastName = "Scholl";
 		data.firstName = "Jackie";
 		data.nNumber = "123456789";
@@ -160,8 +160,8 @@ public class PDFCreator {
 		if (classes.length > 9) {
 			throw new IllegalArgumentException("More classes than room on sheet");
 		}
-		if (contractData.semester != null && contractData.year != null) {
-			setTextField(contractData.semester.fieldName, (String) contractData.year);
+		if (contractData.semester != null && contractData.contractYear != null) {
+			setTextField(contractData.semester.fieldName, (String) contractData.contractYear);
 		}
 		setTextField("Name", contractData.lastName);
 		setTextField("First", contractData.firstName);
@@ -230,7 +230,7 @@ enum Semester {
 
 class ContractData {
 	public Semester semester;
-	public String year;
+	public String contractYear;
 	public String lastName;
 	public String firstName;
 	public String nNumber;

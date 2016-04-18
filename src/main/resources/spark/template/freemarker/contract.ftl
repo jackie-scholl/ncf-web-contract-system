@@ -165,8 +165,7 @@ Student signature <br>
 
 
 
-<script>updateScores(${currentTotalScore}, ${averageScore},
-            ${maxScore}, ${numberOfGames},${percentScore});</script>
+
 
 </#assign>
 <#include "main.ftl">

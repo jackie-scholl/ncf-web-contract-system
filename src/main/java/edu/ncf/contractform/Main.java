@@ -97,7 +97,8 @@ public class Main {
 			
 			Optional<String> googleId = getGoogleID(qm.value("id_token"));
 			
-			ContractData contractData = getContractDataFromParams(qm);
+			ContractData contractData = getContractDataFromParams(qm,
+                                googleId.get());
 			googleId.ifPresent(id -> DatabaseManager.saveNewContract(id, contractData));
 			
 			res.raw().setContentType("application/pdf");
@@ -111,8 +112,10 @@ public class Main {
 		}
 	}
 
-	private static ContractData getContractDataFromParams(QueryParamsMap qm) {
+	private static ContractData getContractDataFromParams(QueryParamsMap qm,
+                String googleId) {
 		ContractData data = new ContractData();
+                data.googleId = googleId;
 		data.contractYear = qm.value("year");
 		if (ContractData.LEGAL_SEMESTERS.contains(qm.value("Semester"))) {
 			data.semester = qm.value("Semester");

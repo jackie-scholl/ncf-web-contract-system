@@ -243,6 +243,7 @@ enum Semester {
 }
 
 class ContractData {
+        public String googleId;
 	public String semester;
 	public String contractYear;
 	public String lastName;

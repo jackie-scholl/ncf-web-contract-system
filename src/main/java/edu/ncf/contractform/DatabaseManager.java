@@ -78,8 +78,6 @@ public class DatabaseManager {
                     stmt.executeUpdate(sql);
                 }
             }
-            
-            //sql = "INSERT INTO Classes VALUES ("
 
             stmt.close();
             c.commit();

@@ -61,7 +61,23 @@ public class DatabaseManager {
                     + "\'" + cd.advisorName + "\');";
             stmt.executeUpdate(sql);
             
-            //cd.classes;
+            for (ClassData classData : cd.classes) {
+                //Only insert classes with course names
+                if (classData.courseName != null
+                        && classData.courseName != "") {
+                    sql = "INSERT INTO Classes VALUES ("
+                        + "\'" + googleId + "\', "
+                        + "\'" + cd.semester + "\', "
+                        + "\'" + cd.contractYear + "\', "
+                        + "\'" + classData.courseCode + "\', "
+                        + "\'" + classData.courseName + "\', "
+                        + "\'" + classData.isInternship + "\', "
+                        + "\'" + classData.sessionName + "\', "
+                        + "\'" + classData.instructorName + "\');";
+                    
+                    stmt.executeUpdate(sql);
+                }
+            }
             
             //sql = "INSERT INTO Classes VALUES ("
 
@@ -110,7 +126,7 @@ public class DatabaseManager {
                     + "LastName              VarChar(20), "
                     + "Semester              VarChar(6), "
                     + "Year                  int, "
-                    + "onCampusStudy         VarChar(5), "
+                    + "StudyLocation         VarChar(10), "
                     + "ExpectedGraduationYear int, "
                     + "BoxNumber             int, "
                     + "Goals                 Text, "

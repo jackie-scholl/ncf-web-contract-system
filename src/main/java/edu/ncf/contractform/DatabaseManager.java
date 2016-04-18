@@ -36,12 +36,30 @@ public class DatabaseManager {
     }
     */
     
-    public static void saveNewContract(QueryParamsMap qm) {
-        
-    }
-    
-    public static void saveNewContract(String googleID, ContractData contractData) {
-    	
+    public static void saveNewContract(String googleId, ContractData cd) {
+    	Connection c = null;
+        Statement stmt = null;
+        try {
+            c = DriverManager.getConnection("jdbc:sqlite:ContractsNCF.db");
+            c.setAutoCommit(false);
+            System.out.println("Opened database successfully");
+
+            stmt = c.createStatement();
+            String sql = "INSERT INTO "
+                    + "Accounts (Username,Password,FirstName,LastName) "
+                    + "VALUES (\'" + username + "\',\'" + password + "\',\'"
+                    + firstName + "\',\'" + lastName + "\');";
+            stmt.executeUpdate(sql);
+
+            stmt.close();
+            c.commit();
+            c.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            System.exit(0);
+        }
+        System.out.println("Records created successfully");
     }
     
     public static void dropTables() {
@@ -115,33 +133,6 @@ public class DatabaseManager {
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
-    }
-
-    public static void insertNewAccount(String username, String password,
-            String firstName, String lastName) {
-        Connection c = null;
-        Statement stmt = null;
-        try {
-            c = DriverManager.getConnection("jdbc:sqlite:ContractsNCF.db");
-            c.setAutoCommit(false);
-            System.out.println("Opened database successfully");
-
-            stmt = c.createStatement();
-            String sql = "INSERT INTO "
-                    + "Accounts (Username,Password,FirstName,LastName) "
-                    + "VALUES (\'" + username + "\',\'" + password + "\',\'"
-                    + firstName + "\',\'" + lastName + "\');";
-            stmt.executeUpdate(sql);
-
-            stmt.close();
-            c.commit();
-            c.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.err.println(e.getClass().getName() + ": " + e.getMessage());
-            System.exit(0);
-        }
-        System.out.println("Records created successfully");
     }
 
     //This is the update for String values

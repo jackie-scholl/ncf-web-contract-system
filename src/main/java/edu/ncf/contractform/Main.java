@@ -115,12 +115,13 @@ public class Main {
 	private static ContractData getContractDataFromParams(QueryParamsMap qm,
                 String googleId) {
 		ContractData data = new ContractData();
-                data.googleId = googleId;
 		data.contractYear = qm.value("year");
 		if (ContractData.LEGAL_SEMESTERS.contains(qm.value("Semester"))) {
-			data.semester = qm.value("Semester");
+                    data.semester = qm.value("Semester");
 		} else {
-			throw new IllegalArgumentException("Semester must be one of the following: "+ContractData.LEGAL_SEMESTERS);
+			throw new IllegalArgumentException(
+                                "Semester must be one of the following: " + 
+                                        ContractData.LEGAL_SEMESTERS);
 		}
 		data.lastName = qm.value("lastName");
 		data.firstName = qm.value("firstName");

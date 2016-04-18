@@ -1,4 +1,4 @@
-<table id="board" class="board">
+<table id="board1" class="board1">
     <tr>
         <td><pre>Course  </pre></td>
         <td><pre>Course name  </pre></td>
@@ -10,7 +10,7 @@
   <tr>
       <td><input type="text" id="Course number${row}" name="Course number${row}" placeholder=""></input> </td>
       <td><input type="text" id="course name${row}" name="Course name${row}" placeholder=""></input> </td>
-      <td><input type="checkbox" id ="internship${row}" name="internship${row}" value=""></td>
+      <td>  <input type="checkbox" id ="internship${row}" name="internship${row}" value=""></td>
       <td>  <select id = "session${row}" name="session${row}">
         <option value='A'>full term</option>
         <option value='M1'>module 1</option>

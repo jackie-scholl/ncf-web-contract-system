@@ -13,8 +13,6 @@ import com.google.common.collect.ImmutableSet;
 
 public class PDFCreator {
 	public static void main(String[] args) throws IOException {
-		ImmutableSet.builder();
-		
 		oldBuildPDF();
 		ContractData data = new ContractData();
 		data.semester = "Fall";

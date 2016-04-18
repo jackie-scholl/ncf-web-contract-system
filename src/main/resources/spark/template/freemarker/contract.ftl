@@ -6,7 +6,7 @@
 
 <!--<p> take this section and change it to submit or save.</p> -->
 
-<form id="submit" action="/saved" method="post">
+<form id="submit" action="/contract/saved" method="post">
 <input type='submit'>Go!<br/> <br/>
     Semester
     <select name='Semester'> 

@@ -73,7 +73,7 @@ public class Main {
         }
 
         Spark.get("/contract", new WelcomePageStarter(), freeMarker);
-        Spark.post("/saved", new SavedContractHandler(), freeMarker);
+        Spark.post("/contract/saved", new SavedContractHandler(), freeMarker);
        // Spark.post("/results", new ResultsHandler(), freeMarker);
     }
 
@@ -102,7 +102,7 @@ public class Main {
             QueryParamsMap qm = req.queryMap();
             
             Map<String, Object> variables = new ImmutableMap.Builder<String, Object>()
-                    .put("title", "Boggle: Results")
+                    .put("title", "Contract Saved")
                     .put("time", 5).build();
             
             return new ModelAndView(variables, "contractSaved.ftl");

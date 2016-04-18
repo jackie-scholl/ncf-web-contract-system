@@ -187,7 +187,9 @@ public class PDFCreator {
 		String oneMCExtra = (classNumber == 1 ? "" : "_" + classNumber);
 		setTextField("1MC" + oneMCExtra, classData.instructorName);
 		
-		setCheckBox("Session " + classData.session.fieldName + " " + classNumber, true);
+		if (classData.sessionName != null) {
+			setCheckBox("Session " + classData.sessionName + " " + classNumber, true);
+		}
 
 		// The internship check boxes are really weird; the first one is called "Check Box2", and then it goes 2, 3, ...
 		String checkBoxField = classNumber == 1 ? "Check Box2" : String.valueOf(classNumber);
@@ -270,17 +272,22 @@ class ClassData {
 	public String courseName;
 	public Boolean isInternship;
 	public String instructorName;
-	public Session session;
+	public String sessionName;
 
 	public ClassData() {}
-
-	public ClassData(String courseCode, String courseName, Boolean isInternship, Session session,
+	
+	public ClassData(String courseCode, String courseName, Boolean isInternship, String sessionName,
 			String instructorName) {
 		super();
 		this.courseCode = courseCode;
 		this.courseName = courseName;
 		this.isInternship = isInternship;
 		this.instructorName = instructorName;
-		this.session = session;
+		this.sessionName = sessionName;
+	}
+
+	public ClassData(String courseCode, String courseName, Boolean isInternship, Session session,
+			String instructorName) {
+		this(courseCode, courseName, isInternship, session.fieldName, instructorName);
 	}
 }

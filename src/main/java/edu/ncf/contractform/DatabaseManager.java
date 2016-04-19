@@ -131,10 +131,6 @@ public class DatabaseManager {
                     + "CertificationCriteria Text, "
                     + "OtherActivities       Text, "
                     + "AdvisorName           VarChar(20), "
-                    + "AdvisorSignature      VarChar(256), "
-                    + "AdvisorSignDate       Date, "
-                    + "StudentSignature      VarChar(256), "
-                    + "StudentSignDate       Date, "
                     + "PRIMARY KEY (GoogleID)"
                     + ")";
             stmt.executeUpdate(createStudentsTable);

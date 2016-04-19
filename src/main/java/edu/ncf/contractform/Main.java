@@ -14,6 +14,7 @@ import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.gson.GsonFactory;
 import com.google.common.collect.ImmutableMap;
+import com.google.gson.Gson;
 
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
@@ -68,6 +69,8 @@ public class Main {
 
 		Spark.get("/contract", new WelcomePageStarter(), freeMarker);
 		Spark.post("/contract/saved", new SavedContractHandler());
+		Spark.get("/contractList", new ContractList(), freeMarker);
+		Spark.get("/api/getContracts", new ApiContractList());
 		// Spark.post("/results", new ResultsHandler(), freeMarker);
 	}
 
@@ -87,6 +90,64 @@ public class Main {
 	}
 	
 	/**
+	 * Shows the various contracts the user has
+	 */
+	private static class ContractList implements TemplateViewRoute {
+		@Override
+		public ModelAndView handle(Request rqst, Response rspns) {
+			Map<String, Object> variables = new ImmutableMap.Builder<String, Object>()
+					.put("title", "Contract List").build();
+			return new ModelAndView(variables, "contractList.ftl");
+		}
+	}
+	
+	/**
+	 * Returns the generated PDF.
+	 */
+	private static class ApiContractList implements Route {
+		public Object handle(Request req, Response res) {
+		    QueryParamsMap qm = req.queryMap();
+			System.out.println(qm.toMap());
+			
+			Optional<String> googleId = getGoogleID(qm.value("id_token"));
+			
+			List<Long> contractList = JsonDatabaseManager.getUserContracts(googleId.get());
+			
+			Map<String, Object> resultObj = new HashMap<>();
+			resultObj.put("id_token", googleId.get());
+			resultObj.put("contractIds", contractList);
+			
+			//String result = new Gson().toJson(contractList);
+			String result = new Gson().toJson(resultObj);
+			
+			System.out.println(result);
+			
+			res.raw().setContentType("text/json");
+			try {
+				res.raw().getOutputStream().print(result);
+				
+				res.raw().getOutputStream().close();
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
+			
+			/*ContractData contractData = getContractDataFromParams(qm,
+                                googleId.get());
+			googleId.ifPresent(id -> JsonDatabaseManager.saveNewContract(id, contractData));
+			JsonDatabaseManager.selectContracts();
+			
+			res.raw().setContentType("application/pdf");
+			try {
+				PDFCreator.buildPDF(res.raw().getOutputStream(), contractData);
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}*/
+		    
+		    return null;
+		}
+	}
+	
+	/**
 	 * Returns the generated PDF.
 	 */
 	private static class SavedContractHandler implements Route {
@@ -95,6 +156,8 @@ public class Main {
 			System.out.println(qm.toMap());
 			
 			Optional<String> googleId = getGoogleID(qm.value("id_token"));
+			
+			System.out.println(googleId);
 			
 			ContractData contractData = getContractDataFromParams(qm,
                                 googleId.get());

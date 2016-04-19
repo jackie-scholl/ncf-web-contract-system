@@ -1,4 +1,5 @@
 var googleUser = {};
+var gIdToken = {};
 
 function hideLogout() {
 	$("#logout").hide();
@@ -28,6 +29,7 @@ function onSignIn(success) {
 	// The ID token you need to pass to your backend:
 	var id_token = googleUser.getAuthResponse().id_token;
 	$("#google_id_token").val(id_token);
+	gIdToken = id_token;
 	
 	$("#firstName").val(profile.getGivenName());
 	$("#lastName").val(profile.getFamilyName());

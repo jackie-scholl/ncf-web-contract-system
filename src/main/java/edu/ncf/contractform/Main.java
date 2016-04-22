@@ -64,12 +64,15 @@ public class Main {
 
 		contractStore = JsonDatabaseManager.instance();
 
-		Spark.get("/contract", new WelcomePageStarter(), freeMarker);
-		Spark.post("/contract/saved", new SavedContractHandler());
-		Spark.get("/contracts", new ContractList(), freeMarker);
-		Spark.get("/contracts/:contractId", new ContractForm(), freeMarker);
-		Spark.get("/api/contracts", new ApiContractList());
-		
+		Spark.get("/contract", "text/html", new WelcomePageStarter(), freeMarker);
+		Spark.post("/contract/saved", "application/pdf", new SavedContractHandler());
+		Spark.get("/contracts", "text/html",  new ContractList(), freeMarker);
+		Spark.post("/contracts", new AddContract());
+		Spark.get("/contracts/:contractId", "text/html", new ContractForm(), freeMarker);
+		Spark.get("/contracts/:contractId", "application/pdf", new PDFContractHandler());
+		Spark.put("/contracts/:contractId", new SaveContractHandler());
+		Spark.get("/api/contracts", "text/json", new ApiContractList());
+
 		// Spark.post("/results", new ResultsHandler(), freeMarker);
 	}
 
@@ -80,19 +83,23 @@ public class Main {
 	private static class WelcomePageStarter implements TemplateViewRoute {
 
 		@Override
-		public ModelAndView handle(Request rqst, Response rspns) {
+		public ModelAndView handle(Request req, Response res) {
 			Map<String, Object> variables = new ImmutableMap.Builder<String, Object>()
 					.put("title", "Contract Form").build();
 			return new ModelAndView(variables, "contract.ftl");
 		}
 	}
-	
+
 	private static class ContractForm implements TemplateViewRoute {
 		@Override
-		public ModelAndView handle(Request rqst, Response rspns) {
-			QueryParamsMap qm = rqst.queryMap();
-			long contractId = Long.parseLong(rqst.params(":contractId"));
+		public ModelAndView handle(Request req, Response res) {
+			long contractId = Long.parseLong(req.params(":contractId"));
 			ContractEntry contractEntry = contractStore.getContractByContractID(contractId);
+			if (!getGoogleIdFromCookie(req).equals(contractEntry.googleId)) {
+				throw new IllegalArgumentException(
+						"You are not the owner of this contract. Please go back to the contracts page");
+			}
+
 			System.out.println(contractEntry.toJson());
 			// use details from contractEntry to pre-fill the contract form
 			Map<String, Object> variables = new ImmutableMap.Builder<String, Object>()
@@ -100,89 +107,153 @@ public class Main {
 			return new ModelAndView(variables, "contract.ftl");
 		}
 	}
-	
+
 	/**
 	 * Shows the various contracts the user has
 	 */
 	private static class ContractList implements TemplateViewRoute {
 		@Override
-		public ModelAndView handle(Request rqst, Response rspns) {
+		public ModelAndView handle(Request req, Response res) {
 			Map<String, Object> variables = new ImmutableMap.Builder<String, Object>()
 					.put("title", "Contract List").build();
 			return new ModelAndView(variables, "contractList.ftl");
 		}
 	}
-	
+
+	private static class AddContract implements Route {
+		public Object handle(Request req, Response res) {
+			String googleId = getGoogleIdFromCookie(req);
+			long contractId = contractStore.createContract(googleId);
+
+			Map<String, Object> resultObj = new HashMap<>();
+			resultObj.put("contractId", contractId);
+			String result = new Gson().toJson(resultObj);
+
+			System.out.println(result);
+
+			res.status(201); // Created
+			res.header("Location", "/contracts/" + contractId);
+
+			res.raw().setContentType("text/json");
+			try {
+				res.raw().getOutputStream().print(result);
+				res.raw().getOutputStream().close();
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
+
+			return null;
+		}
+	}
+
 	/**
 	 * Returns the generated PDF.
 	 */
 	private static class ApiContractList implements Route {
 		public Object handle(Request req, Response res) {
-		    QueryParamsMap qm = req.queryMap();
+			QueryParamsMap qm = req.queryMap();
 			System.out.println(qm.toMap());
-			
+
 			Optional<String> googleId = getGoogleID(qm.value("id_token"));
-			
+
 			List<ContractEntry> contractEntries = contractStore.getContractsByGoogleID(googleId.get());
-			
+
 			Map<String, Object> resultObj = new HashMap<>();
 			resultObj.put("contracts", contractEntries);
-			
+
 			String result = new Gson().toJson(resultObj);
-			
+
 			System.out.println(result);
-			
+
 			res.raw().setContentType("text/json");
 			try {
 				res.raw().getOutputStream().print(result);
-				
 				res.raw().getOutputStream().close();
 			} catch (IOException e) {
 				throw new RuntimeException(e);
 			}
-		    
-		    return null;
+
+			return null;
 		}
 	}
 	
+	private static class PDFContractHandler implements Route {
+		public Object handle(Request req, Response res) {
+			long contractId = Long.parseLong(req.params(":contractId"));
+			ContractEntry contractEntry = contractStore.getContractByContractID(contractId);
+			if (!getGoogleIdFromCookie(req).equals(contractEntry.googleId)) {
+				throw new IllegalArgumentException(
+						"You are not the owner of this contract. Please go back to the contracts page");
+			}
+			
+			QueryParamsMap qm = req.queryMap();
+			System.out.println(qm.toMap());
+
+			res.raw().setContentType("application/pdf");
+			try {
+				PDFCreator.buildPDF(res.raw().getOutputStream(), contractEntry.contractData);
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
+
+			return null;
+		}
+	}
+	
+	private static class SaveContractHandler implements Route {
+		public Object handle(Request req, Response res) {
+			QueryParamsMap qm = req.queryMap();
+
+			String googleId = getGoogleIdFromCookie(req);
+
+			ContractData contractData = getContractDataFromParams(qm, googleId);
+			contractStore.updateContract(contractStore.createContract(googleId), contractData);
+			contractStore.showContracts();
+			
+			res.status(204);
+
+			return null;
+		}
+	}
+
 	/**
 	 * Returns the generated PDF.
 	 */
 	private static class SavedContractHandler implements Route {
 		public Object handle(Request req, Response res) {
-		    QueryParamsMap qm = req.queryMap();
+			QueryParamsMap qm = req.queryMap();
 			System.out.println(qm.toMap());
-			
+
 			Optional<String> googleId = getGoogleID(qm.value("id_token"));
-			
+
 			System.out.println(googleId);
-			
+
 			ContractData contractData = getContractDataFromParams(qm,
-                                googleId.get());
+					googleId.get());
 			googleId.ifPresent(id -> contractStore.updateContract(contractStore.createContract(id), contractData));
 			contractStore.showContracts();
-			
+
 			res.raw().setContentType("application/pdf");
 			try {
 				PDFCreator.buildPDF(res.raw().getOutputStream(), contractData);
 			} catch (IOException e) {
 				throw new RuntimeException(e);
 			}
-		    
-		    return null;
+
+			return null;
 		}
 	}
 
 	private static ContractData getContractDataFromParams(QueryParamsMap qm,
-                String googleId) {
+			String googleId) {
 		ContractData data = new ContractData();
 		data.contractYear = qm.value("year");
 		if (ContractData.LEGAL_SEMESTERS.contains(qm.value("Semester"))) {
-                    data.semester = qm.value("Semester");
+			data.semester = qm.value("Semester");
 		} else {
 			throw new IllegalArgumentException(
-                                "Semester must be one of the following: " + 
-                                        ContractData.LEGAL_SEMESTERS);
+					"Semester must be one of the following: " +
+							ContractData.LEGAL_SEMESTERS);
 		}
 		data.lastName = qm.value("lastName");
 		data.firstName = qm.value("firstName");
@@ -195,16 +266,25 @@ public class Main {
 		data.descriptionsOtherActivities = qm.value("other");
 		data.advisorName = qm.value("advisor name");
 		ClassData[] classData = new ClassData[8];
-		for (int i=0; i<classData.length; i++) {
+		for (int i = 0; i < classData.length; i++) {
 			classData[i] = getClassDataFromParams(qm, i);
 		}
 		data.classes = classData;
 		return data;
 	}
-	
+
 	private static ClassData getClassDataFromParams(QueryParamsMap qm, int index) {
-		return new ClassData(qm.value("Course number"+index), qm.value("Course name"+index),
-				(qm.value("internship"+index) != null), qm.value("session"+index), qm.value("Instructor"+index));
+		return new ClassData(qm.value("Course number" + index), qm.value("Course name" + index),
+				(qm.value("internship" + index) != null), qm.value("session" + index), qm.value("Instructor" + index));
+	}
+	
+	private static String getGoogleIdFromCookie(Request req) {
+		Optional<String> googleId = Optional.ofNullable(req.cookie("id_token")).flatMap(Main::getGoogleID);
+		if (!googleId.isPresent()) {
+			throw new IllegalArgumentException(
+					"Google log-in cookie missing or invalid. Please go to /contracts and sign in");
+		}
+		return googleId.get();
 	}
 
 	private static Optional<String> getGoogleID(String idToken) {

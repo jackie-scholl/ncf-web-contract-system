@@ -66,7 +66,7 @@ public class Main {
 
 		Spark.get("/contract", new WelcomePageStarter(), freeMarker);
 		Spark.post("/contract/saved", new SavedContractHandler());
-		Spark.get("/contractList", new ContractList(), freeMarker);
+		Spark.get("/contracts", new ContractList(), freeMarker);
 		Spark.get("/api/contracts", new ApiContractList());
 		// Spark.post("/results", new ResultsHandler(), freeMarker);
 	}

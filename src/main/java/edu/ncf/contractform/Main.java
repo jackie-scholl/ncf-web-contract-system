@@ -25,6 +25,7 @@ import spark.*;
 import spark.template.freemarker.FreeMarkerEngine;
 
 public class Main {
+	private static ContractStore contractStore = null;
 
 	/**
 	 * The below if/else if statements don't actually do anything. Since we aren't running from command line, nothing
@@ -61,11 +62,7 @@ public class Main {
 		// We render our responses with the FreeMaker template system.
 		FreeMarkerEngine freeMarker = createEngine();
 
-		try {
-			JsonDatabaseManager.createTables();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		contractStore = JsonDatabaseManager.instance();
 
 		Spark.get("/contract", new WelcomePageStarter(), freeMarker);
 		Spark.post("/contract/saved", new SavedContractHandler());
@@ -82,7 +79,6 @@ public class Main {
 
 		@Override
 		public ModelAndView handle(Request rqst, Response rspns) {
-			// Set<String> usernamesTaken = DatabaseManager.getUsernames();
 			Map<String, Object> variables = new ImmutableMap.Builder<String, Object>()
 					.put("title", "Contract Form").build();
 			return new ModelAndView(variables, "contract.ftl");
@@ -111,13 +107,12 @@ public class Main {
 			
 			Optional<String> googleId = getGoogleID(qm.value("id_token"));
 			
-			List<Long> contractList = JsonDatabaseManager.getUserContracts(googleId.get());
+			List<ContractEntry> contractEntries = contractStore.getContractsByGoogleID(googleId.get());
 			
 			Map<String, Object> resultObj = new HashMap<>();
 			resultObj.put("id_token", googleId.get());
-			resultObj.put("contractIds", contractList);
+			resultObj.put("contracts", contractEntries);
 			
-			//String result = new Gson().toJson(contractList);
 			String result = new Gson().toJson(resultObj);
 			
 			System.out.println(result);
@@ -130,18 +125,6 @@ public class Main {
 			} catch (IOException e) {
 				throw new RuntimeException(e);
 			}
-			
-			/*ContractData contractData = getContractDataFromParams(qm,
-                                googleId.get());
-			googleId.ifPresent(id -> JsonDatabaseManager.saveNewContract(id, contractData));
-			JsonDatabaseManager.selectContracts();
-			
-			res.raw().setContentType("application/pdf");
-			try {
-				PDFCreator.buildPDF(res.raw().getOutputStream(), contractData);
-			} catch (IOException e) {
-				throw new RuntimeException(e);
-			}*/
 		    
 		    return null;
 		}
@@ -161,8 +144,8 @@ public class Main {
 			
 			ContractData contractData = getContractDataFromParams(qm,
                                 googleId.get());
-			googleId.ifPresent(id -> JsonDatabaseManager.saveNewContract(id, contractData));
-			JsonDatabaseManager.selectContracts();
+			googleId.ifPresent(id -> contractStore.updateContract(contractStore.createContract(id), contractData));
+			contractStore.showContracts();
 			
 			res.raw().setContentType("application/pdf");
 			try {

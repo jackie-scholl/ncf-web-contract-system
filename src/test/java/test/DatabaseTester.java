@@ -17,7 +17,7 @@ public class DatabaseTester {
     //@Test
     public void testCreateTable() {
         System.out.println("Now creating table");
-        JsonDatabaseManager.createTables();
+        JsonDatabaseManager.instance().createTables();
     }
     
 }

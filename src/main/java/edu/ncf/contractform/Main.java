@@ -154,8 +154,9 @@ public class Main {
 			QueryParamsMap qm = req.queryMap();
 			System.out.println(qm.toMap());
 
-			Optional<String> googleId = getGoogleID(qm.value("id_token"));
-
+			//Optional<String> googleId = getGoogleID(qm.value("id_token"));
+			Optional<String> googleId = Optional.of(getGoogleIdFromCookie(req));
+			
 			List<ContractEntry> contractEntries = contractStore.getContractsByGoogleID(googleId.get());
 
 			Map<String, Object> resultObj = new HashMap<>();
@@ -279,7 +280,8 @@ public class Main {
 	}
 	
 	private static String getGoogleIdFromCookie(Request req) {
-		Optional<String> googleId = Optional.ofNullable(req.cookie("id_token")).flatMap(Main::getGoogleID);
+		System.out.println("id_token2: " + req.cookie("id_token2"));
+		Optional<String> googleId = Optional.ofNullable(req.cookie("id_token2")).flatMap(Main::getGoogleID);
 		if (!googleId.isPresent()) {
 			throw new IllegalArgumentException(
 					"Google log-in cookie missing or invalid. Please go to /contracts and sign in");
@@ -296,6 +298,7 @@ public class Main {
 			}
 			return Optional.of(payload.getSubject());
 		} else {
+			System.out.println(idToken);
 			System.out.println("Payload not present");
 			return Optional.empty();
 		}
@@ -310,7 +313,7 @@ public class Main {
 				.build();
 		try {
 			GoogleIdToken idToken = verifier.verify(idTokenString);
-			// System.out.println(idToken);
+			System.out.println("verified token: " + idToken);
 			return Optional.ofNullable(idToken).map(x -> x.getPayload());
 		} catch (GeneralSecurityException | IOException e) {
 			e.printStackTrace();

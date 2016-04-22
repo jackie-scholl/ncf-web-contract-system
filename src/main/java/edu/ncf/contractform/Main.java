@@ -243,6 +243,7 @@ public class Main {
 
 		@Override
 		public void handle(Exception e, Request req, Response res) {
+			e.printStackTrace();
 			res.status(INTERNAL_SERVER_ERROR);
 			StringWriter stacktrace = new StringWriter();
 			try (PrintWriter pw = new PrintWriter(stacktrace)) {

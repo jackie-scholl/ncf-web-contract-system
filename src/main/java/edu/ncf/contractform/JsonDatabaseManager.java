@@ -58,7 +58,7 @@ public class JsonDatabaseManager implements ContractStore {
 	public void showContracts() {
 		try (Connection c = DriverManager.getConnection(DB_URL)) {
 			ResultSet rs = c.createStatement()
-					.executeQuery("SELECT _rowid_, ContractID, GoogleID, ContractData FROM Contracts;");
+					.executeQuery("SELECT * FROM Contracts;");
 
 			ResultSetMetaData rsmd = rs.getMetaData();
 			int columnsNumber = rsmd.getColumnCount();
@@ -81,7 +81,7 @@ public class JsonDatabaseManager implements ContractStore {
 		try (Connection c = DriverManager.getConnection(DB_URL)) {
 			c.setAutoCommit(false);
 			PreparedStatement pstmt = c
-					.prepareStatement("INSERT INTO Contracts  (GoogleID, ContractData) VALUES (?, '{}', ?);");
+					.prepareStatement("INSERT INTO Contracts  (GoogleID, ContractData, DateLastModified) VALUES (?, '{}', ?);");
 			pstmt.setString(1, googleID);
 			pstmt.setLong(2, System.currentTimeMillis());
 			pstmt.execute();

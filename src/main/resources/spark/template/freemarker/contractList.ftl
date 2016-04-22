@@ -8,6 +8,7 @@
 
   <h1>Contract List</h1>
   <a href="/Contract.pdf">Blank Contract</a>
+  <h3 class="logged-out">Please sign in to view your contracts</h3>
   <div id="content"></div>
 
 </#assign>

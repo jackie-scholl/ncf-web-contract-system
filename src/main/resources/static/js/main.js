@@ -2,7 +2,7 @@ var googleUser = {};
 var gIdToken = {};
 
 function hideLogout() {
-	$("#logout").hide();
+	$(".logged-in").hide();
 }
 
 function signOut() {
@@ -12,8 +12,8 @@ function signOut() {
 	auth2.signOut().then(function() {
 		console.log('User signed out.');
 	});
-	$("#login").show();
-	$("#logout").hide();
+	$(".logged-in").show();
+	$(".logged-out").hide();
 }
 
 function onSignIn(success) {
@@ -22,8 +22,8 @@ function onSignIn(success) {
 	// Useful data for your client-side scripts:
 	var profile = googleUser.getBasicProfile();
 	
-	$("#login").hide();
-	$("#logout").show();
+	$(".logged-in").hide();
+	$(".logged-out").show();
 	$(".user-full-name").html(profile.getName());
 
 	// The ID token you need to pass to your backend:

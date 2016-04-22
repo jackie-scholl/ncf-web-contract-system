@@ -11,8 +11,10 @@ import com.google.gson.Gson;
 
 public class PDFCreator {
 	public static void main(String[] args) throws IOException {
-		oldBuildPDF();
-		examineFilledPDF();
+		buildPDFToDisk(buildSampleContract());
+	}
+	
+	private static ContractData buildSampleContract() {
 		ContractData data = new ContractData();
 		data.semester = "Fall";
 		data.contractYear = "2015";
@@ -38,94 +40,8 @@ public class PDFCreator {
 		/*data.classes = new ClassData[] {
 				new ClassData("12345", "Learning Stuff 101", false, Session.A, "Professor McSmarty Pants")
 		};*/
-
-		buildPDFToDisk(data);
-	}
-	
-	public static void examineFilledPDF() throws IOException {
-		InputStream formStream = new FileInputStream("/Users/jackie/Downloads/JackieFilledSample.pdf");
-		PDDocument pdfDocument = PDDocument.load(formStream);
-
-		// get the document catalog
-		PDAcroForm acroForm = pdfDocument.getDocumentCatalog().getAcroForm();
-		assert acroForm != null;
-		for (PDField x : acroForm.getFields()) {
-			System.out.println(x);
-		}
 		
-		pdfDocument.close();
-	}
-
-	public static void oldBuildPDF() throws IOException {
-		InputStream formTemplateStream = PDFCreator.class.getResourceAsStream("/Contract.pdf");
-
-		// load the document
-		PDDocument pdfDocument = PDDocument.load(formTemplateStream);
-
-		// get the document catalog
-		PDAcroForm acroForm = pdfDocument.getDocumentCatalog().getAcroForm();
-
-		// as there might not be an AcroForm entry a null check is necessary
-		if (acroForm != null) {
-			for (PDField x : acroForm.getFields()) {
-				System.out.println(x.getFullyQualifiedName());
-			}
-
-			System.out.println("\n\n\n");
-
-			((PDTextField) acroForm.getField("Fall")).setValue("2015");
-
-			((PDTextField) acroForm.getField("Name")).setValue("Scholl");
-			((PDTextField) acroForm.getField("First")).setValue("Jackie");
-			((PDTextField) acroForm.getField("N")).setValue("12345678");
-			((PDTextField) acroForm.getField("Expected Year of Graduation")).setValue("2019");
-			((PDTextField) acroForm.getField("Box No")).setValue("862");
-			((PDTextField) acroForm.getField("GOALS Specify Short and Long Term")).setValue("don't die?");
-
-			((PDTextField) acroForm.getField("courses only 1")).setValue("80141");
-			((PDTextField) acroForm.getField("Course Name 1")).setValue("Computer Networks");
-			((PDTextField) acroForm.getField("1MC")).setValue("Matthew Lepinski");
-			((PDCheckBox) acroForm.getField("Session A 1")).check();
-
-			((PDTextField) acroForm.getField("courses only 2")).setValue("80142");
-			((PDTextField) acroForm.getField("Course Name 2")).setValue("Distributed Computing");
-			((PDTextField) acroForm.getField("1MC_2")).setValue("David Gillman");
-			((PDCheckBox) acroForm.getField("Session M1 2")).check();
-
-			((PDTextField) acroForm.getField("courses only 3")).setValue("80142");
-			((PDTextField) acroForm.getField("Course Name 3")).setValue("Distributed Computing");
-			((PDTextField) acroForm.getField("1MC_3")).setValue("David Gillman");
-			((PDCheckBox) acroForm.getField("Session M2 3")).check();
-
-			((PDTextField) acroForm.getField("courses only 4")).setValue("80142");
-			((PDTextField) acroForm.getField("Course Name 4")).setValue("Distributed Computing");
-			((PDTextField) acroForm.getField("1MC_4")).setValue("David Gillman");
-			((PDCheckBox) acroForm.getField("Session 1MC 4")).check();
-
-			((PDTextField) acroForm.getField("courses only 5")).setValue("80142");
-			((PDTextField) acroForm.getField("Course Name 5")).setValue("Distributed Computing");
-			((PDTextField) acroForm.getField("1MC_5")).setValue("David Gillman");
-			((PDCheckBox) acroForm.getField("5")).check();
-			((PDCheckBox) acroForm.getField("Session A 5")).check();
-
-			((PDTextField) acroForm.getField("Advisor")).setValue("David Gillman");
-
-			//System.out.println(acroForm.getField("Print Form"));
-			//System.out.println(((PDPushButton) acroForm.getField("Print Form")).getExportValues());
-			
-			System.out.println(acroForm.getField("On Campus/Off Campus"));
-			((PDRadioButton) acroForm.getField("On Campus/Off Campus")).setValue("On Campus");
-			
-			
-			System.out.println(acroForm.getField("Semester"));
-			((PDRadioButton) acroForm.getField("Semester")).setValue("Fall");
-			
-		}
-
-		// Save and close the filled out form.
-		pdfDocument.save("target/FillFormFieldOld.pdf");
-		pdfDocument.close();
-		System.out.println("Done!");
+		return data;
 	}
 
 	private static void buildPDF(OutputStream outputStream, InputStream formTemplateStream, ContractData contractData)

@@ -27,8 +27,8 @@
         
     Location
     <select name='location'> 
-        <option value='On campus'>On campus</option>
-        <option value='Off campus'>Off campus</option>
+        <option value='On campus'>On Campus</option>
+        <option value='Off campus'>Off Campus</option>
     </select>           
     
 

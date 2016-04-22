@@ -4,10 +4,7 @@ import java.io.*;
 import java.util.Set;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.pdmodel.interactive.form.PDAcroForm;
-import org.apache.pdfbox.pdmodel.interactive.form.PDCheckBox;
-import org.apache.pdfbox.pdmodel.interactive.form.PDField;
-import org.apache.pdfbox.pdmodel.interactive.form.PDTextField;
+import org.apache.pdfbox.pdmodel.interactive.form.*;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.gson.Gson;
@@ -15,17 +12,19 @@ import com.google.gson.Gson;
 public class PDFCreator {
 	public static void main(String[] args) throws IOException {
 		oldBuildPDF();
+		examineFilledPDF();
 		ContractData data = new ContractData();
 		data.semester = "Fall";
 		data.contractYear = "2015";
-		data.lastName = "Scholl";
+		data.studyLocation = "On Campus";
 		data.firstName = "Jackie";
+		data.lastName = "Scholl";
 		data.nNumber = "123456789";
 		data.expectedGradYear = "2019";
 		data.boxNumber = "862";
-		data.goals = "don't die?";
+		data.goals = "Learn to fly, solve world hunger";
 		data.certificationCriteria = "Three out of four units. (3/4)";
-		data.descriptionsOtherActivities = "maybe fly a plane idk";
+		data.descriptionsOtherActivities = "Look cool the whole time";
 		data.advisorName = "David Gillman";
 
 		data.classes = new ClassData[] {
@@ -35,15 +34,30 @@ public class PDFCreator {
 				new ClassData("80142", "Distributed Computing", false, Session.ONE_MC, "David Gillman"),
 				new ClassData("80142", "Distributed Computing", true, Session.A, "David Gillman"),
 		};
+		
+		/*data.classes = new ClassData[] {
+				new ClassData("12345", "Learning Stuff 101", false, Session.A, "Professor McSmarty Pants")
+		};*/
 
 		buildPDFToDisk(data);
 	}
+	
+	public static void examineFilledPDF() throws IOException {
+		InputStream formStream = new FileInputStream("/Users/jackie/Downloads/JackieFilledSample.pdf");
+		PDDocument pdfDocument = PDDocument.load(formStream);
+
+		// get the document catalog
+		PDAcroForm acroForm = pdfDocument.getDocumentCatalog().getAcroForm();
+		assert acroForm != null;
+		for (PDField x : acroForm.getFields()) {
+			System.out.println(x);
+		}
+		
+		pdfDocument.close();
+	}
 
 	public static void oldBuildPDF() throws IOException {
-
 		InputStream formTemplateStream = PDFCreator.class.getResourceAsStream("/Contract.pdf");
-
-		System.out.println(formTemplateStream);
 
 		// load the document
 		PDDocument pdfDocument = PDDocument.load(formTemplateStream);
@@ -96,6 +110,16 @@ public class PDFCreator {
 
 			((PDTextField) acroForm.getField("Advisor")).setValue("David Gillman");
 
+			//System.out.println(acroForm.getField("Print Form"));
+			//System.out.println(((PDPushButton) acroForm.getField("Print Form")).getExportValues());
+			
+			System.out.println(acroForm.getField("On Campus/Off Campus"));
+			((PDRadioButton) acroForm.getField("On Campus/Off Campus")).setValue("On Campus");
+			
+			
+			System.out.println(acroForm.getField("Semester"));
+			((PDRadioButton) acroForm.getField("Semester")).setValue("Fall");
+			
 		}
 
 		// Save and close the filled out form.
@@ -166,11 +190,13 @@ public class PDFCreator {
 		if (contractData.semester != null && contractData.contractYear != null) {
 			if (ContractData.LEGAL_SEMESTERS.contains(contractData.semester)) {
 				setTextField(contractData.semester, (String) contractData.contractYear);
+				setOtherFieldValue("Semester", (String) contractData.semester);
 			} else {
 				throw new IllegalArgumentException(
 						"Semester must be one of the following: " + ContractData.LEGAL_SEMESTERS);
 			}
 		}
+		setOtherFieldValue("On Campus/Off Campus", contractData.studyLocation);
 		setTextField("Name", contractData.lastName);
 		setTextField("First", contractData.firstName);
 		setTextField("N", contractData.nNumber);
@@ -217,6 +243,17 @@ public class PDFCreator {
 			}
 			((PDTextField) field).setValue(value);
 		}
+	}
+	
+	private void setOtherFieldValue(String fieldName, String value) throws IOException {
+		if (value == null) {
+			return;
+		}
+		PDField field = acroForm.getField(fieldName);
+		/*if (!(field instanceof PDCheckBox)) {
+			throw new IllegalArgumentException("Field is not a check box: " + fieldName + ", " + field);
+		}*/
+		field.setValue(value);
 	}
 
 	private void setCheckBox(String fieldName, Boolean value) throws IOException {

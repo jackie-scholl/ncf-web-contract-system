@@ -67,7 +67,7 @@ public class Main {
 		Spark.get("/contract", new WelcomePageStarter(), freeMarker);
 		Spark.post("/contract/saved", new SavedContractHandler());
 		Spark.get("/contractList", new ContractList(), freeMarker);
-		Spark.get("/api/getContracts", new ApiContractList());
+		Spark.get("/api/contracts", new ApiContractList());
 		// Spark.post("/results", new ResultsHandler(), freeMarker);
 	}
 
@@ -110,7 +110,6 @@ public class Main {
 			List<ContractEntry> contractEntries = contractStore.getContractsByGoogleID(googleId.get());
 			
 			Map<String, Object> resultObj = new HashMap<>();
-			resultObj.put("id_token", googleId.get());
 			resultObj.put("contracts", contractEntries);
 			
 			String result = new Gson().toJson(resultObj);

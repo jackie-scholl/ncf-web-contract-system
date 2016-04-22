@@ -10,6 +10,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.5/marked.min.js"></script>
 
+  <a href="/Contract.pdf">Blank Contract</a>
   <div id="content"></div>
   <script type="text/babel" src="/js/contractList.js"></script>
 

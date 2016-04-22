@@ -1,15 +1,23 @@
 package edu.ncf.contractform;
 
 import java.io.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.interactive.form.*;
 
+import com.google.common.collect.ImmutableSet;
+
 public class PDFCreator {
+	public static final boolean FLATTEN_PDF = true;
+	
 	public static void main(String[] args) throws IOException {
 		buildPDFToDisk(buildSampleContract());
 	}
-	
+
 	private static ContractData buildSampleContract() {
 		ContractData data = new ContractData();
 		data.semester = "Fall";
@@ -32,11 +40,11 @@ public class PDFCreator {
 				new ClassData("80142", "Distributed Computing", false, Session.ONE_MC, "David Gillman"),
 				new ClassData("80142", "Distributed Computing", true, Session.A, "David Gillman"),
 		};
-		
+
 		/*data.classes = new ClassData[] {
 				new ClassData("12345", "Learning Stuff 101", false, Session.A, "Professor McSmarty Pants")
 		};*/
-		
+
 		return data;
 	}
 
@@ -60,6 +68,13 @@ public class PDFCreator {
 		PDFCreator creator = new PDFCreator(acroForm);
 		creator.fill(contractData);
 
+		if (FLATTEN_PDF) {
+			Set<String> fieldsToRemove = ImmutableSet.of("Clear Form", "Print Form", "Save Form");
+			List<PDField> fieldsToKeep = acroForm.getFields().stream()
+					.filter(x -> !fieldsToRemove.contains(x.getFullyQualifiedName())).collect(Collectors.toList());
+			acroForm.flatten(fieldsToKeep, true);
+		}
+
 		// System.out.printf("Form created; %f milliseconds%n", (System.nanoTime() - startTime) / 1.0e6);
 
 		pdfDocument.save(outputStream);
@@ -71,7 +86,8 @@ public class PDFCreator {
 	}
 
 	public static void buildPDF(OutputStream outputStream, ContractData contractData) throws IOException {
-		buildPDF(new BufferedOutputStream(outputStream), PDFCreator.class.getResourceAsStream("/Contract.pdf"), contractData);
+		buildPDF(new BufferedOutputStream(outputStream), PDFCreator.class.getResourceAsStream("/Contract.pdf"),
+				contractData);
 	}
 
 	public static void buildPDFToDisk(ContractData contractData) throws IOException {
@@ -156,7 +172,7 @@ public class PDFCreator {
 			((PDTextField) field).setValue(value);
 		}
 	}
-	
+
 	private void setOtherFieldValue(String fieldName, String value) throws IOException {
 		if (value == null) {
 			return;

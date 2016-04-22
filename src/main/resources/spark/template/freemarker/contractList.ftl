@@ -12,7 +12,6 @@
 
   <a href="/Contract.pdf">Blank Contract</a>
   <div id="content"></div>
-  <script type="text/babel" src="/js/contractList.js"></script>
 
 </#assign>
 <#include "main.ftl">

@@ -119,6 +119,9 @@ public class JsonDatabaseManager implements ContractStore {
 					"SELECT ContractID, GoogleID, ContractData, DateLastModified FROM Contracts WHERE ContractID=?");
 			pstmt.setLong(1, contractID);
 			ResultSet rs = pstmt.executeQuery();
+			if (!rs.next()) {
+				throw new IllegalArgumentException("Contract ID "+contractID+" does not exist");
+			}
 			return new ContractEntry(rs.getLong(1), rs.getString(2), ContractData.fromJson(rs.getString(3)),
 					rs.getLong(4));
 		} catch (SQLException e) {

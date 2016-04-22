@@ -1,5 +1,6 @@
 var googleUser = {};
 var gIdToken = {};
+var onSignInExtra = function() {}
 
 function hideLogout() {
 	$(".logged-in").hide();
@@ -33,6 +34,8 @@ function onSignIn(success) {
 	
 	$("#firstName").val(profile.getGivenName());
 	$("#lastName").val(profile.getFamilyName());
+	
+	onSignInExtra();
 };
 
 function onSignInFailure(error) {

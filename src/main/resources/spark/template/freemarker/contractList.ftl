@@ -10,6 +10,7 @@
   <a href="/Contract.pdf">Blank Contract</a>
   <h3 class="logged-out">Please sign in to view your contracts</h3>
   <div id="content"></div>
+  <script src="/js/contract_list.js"></script>
 
 </#assign>
 <#include "main.ftl">

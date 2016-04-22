@@ -20,6 +20,9 @@ function signOut() {
 function onSignIn(success) {
 	console.log(JSON.stringify({message: "success", value: success}));
 	googleUser = success;
+	
+	document.cookie = "id_token="+googleUser.getAuthResponse().id_token;
+	
 	// Useful data for your client-side scripts:
 	var profile = googleUser.getBasicProfile();
 	

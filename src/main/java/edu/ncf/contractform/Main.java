@@ -67,7 +67,9 @@ public class Main {
 		Spark.get("/contract", new WelcomePageStarter(), freeMarker);
 		Spark.post("/contract/saved", new SavedContractHandler());
 		Spark.get("/contracts", new ContractList(), freeMarker);
+		Spark.get("/contracts/:contractId", new ContractForm(), freeMarker);
 		Spark.get("/api/contracts", new ApiContractList());
+		
 		// Spark.post("/results", new ResultsHandler(), freeMarker);
 	}
 
@@ -79,6 +81,20 @@ public class Main {
 
 		@Override
 		public ModelAndView handle(Request rqst, Response rspns) {
+			Map<String, Object> variables = new ImmutableMap.Builder<String, Object>()
+					.put("title", "Contract Form").build();
+			return new ModelAndView(variables, "contract.ftl");
+		}
+	}
+	
+	private static class ContractForm implements TemplateViewRoute {
+		@Override
+		public ModelAndView handle(Request rqst, Response rspns) {
+			QueryParamsMap qm = rqst.queryMap();
+			long contractId = Long.parseLong(rqst.params(":contractId"));
+			ContractEntry contractEntry = contractStore.getContractByContractID(contractId);
+			System.out.println(contractEntry.toJson());
+			// use details from contractEntry to pre-fill the contract form
 			Map<String, Object> variables = new ImmutableMap.Builder<String, Object>()
 					.put("title", "Contract Form").build();
 			return new ModelAndView(variables, "contract.ftl");

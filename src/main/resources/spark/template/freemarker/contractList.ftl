@@ -7,6 +7,9 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.5/marked.min.js"></script>
 
   <h1>Contract List</h1>
+  <div id="contractList">
+      
+  </div>
   <a href="/Contract.pdf">Blank Contract</a>
   <h3 class="logged-out">Please sign in to view your contracts</h3>
   <div id="content"></div>

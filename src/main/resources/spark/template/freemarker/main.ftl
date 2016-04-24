@@ -45,8 +45,10 @@
 			<a href="#" onclick="oldContract();" id="old-contract-link">Use an old Contract</a>
 		</div>
 
-		<form id="unsaved-contract" class="unsaved-contract" action="/contract/unsaved" method="post">
-                        <a href="#" onclick="unsavedContract();" id="unsaved-contract-link">Use an unsaved Contract</a>
+		<form id="unsaved-contract" class="unsaved-contract">
+                        <a href="/contract.pdf" >Use a blank contract</a>
+		        </br>
+                        <a href="/contract renegotiation.pdf" >Use a blank renegotiation contract</a>
 		</form>
 	</div>
 	

@@ -10,7 +10,8 @@ function newContract() {
     $(".blank-form").show();
 }
 
-
+function oldContract() {
+}
 
 
 
@@ -25,7 +26,8 @@ function signOut() {
 	$(".logged-in").hide();
 	$(".logged-out").show();
         $(".blank-form").hide();
-         $(".new-contract").hide();
+        $(".new-contract").hide();
+        $(".old-contract").hide();
         
 }
 
@@ -46,6 +48,7 @@ function onSignIn(success) {
 	$(".logged-out").hide();
         $(".blank-form").hide();
         $(".new-contract").show();
+        $(".old-contract").show();
 
 	$(".user-full-name").html(profile.getName());
 
@@ -56,7 +59,6 @@ function onSignIn(success) {
 	
 	$("#firstName").val(profile.getGivenName());
 	$("#lastName").val(profile.getFamilyName());
-	
 	onSignInExtra();
 };
 

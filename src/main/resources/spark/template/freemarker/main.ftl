@@ -35,9 +35,14 @@
 	</div>
 
   	<div id="options-area" align="left">
-		<div id="options" class="new-contract" style="display:none">
+		<div id="new-contract" class="new-contract" style="display:none">
 			<a href="#" onclick="newContract();" id="new-contract-link">New Contract</a>
 		</div>
+
+		<div id="old-contract" class="old-contract" style="display:none">
+			<a href="#" onclick="oldContract();" id="old-contract-link">Use an old Contract</a>
+		</div>
+
 	</div>
 	
     ${content}

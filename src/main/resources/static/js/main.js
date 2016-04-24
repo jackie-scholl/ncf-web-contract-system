@@ -6,6 +6,15 @@ function hideLogout() {
 	$(".logged-in").hide();
 }
 
+function newContract() {
+    $(".blank-form").show();
+}
+
+
+
+
+
+
 function signOut() {
 	console.log('Signing out ' + googleUser.getBasicProfile().getName());
 	var auth2 = gapi.auth2.getAuthInstance();
@@ -15,6 +24,9 @@ function signOut() {
 	});
 	$(".logged-in").hide();
 	$(".logged-out").show();
+        $(".blank-form").hide();
+         $(".new-contract").hide();
+        
 }
 
 function onSignIn(success) {
@@ -32,6 +44,9 @@ function onSignIn(success) {
 	
 	$(".logged-in").show();
 	$(".logged-out").hide();
+        $(".blank-form").hide();
+        $(".new-contract").show();
+
 	$(".user-full-name").html(profile.getName());
 
 	// The ID token you need to pass to your backend:

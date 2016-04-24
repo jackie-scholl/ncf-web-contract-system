@@ -29,8 +29,14 @@
 		<div id="login" class="logged-out"><div class="g-signin2" id="my-signin" data-onsuccess="onSignIn" data-onfailure="onSignInFailure"
 				 data-width="240" data-longtitle="true" data-theme="dark"></div></div>
 		<div id="logout" class="logged-in" style="display:none">
-			<p>Welcome <span class="user-full-name">ANON</span>!!</p>
+			<p>Welcome <span class="user-full-name">ANON</span>!</p>
 			<a href="#" onclick="signOut();" id="logout-link">Sign out</a>
+		</div>
+	</div>
+
+  	<div id="options-area" align="left">
+		<div id="options" class="new-contract" style="display:none">
+			<a href="#" onclick="newContract();" id="new-contract-link">New Contract</a>
 		</div>
 	</div>
 	

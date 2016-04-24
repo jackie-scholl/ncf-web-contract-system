@@ -32,7 +32,7 @@ function signOut() {
         $(".blank-form").hide();
         $(".new-contract").hide();
         $(".old-contract").hide();
-        
+        $(".unsaved-contract").show();
 }
 
 function onSignIn(success) {
@@ -54,6 +54,7 @@ function onSignIn(success) {
         $(".blank-form").hide();
         $(".new-contract").show();
         $(".old-contract").show();
+        $(".unsaved-contract").hide();
 
 	$(".user-full-name").html(profile.getName());
 

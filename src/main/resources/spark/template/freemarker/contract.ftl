@@ -1,10 +1,13 @@
+
+<#assign heading>
+   <form align="center">
+     <h1>Welcome to the NCF contract form</h1>
+     <p> To save your completed contract press submit. To save for later, press save. </p>
+    </form>
+
+</#assign>
+
 <#assign content>
-
-
-<h1>Welcome to the NCF contract form</h1>
-<p> To save your completed contract press submit. To save for later, press save. </p>
-
-
 <!--<p> take this section and change it to submit or save.</p> -->
 
 <form id="submit" class="blank-form" action="/contract/saved" method="post" style="display:none">

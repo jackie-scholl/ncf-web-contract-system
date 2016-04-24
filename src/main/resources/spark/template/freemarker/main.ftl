@@ -34,6 +34,8 @@
 		</div>
 	</div>
 
+    ${heading}
+
   	<div id="options-area" align="center">
 		<div id="new-contract" class="new-contract" style="display:none">
 			<a href="#" onclick="newContract();" id="new-contract-link">New Contract</a>
@@ -46,7 +48,6 @@
 		<form id="unsaved-contract" class="unsaved-contract" action="/contract/unsaved" method="post">
                         <a href="#" onclick="unsavedContract();" id="unsaved-contract-link">Use an unsaved Contract</a>
 		</form>
-
 	</div>
 	
     ${content}

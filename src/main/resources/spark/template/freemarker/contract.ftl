@@ -1,9 +1,10 @@
 
 <#assign heading>
    <form align="center">
-     <h1>Welcome to the NCF contract form</h1>
+     <h1>Welcome to the NCF contract page</h1>
+     <p> To save, submit or view old contracts, please sign in. </p>
      <p> To save your completed contract press submit. To save for later, press save. </p>
-    </form>
+   </form>
 
 </#assign>
 

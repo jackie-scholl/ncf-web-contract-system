@@ -13,6 +13,9 @@ function newContract() {
 function oldContract() {
 }
 
+function unsavedContract() {
+    document.getElementById("unsaved-contract").submit();
+}
 
 
 
@@ -23,6 +26,7 @@ function signOut() {
 	auth2.signOut().then(function() {
 		console.log('User signed out.');
 	});
+        
 	$(".logged-in").hide();
 	$(".logged-out").show();
         $(".blank-form").hide();
@@ -44,6 +48,7 @@ function onSignIn(success) {
 	// Useful data for your client-side scripts:
 	var profile = googleUser.getBasicProfile();
 	
+        
 	$(".logged-in").show();
 	$(".logged-out").hide();
         $(".blank-form").hide();

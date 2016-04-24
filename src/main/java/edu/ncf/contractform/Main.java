@@ -66,6 +66,7 @@ public class Main {
 
 		Spark.get("/contract", "text/html", new WelcomePageStarter(), freeMarker);
 		Spark.post("/contract/saved", "application/pdf", new SavedContractHandler());
+                Spark.post("/contract/unsaved", "application/pdf", new UnsavedContractHandler());
 		Spark.get("/contracts", "text/html",  new ContractList(), freeMarker);
 		Spark.post("/contracts", new AddContract());
 		Spark.get("/contracts/:contractId", "text/html", new ContractForm(), freeMarker);
@@ -76,6 +77,27 @@ public class Main {
 		// Spark.post("/results", new ResultsHandler(), freeMarker);
 	}
 
+        
+         /**
+	 * returns the blank form.
+	 */
+	private static class UnsavedContractHandler implements Route {
+		public Object handle(Request req, Response res) {
+
+			ContractData contractData = new ContractData();
+
+			res.raw().setContentType("application/pdf");
+			try {
+				PDFCreator.buildPDF(res.raw().getOutputStream(), contractData);
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
+
+			return null;
+		}
+	}
+        
+        
 	/**
 	 * Serves as the first load of the game. This is called using GET while the PlayHandler is called using POST (since
 	 * it's a form submission)

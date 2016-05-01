@@ -7,7 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class JsonDatabaseManager implements ContractStore {
-	private static final String DB_URL = "jdbc:sqlite:JSONContractsNCF.db";
+	//private static final String DB_URL = "jdbc:sqlite:JSONContractsNCF.db";
+	private static final String DB_URL = "jdbc:sqlite:/Users/jackie/Documents/workspace/contract-form/JSONContractsNCF.db";
 	
 	public static void main(String[] args) {
 		instance().showContracts();
@@ -135,6 +136,23 @@ public class JsonDatabaseManager implements ContractStore {
 			PreparedStatement pstmt = c.prepareStatement(
 					"SELECT ContractID, GoogleID, ContractData, DateLastModified FROM Contracts WHERE GoogleID=?");
 			pstmt.setString(1, googleID);
+			ResultSet rs = pstmt.executeQuery();
+			List<ContractEntry> resultList = new ArrayList<>();
+			while (rs.next()) {
+				resultList.add(new ContractEntry(rs.getLong(1), rs.getString(2), ContractData.fromJson(rs.getString(3)),
+						rs.getLong(4)));
+			}
+			ImmutableList.copyOf(resultList);
+			return resultList;
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
+	public List<ContractEntry> getAllContracts() {
+		try (Connection c = DriverManager.getConnection(DB_URL)) {
+			PreparedStatement pstmt = c.prepareStatement(
+					"SELECT ContractID, GoogleID, ContractData, DateLastModified FROM Contracts");
 			ResultSet rs = pstmt.executeQuery();
 			List<ContractEntry> resultList = new ArrayList<>();
 			while (rs.next()) {

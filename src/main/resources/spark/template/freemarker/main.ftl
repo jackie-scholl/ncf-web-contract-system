@@ -34,7 +34,6 @@
 		</div>
 	</div>
 
-    ${heading}
 
   	<div id="options-area" align="center">
 		<div id="new-contract" class="new-contract" style="display:none">

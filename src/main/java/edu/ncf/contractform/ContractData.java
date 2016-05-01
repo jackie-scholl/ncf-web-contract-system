@@ -5,29 +5,7 @@ import java.util.Set;
 import com.google.common.collect.ImmutableSet;
 import com.google.gson.Gson;
 
-class ContractEntry {
-	public long contractId;
-	public String googleId;
-	public ContractData contractData;
-	public long dateLastModified;
-	
-	public ContractEntry(long contractId, String googleId, ContractData contractData, long dateLastModified) {
-		this.contractId = contractId;
-		this.googleId = googleId;
-		this.contractData = contractData;
-		this.dateLastModified = dateLastModified;
-	}
-
-	public String toJson() {
-		return new Gson().toJson(this);
-	}
-	
-	public static ContractEntry fromJson(String json) {
-		return new Gson().fromJson(json, ContractEntry.class);
-	}
-}
-
-class ContractData {
+public class ContractData {
 	public String semester;
 	public String contractYear;
 	public String lastName;
@@ -48,6 +26,10 @@ class ContractData {
 	
 	public static ContractData fromJson(String json) {
 		return new Gson().fromJson(json, ContractData.class);
+	}
+	
+	public String toString() {
+		return toJson();
 	}
 
 	public final static Set<String> LEGAL_SEMESTERS = ImmutableSet.copyOf(new String[] { "Fall", "Spring" });

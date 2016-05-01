@@ -136,12 +136,8 @@ public class Main {
 	private static class ContractList implements TemplateViewRoute {
             @Override
             public ModelAndView handle(Request req, Response res) {
-                String googleId = getGoogleIdFromCookie(req);
-
                 Map<String, Object> variables = new ImmutableMap.Builder<String, Object>()
                     .put("title", "Contract List")
-                    .put("contractList", ((JsonDatabaseManager) contractStore)
-                            .getContractsByGoogleID(googleId))
                     .build();
                 return new ModelAndView(variables, "contractList.ftl");
             }

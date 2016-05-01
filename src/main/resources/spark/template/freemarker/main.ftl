@@ -35,22 +35,6 @@
 	</div>
 
     ${heading}
-
-  	<div id="options-area" align="center">
-		<div id="new-contract" class="new-contract" style="display:none">
-			<a href="#" onclick="newContract();" id="new-contract-link">New Contract</a>
-		</div>
-
-		<div id="old-contract" class="old-contract" style="display:none">
-			<a href="#" onclick="oldContract();" id="old-contract-link">Use an old Contract</a>
-		</div>
-
-		<form id="unsaved-contract" class="unsaved-contract">
-                        <a href="/contract.pdf" >Use a blank contract</a>
-		        </br>
-                        <a href="/contract renegotiation.pdf" >Use a blank renegotiation contract</a>
-		</form>
-	</div>
 	
     ${content}
     

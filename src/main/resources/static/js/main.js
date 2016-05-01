@@ -10,15 +10,6 @@ function newContract() {
     $(".blank-form").show();
 }
 
-function oldContract() {
-}
-
-function unsavedContract() {
-    document.getElementById("unsaved-contract").submit();
-}
-
-
-
 function signOut() {
 	console.log('Signing out ' + googleUser.getBasicProfile().getName());
 	var auth2 = gapi.auth2.getAuthInstance();
@@ -29,10 +20,6 @@ function signOut() {
         
 	$(".logged-in").hide();
 	$(".logged-out").show();
-        $(".blank-form").hide();
-        $(".new-contract").hide();
-        $(".old-contract").hide();
-        $(".unsaved-contract").show();
 }
 
 function onSignIn(success) {
@@ -51,10 +38,6 @@ function onSignIn(success) {
         
 	$(".logged-in").show();
 	$(".logged-out").hide();
-        $(".blank-form").hide();
-        $(".new-contract").show();
-        $(".old-contract").show();
-        $(".unsaved-contract").hide();
 
 	$(".user-full-name").html(profile.getName());
 

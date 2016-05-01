@@ -1,3 +1,10 @@
+<#assign heading>
+  <br /> <br />
+  <a href="/Contract.pdf">Blank Contract</a> <br />
+  <a href="/Contract_Renegotiation.pdf">Blank Renegotiation Contract</a> <br /> <br />
+</#assign>
+
+
 <#assign content>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.0.1/react.js"></script>
@@ -10,8 +17,10 @@
   <div id="contractList">
       
   </div>
-  <a href="/Contract.pdf">Blank Contract</a>
+  
   <h3 class="logged-out">Please sign in to view your contracts</h3>
+  <a href="#" onclick="newContract();" id="new-contract-link" class="logged-in">New Contract</a>
+
   <div id="content"></div>
   <script src="/js/contract_list.js"></script>
 

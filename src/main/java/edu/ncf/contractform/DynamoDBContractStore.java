@@ -1,26 +1,19 @@
 package edu.ncf.contractform;
 
 import java.security.SecureRandom;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.Collectors;
 
-import com.amazonaws.AmazonClientException;
-import com.amazonaws.AmazonServiceException;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.profile.ProfileCredentialsProvider;
 import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
-import com.amazonaws.services.dynamodbv2.document.spec.QuerySpec;
-import com.amazonaws.services.dynamodbv2.document.utils.ValueMap;
 import com.amazonaws.services.dynamodbv2.model.*;
-import com.amazonaws.services.dynamodbv2.util.Tables;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.primitives.Longs;
 
-public enum DynamoDBContractStore {
+public enum DynamoDBContractStore implements ContractStore {
 	INSTANCE;
 	private final AmazonDynamoDBClient dynamoDB;
 	private final String tableName;
@@ -48,49 +41,32 @@ public enum DynamoDBContractStore {
 		return new ProfileCredentialsProvider("ContractTableManager").getCredentials();
 	}
 
+	public static ContractStore instance() {
+		return INSTANCE;
+	}
+
 	public static void main(String... args) {
 		System.out.println("Table Description: " + INSTANCE.describeTable());
+		System.out.println("Contracts: " + instance().getContractsByGoogleID("105457190982729373873"));
 	}
 
 	private TableDescription describeTable() {
-		// Describe our new table
 		DescribeTableRequest describeTableRequest = new DescribeTableRequest().withTableName(tableName);
 		TableDescription tableDescription = dynamoDB.describeTable(describeTableRequest).getTable();
 		return tableDescription;
 	}
 
-	private PutItemResult insertContract(String tableName, ContractEntry entry) {
-		Map<String, AttributeValue> item = newItem2(entry);
+	private void insertContractEntriesFromLocalDb() {
+		for (ContractEntry e : JsonDatabaseManager.instance().getAllContracts()) {
+			System.out.println(INSTANCE.insertContract(e));
+		}
+	}
+
+	private PutItemResult insertContract(ContractEntry entry) {
+		Map<String, AttributeValue> item = contractEntryToAttributeMap(entry);
 		PutItemRequest putItemRequest = new PutItemRequest(tableName, item);
 		PutItemResult putItemResult = dynamoDB.putItem(putItemRequest);
 		return putItemResult;
-	}
-
-	private Map<String, AttributeValue> newItem(ContractEntry entry) {
-		Map<String, AttributeValue> item = new HashMap<String, AttributeValue>();
-		item.put("ContractId", new AttributeValue().withN(Long.toString(entry.contractId)));
-		item.put("GoogleId", new AttributeValue(entry.googleId));
-		item.put("ContractData", new AttributeValue(entry.contractData.toJson()));
-		item.put("DateLastModified", new AttributeValue().withN(Long.toString(entry.dateLastModified)));
-		return item;
-	}
-
-	private Map<String, AttributeValue> newItem2(ContractEntry entry) {
-		return ImmutableMap.<String, AttributeValue> builder()
-				.put("ContractId", new AttributeValue().withN(Long.toString(entry.contractId)))
-				.put("GoogleId", new AttributeValue(entry.googleId))
-				.put("GoogleId", new AttributeValue(entry.contractData.toJson()))
-				.put("DateLastModified", new AttributeValue().withN(Long.toString(entry.dateLastModified)))
-				.build();
-	}
-	
-	private Map<String, AttributeValue> newItem3(ContractEntry entry) {
-		return ImmutableMap.<String, AttributeValue> builder()
-				.put("ContractId", new AttributeValue().withN(Long.toString(entry.contractId)))
-				.put("GoogleId", new AttributeValue(entry.googleId))
-				.put("GoogleId", new AttributeValue(entry.contractData.toJson()))
-				.put("DateLastModified", new AttributeValue().withN(Long.toString(entry.dateLastModified)))
-				.build();
 	}
 
 	public long createContract(String googleId) {
@@ -109,7 +85,7 @@ public enum DynamoDBContractStore {
 		long newContractId = random.nextLong();
 		ContractEntry entry = new ContractEntry(newContractId, googleId, new ContractData(),
 				System.currentTimeMillis());
-		Map<String, AttributeValue> item = newItem2(entry);
+		Map<String, AttributeValue> item = contractEntryToAttributeMap(entry);
 		/*
 		 * From the DynamoDB docs:
 		 * "To prevent a new item from replacing an existing item, use a conditional expression that contains the
@@ -128,10 +104,82 @@ public enum DynamoDBContractStore {
 		} catch (ConditionalCheckFailedException e) {
 			throw new RuntimeException(
 					"Tried to create new item, but ContractId already exists; this is terrible. See comments.", e);
-		} catch (ProvisionedThroughputExceededException e) {
-			// What do we do if the throughput is beyond capacity?
-			throw e;
 		}
 		return newContractId;
+	}
+
+	public ContractEntry getContractByContractID(long contractId) {
+		GetItemRequest getItemRequest = new GetItemRequest().withTableName(tableName).addKeyEntry("ContractId",
+				new AttributeValue(longToBase64(contractId))).withConsistentRead(true);
+		GetItemResult result = dynamoDB.getItem(getItemRequest);
+		return attributeMapToContractEntry(result.getItem());
+	}
+
+	public List<ContractEntry> getContractsByGoogleID(String googleId) {
+		QueryRequest req = new QueryRequest(tableName)
+				.withIndexName("GoogleId-index")
+				.addKeyConditionsEntry("GoogleId",
+						new Condition()
+								.withComparisonOperator(ComparisonOperator.EQ)
+								.withAttributeValueList(new AttributeValue(googleId)));
+		QueryResult queryResult = dynamoDB.query(req);
+		List<ContractEntry> results = queryResultToContractEntries(queryResult);
+		return results;
+	}
+
+	public void showContracts() {
+		System.out.println(getAllContracts());
+	}
+
+	private List<ContractEntry> getAllContracts() {
+		ScanRequest scanRequest = new ScanRequest(tableName);
+		ScanResult scanResult = dynamoDB.scan(scanRequest);
+		System.out.println("Scan result: " + scanResult);
+		return attributeMapsToContractEntries(scanResult.getItems());
+	}
+
+	public void updateContract(long contractId, ContractData newContents) {
+		UpdateItemRequest updateItemRequest = new UpdateItemRequest()
+				.withTableName(tableName)
+				.addKeyEntry("ContractId", new AttributeValue(longToBase64(contractId)))
+				.withReturnValues(ReturnValue.ALL_NEW);
+		UpdateItemResult updateResult = dynamoDB.updateItem(updateItemRequest);
+		ContractEntry updatedEntry = attributeMapToContractEntry(updateResult.getAttributes());
+		//return updatedEntry;
+	}
+
+	private Map<String, AttributeValue> contractEntryToAttributeMap(ContractEntry entry) {
+		return ImmutableMap.<String, AttributeValue> builder()
+				.put("ContractId", new AttributeValue(longToBase64(entry.contractId)))
+				.put("GoogleId", new AttributeValue(entry.googleId))
+				.put("ContractData", new AttributeValue(entry.contractData.toJson()))
+				.put("DateLastModified", new AttributeValue().withN(Long.toString(entry.dateLastModified)))
+				.build();
+	}
+
+	private static List<ContractEntry> queryResultToContractEntries(QueryResult queryResult) {
+		return queryResult.getItems().stream().map(DynamoDBContractStore::attributeMapToContractEntry)
+				.collect(Collectors.toList());
+	}
+
+	private static List<ContractEntry> attributeMapsToContractEntries(List<Map<String, AttributeValue>> mapList) {
+		return mapList.stream().map(DynamoDBContractStore::attributeMapToContractEntry)
+				.collect(Collectors.toList());
+	}
+
+	private static ContractEntry attributeMapToContractEntry(Map<String, AttributeValue> map) {
+		return new ContractEntry(
+				base64ToLong(map.get("ContractId").getS()),
+				map.get("GoogleId").getS(),
+				ContractData.fromJson(map.get("ContractData").getS()),
+				Long.parseLong(map.get("DateLastModified").getN()));
+	}
+
+	private static String longToBase64(long contractId) {
+		return Base64.getUrlEncoder().encodeToString(Longs.toByteArray(contractId));
+	}
+
+	private static long base64ToLong(String contractId) {
+		return Longs.fromByteArray(Base64.getUrlDecoder().decode(contractId));
 	}
 }

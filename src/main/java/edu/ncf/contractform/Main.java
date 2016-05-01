@@ -66,12 +66,13 @@ public class Main {
 
 		Spark.get("/contract", "text/html", new WelcomePageStarter(), freeMarker);
 		Spark.post("/contract/saved", "application/pdf", new SavedContractHandler());
-                Spark.post("/contract/unsaved", "application/pdf", new UnsavedContractHandler());
+		Spark.post("/contract/unsaved", "application/pdf", new UnsavedContractHandler());
 		Spark.get("/contracts", "text/html",  new ContractList(), freeMarker);
 		Spark.post("/contracts", new AddContract());
 		Spark.get("/contracts/:contractId", "text/html", new ContractForm(), freeMarker);
 		Spark.get("/contracts/:contractId", "application/pdf", new PDFContractHandler());
-		Spark.put("/contracts/:contractId", new SaveContractHandler());
+		Spark.get("/contracts/:contractId/pdf", new PDFContractHandler());
+		Spark.post("/contracts/:contractId/save", "text/html", new SaveContractHandler());
 		Spark.get("/api/contracts", "text/json", new ApiContractList());
 
 		// Spark.post("/results", new ResultsHandler(), freeMarker);
@@ -125,8 +126,10 @@ public class Main {
 			System.out.println(contractEntry.toJson());
 			// use details from contractEntry to pre-fill the contract form
 			Map<String, Object> variables = new ImmutableMap.Builder<String, Object>()
-					.put("title", "Contract Form").build();
-			return new ModelAndView(variables, "contract.ftl");
+					.put("title", "Contract Form")
+					.put("id", contractId)
+					.build();
+			return new ModelAndView(variables, "contract2.ftl");
 		}
 	}
 
@@ -229,10 +232,21 @@ public class Main {
 			QueryParamsMap qm = req.queryMap();
 
 			String googleId = getGoogleIdFromCookie(req);
+			long contractId = Long.parseLong(req.params(":contractId"));
+			
+			ContractEntry contractEntry = contractStore.getContractByContractID(contractId);
+			System.out.println(contractEntry);
+			if (!getGoogleIdFromCookie(req).equals(contractEntry.googleId)) {
+				throw new IllegalArgumentException(
+						"You are not the owner of this contract. Please go back to the contracts page");
+			}
 
 			ContractData contractData = getContractDataFromParams(qm, googleId);
-			contractStore.updateContract(contractStore.createContract(googleId), contractData);
+			contractStore.updateContract(contractId, contractData);
+			System.out.println("Contract Saved");
 			contractStore.showContracts();
+			
+			res.redirect("/contracts/"+contractId+"/pdf");
 			
 			res.status(204);
 
@@ -303,7 +317,7 @@ public class Main {
 	}
 	
 	private static String getGoogleIdFromCookie(Request req) {
-		System.out.println("id_token2: " + req.cookie("id_token2"));
+		//System.out.println("id_token2: " + req.cookie("id_token2"));
 		Optional<String> googleId = Optional.ofNullable(req.cookie("id_token2")).flatMap(Main::getGoogleID);
 		if (!googleId.isPresent()) {
 			throw new IllegalArgumentException(
@@ -336,7 +350,7 @@ public class Main {
 				.build();
 		try {
 			GoogleIdToken idToken = verifier.verify(idTokenString);
-			System.out.println("verified token: " + idToken);
+			//System.out.println("verified token: " + idToken);
 			return Optional.ofNullable(idToken).map(x -> x.getPayload());
 		} catch (GeneralSecurityException | IOException e) {
 			e.printStackTrace();

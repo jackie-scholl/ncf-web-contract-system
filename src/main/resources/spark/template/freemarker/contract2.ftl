@@ -11,7 +11,8 @@
 <#assign content>
 <!--<p> take this section and change it to submit or save.</p> -->
 
-<form id="submit" class="blank-form" action="/contract/saved" method="post">
+<a href="/contracts/${id}/pdf">View PDF</a>
+<form id="submit" class="blank-form" action="/contracts/${id}/save" method="post">
 
 <input type="hidden" name="id_token" id="google_id_token" value="ANON">
 

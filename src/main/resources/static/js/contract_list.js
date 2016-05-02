@@ -4,13 +4,13 @@ onSignInExtra = function() {
 		id_token : googleUser.getAuthResponse().id_token
 	}, function(data) {
 		console.log(data);
-		$("#content").append(data.contracts[0].contractId);
+		data.contracts.sort((a, b) => b.dateLastModified - a.dateLastModified);
 		var items = [];
 		$.each(data.contracts, function(_, entry) {
 			items.push("<li id='" + entry.contractId + "'>" + link(entry)
 					+ "</li>");
 		});
-
+		
 		$("<ul/>", {
 			"class" : "my-new-list",
 			html : items.join("")
@@ -23,8 +23,18 @@ if (googleUser != null) {
 }
 
 function link(entry) {
+	var classesString = "";
+	var classes = entry.contractData.classes.map((x, _1, _2) => (x.courseName)).filter((x, _1, _2) => (x !== ""));
+	if (classes.length > 0) {
+		classesString = "[" + classes.join() + "]; ";
+	}
 	return "<a href='/contracts/" + entry.contractId + "'>"
-			+ timeSince(new Date(entry.dateLastModified)) + " ago </a>";
+			+ entry.contractData.semester + " " + entry.contractData.contractYear + "; "
+			//+ classes.join()
+			+ classesString
+			//+ entry.contractData.classes.forEach((y, _, _) => (y.courseName)) + "; "
+			//+ $.each(entry.contractData.classes, (_, x) => (x.courseName))
+			+ "last modified " + timeSince(new Date(entry.dateLastModified)) + " ago </a>";
 }
 
 function createContract() {

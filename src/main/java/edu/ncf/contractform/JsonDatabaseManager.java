@@ -1,9 +1,11 @@
 package edu.ncf.contractform;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.primitives.Longs;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 public class JsonDatabaseManager implements ContractStore {
@@ -78,7 +80,7 @@ public class JsonDatabaseManager implements ContractStore {
 		}
 	}
 
-	public long createContract(String googleID) {
+	public String createContract(String googleID) {
 		try (Connection c = DriverManager.getConnection(DB_URL)) {
 			c.setAutoCommit(false);
 			PreparedStatement pstmt = c
@@ -89,19 +91,19 @@ public class JsonDatabaseManager implements ContractStore {
 			ResultSet rs = c.createStatement().executeQuery("SELECT last_insert_rowid();");
 			long rowId = rs.getLong(1);
 			c.commit();
-			return rowId;
+			return longToBase64(rowId);
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
 	}
 
-	public void updateContract(long contractId, String googleId, ContractData newData) {
+	public void updateContract(String contractId, String googleId, ContractData newData) {
 		try (Connection c = DriverManager.getConnection(DB_URL)) {
 			PreparedStatement pstmt = c
 					.prepareStatement("UPDATE Contracts SET ContractData=?, DateLastModified=? WHERE ContractID=? AND GoogleID=?");
 			pstmt.setString(1, newData.toJson());
 			pstmt.setLong(2, System.currentTimeMillis());
-			pstmt.setLong(3, contractId);
+			pstmt.setLong(3, base64ToLong(contractId));
 			pstmt.setString(4, googleId);
 			pstmt.execute();
 		} catch (SQLException e) {
@@ -110,21 +112,21 @@ public class JsonDatabaseManager implements ContractStore {
 	}
 
 	public void saveNewContract(String googleId, ContractData data) {
-		long contractID = createContract(googleId);
-		updateContract(contractID, googleId, data);
+		String contractId = createContract(googleId);
+		updateContract(contractId, googleId, data);
 	}
 
-	public ContractEntry getContractByContractId(long contractId) {
+	public ContractEntry getContractByContractId(String contractId) {
 		try (Connection c = DriverManager.getConnection(DB_URL)) {
 
 			PreparedStatement pstmt = c.prepareStatement(
 					"SELECT ContractID, GoogleID, ContractData, DateLastModified FROM Contracts WHERE ContractID=?");
-			pstmt.setLong(1, contractId);
+			pstmt.setLong(1, base64ToLong(contractId));
 			ResultSet rs = pstmt.executeQuery();
 			if (!rs.next()) {
 				throw new IllegalArgumentException("Contract ID "+contractId+" does not exist");
 			}
-			return new ContractEntry(rs.getLong(1), rs.getString(2), ContractData.fromJson(rs.getString(3)),
+			return new ContractEntry(longToBase64(rs.getLong(1)), rs.getString(2), ContractData.fromJson(rs.getString(3)),
 					rs.getLong(4));
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
@@ -140,7 +142,7 @@ public class JsonDatabaseManager implements ContractStore {
 			ResultSet rs = pstmt.executeQuery();
 			List<ContractEntry> resultList = new ArrayList<>();
 			while (rs.next()) {
-				resultList.add(new ContractEntry(rs.getLong(1), rs.getString(2), ContractData.fromJson(rs.getString(3)),
+				resultList.add(new ContractEntry(longToBase64(rs.getLong(1)), rs.getString(2), ContractData.fromJson(rs.getString(3)),
 						rs.getLong(4)));
 			}
 			ImmutableList.copyOf(resultList);
@@ -157,7 +159,7 @@ public class JsonDatabaseManager implements ContractStore {
 			ResultSet rs = pstmt.executeQuery();
 			List<ContractEntry> resultList = new ArrayList<>();
 			while (rs.next()) {
-				resultList.add(new ContractEntry(rs.getLong(1), rs.getString(2), ContractData.fromJson(rs.getString(3)),
+				resultList.add(new ContractEntry(longToBase64(rs.getLong(1)), rs.getString(2), ContractData.fromJson(rs.getString(3)),
 						rs.getLong(4)));
 			}
 			ImmutableList.copyOf(resultList);
@@ -165,5 +167,13 @@ public class JsonDatabaseManager implements ContractStore {
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
+	}
+	
+	private static String longToBase64(long contractId) {
+		return Base64.getUrlEncoder().encodeToString(Longs.toByteArray(contractId));
+	}
+
+	private static long base64ToLong(String contractId) {
+		return Longs.fromByteArray(Base64.getUrlDecoder().decode(contractId));
 	}
 }

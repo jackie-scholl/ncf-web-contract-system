@@ -3,12 +3,12 @@ package edu.ncf.contractform;
 import com.google.gson.Gson;
 
 public class ContractEntry {
-	public long contractId;
+	public String contractId;
 	public String googleId;
 	public ContractData contractData;
 	public long dateLastModified;
 	
-	public ContractEntry(long contractId, String googleId, ContractData contractData, long dateLastModified) {
+	public ContractEntry(String contractId, String googleId, ContractData contractData, long dateLastModified) {
 		this.contractId = contractId;
 		this.googleId = googleId;
 		this.contractData = contractData;

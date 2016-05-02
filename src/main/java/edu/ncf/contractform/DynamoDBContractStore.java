@@ -69,7 +69,7 @@ public enum DynamoDBContractStore implements ContractStore {
 		return putItemResult;
 	}
 
-	public long createContract(String googleId) {
+	public String createContract(String googleId) {
 		/*
 		 * This should never conflict with an existing contract ID, but we use a check down below just in case. Here is
 		 * the math to justify that we should never get the same ID twice:
@@ -82,7 +82,7 @@ public enum DynamoDBContractStore implements ContractStore {
 		 * The probability of getting the same ID twice is ~2.7e-8, or 27 out of a billion, which we consider
 		 * effectively impossible.
 		 */
-		long newContractId = random.nextLong();
+		String newContractId = longToBase64(random.nextLong());
 		ContractEntry entry = new ContractEntry(newContractId, googleId, new ContractData(),
 				System.currentTimeMillis());
 		Map<String, AttributeValue> item = contractEntryToAttributeMap(entry);
@@ -108,9 +108,9 @@ public enum DynamoDBContractStore implements ContractStore {
 		return newContractId;
 	}
 
-	public ContractEntry getContractByContractId(long contractId) {
+	public ContractEntry getContractByContractId(String contractId) {
 		GetItemRequest getItemRequest = new GetItemRequest().withTableName(tableName).addKeyEntry("ContractId",
-				new AttributeValue(longToBase64(contractId))).withConsistentRead(true);
+				new AttributeValue(contractId)).withConsistentRead(true);
 		GetItemResult result = dynamoDB.getItem(getItemRequest);
 		return attributeMapToContractEntry(result.getItem());
 	}
@@ -138,20 +138,26 @@ public enum DynamoDBContractStore implements ContractStore {
 		return attributeMapsToContractEntries(scanResult.getItems());
 	}
 
-	public void updateContract(long contractId, String googleId, ContractData newContents) {
+	public void updateContract(String contractId, String googleId, ContractData newContents) {
+		String dateLastModified = Long.toString(System.currentTimeMillis());
 		UpdateItemRequest updateItemRequest = new UpdateItemRequest()
 				.withTableName(tableName)
-				.addKeyEntry("ContractId", new AttributeValue(longToBase64(contractId)))
-				.addKeyEntry("GoogleId", new AttributeValue(googleId))
+				.addKeyEntry("ContractId", new AttributeValue(contractId))
+				.withConditionExpression("GoogleId = :google_id")
+				.addExpressionAttributeValuesEntry(":google_id", new AttributeValue(googleId))
+				.withUpdateExpression("SET ContractData = :contract_data, DateLastModified = :date_last_modified")
+				.addExpressionAttributeValuesEntry(":contract_data", new AttributeValue(newContents.toJson()))
+				.addExpressionAttributeValuesEntry(":date_last_modified", new AttributeValue().withN(dateLastModified))
 				.withReturnValues(ReturnValue.ALL_NEW);
 		UpdateItemResult updateResult = dynamoDB.updateItem(updateItemRequest);
 		ContractEntry updatedEntry = attributeMapToContractEntry(updateResult.getAttributes());
-		//return updatedEntry;
+		//System.out.println("Updated entry: " + updatedEntry);
+		// return updatedEntry;
 	}
 
 	private Map<String, AttributeValue> contractEntryToAttributeMap(ContractEntry entry) {
 		return ImmutableMap.<String, AttributeValue> builder()
-				.put("ContractId", new AttributeValue(longToBase64(entry.contractId)))
+				.put("ContractId", new AttributeValue(entry.contractId))
 				.put("GoogleId", new AttributeValue(entry.googleId))
 				.put("ContractData", new AttributeValue(entry.contractData.toJson()))
 				.put("DateLastModified", new AttributeValue().withN(Long.toString(entry.dateLastModified)))
@@ -169,8 +175,9 @@ public enum DynamoDBContractStore implements ContractStore {
 	}
 
 	private static ContractEntry attributeMapToContractEntry(Map<String, AttributeValue> map) {
+		System.out.println(map);
 		return new ContractEntry(
-				base64ToLong(map.get("ContractId").getS()),
+				map.get("ContractId").getS(),
 				map.get("GoogleId").getS(),
 				ContractData.fromJson(map.get("ContractData").getS()),
 				Long.parseLong(map.get("DateLastModified").getN()));

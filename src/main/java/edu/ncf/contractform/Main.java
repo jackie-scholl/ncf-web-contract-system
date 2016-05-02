@@ -62,8 +62,8 @@ public class Main {
 		// We render our responses with the FreeMaker template system.
 		FreeMarkerEngine freeMarker = createEngine();
 
-		contractStore = JsonDatabaseManager.instance();
-		//contractStore = DynamoDBContractStore.INSTANCE;
+		//contractStore = JsonDatabaseManager.instance();
+		contractStore = DynamoDBContractStore.INSTANCE;
 		
 		Spark.get("/contract", "text/html", new WelcomePageStarter(), freeMarker);
 		Spark.post("/contract/saved", "application/pdf", new SavedContractHandler());
@@ -117,7 +117,7 @@ public class Main {
 	private static class ContractForm implements TemplateViewRoute {
 		@Override
 		public ModelAndView handle(Request req, Response res) {
-			long contractId = Long.parseLong(req.params(":contractId"));
+			String contractId = req.params(":contractId");
 			ContractEntry contractEntry = contractStore.getContractByContractId(contractId);
 			if (!getGoogleIdFromCookie(req).equals(contractEntry.googleId)) {
 				throw new IllegalArgumentException(
@@ -150,13 +150,13 @@ public class Main {
 	private static class AddContract implements Route {
 		public Object handle(Request req, Response res) {
 			String googleId = getGoogleIdFromCookie(req);
-			long contractId = contractStore.createContract(googleId);
+			String contractId = contractStore.createContract(googleId);
 
 			Map<String, Object> resultObj = new HashMap<>();
 			resultObj.put("contractId", contractId);
 			String result = new Gson().toJson(resultObj);
 
-			System.out.println(result);
+			//System.out.println(result);
 
 			res.status(201); // Created
 			res.header("Location", "/contracts/" + contractId);
@@ -207,15 +207,14 @@ public class Main {
 	
 	private static class PDFContractHandler implements Route {
 		public Object handle(Request req, Response res) {
-			long contractId = Long.parseLong(req.params(":contractId"));
+			String contractId = req.params(":contractId");
 			ContractEntry contractEntry = contractStore.getContractByContractId(contractId);
 			if (!getGoogleIdFromCookie(req).equals(contractEntry.googleId)) {
 				throw new IllegalArgumentException(
 						"You are not the owner of this contract. Please go back to the contracts page");
 			}
-			
-			QueryParamsMap qm = req.queryMap();
-			System.out.println(qm.toMap());
+			//QueryParamsMap qm = req.queryMap();
+			//System.out.println("QueryParamsMap: "+ qm.toMap());
 
 			res.raw().setContentType("application/pdf");
 			try {
@@ -233,7 +232,7 @@ public class Main {
 			QueryParamsMap qm = req.queryMap();
 
 			String googleId = getGoogleIdFromCookie(req);
-			long contractId = Long.parseLong(req.params(":contractId"));
+			String contractId = req.params(":contractId");
 			
 			/*ContractEntry contractEntry = contractStore.getContractByContractId(contractId);
 			System.out.println(contractEntry);
@@ -243,9 +242,10 @@ public class Main {
 			}*/
 
 			ContractData contractData = getContractDataFromParams(qm, googleId);
+			//System.out.println("Contract Data from params: "+contractData);
 			contractStore.updateContract(contractId, googleId, contractData);
 			System.out.println("Contract Saved");
-			contractStore.showContracts();
+			//contractStore.showContracts();
 			
 			res.redirect("/contracts/"+contractId+"/pdf");
 			
@@ -265,7 +265,7 @@ public class Main {
 
 			Optional<String> googleId = getGoogleID(qm.value("id_token"));
 
-			System.out.println(googleId);
+			//System.out.println(googleId);
 
 			ContractData contractData = getContractDataFromParams(qm,
 					googleId.get());

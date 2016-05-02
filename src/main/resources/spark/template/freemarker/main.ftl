@@ -18,6 +18,7 @@
     <!-- Again, we're serving up the unminified source for clarity. -->
     <script src='/js/main.js'></script>
     <script src="/js/jquery-2.1.1.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.0.3/js.cookie.min.js"></script>
     
     <meta name="google-signin-scope" content="profile email">
     <meta name="google-signin-client_id" content="784978983695-km7e0k6q09qmrmgk3r2aortu0oqdk2tk.apps.googleusercontent.com">

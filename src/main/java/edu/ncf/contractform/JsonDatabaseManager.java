@@ -95,33 +95,34 @@ public class JsonDatabaseManager implements ContractStore {
 		}
 	}
 
-	public void updateContract(long contractID, ContractData newData) {
+	public void updateContract(long contractId, String googleId, ContractData newData) {
 		try (Connection c = DriverManager.getConnection(DB_URL)) {
 			PreparedStatement pstmt = c
-					.prepareStatement("UPDATE Contracts SET ContractData=?, DateLastModified=? WHERE ContractID=?");
+					.prepareStatement("UPDATE Contracts SET ContractData=?, DateLastModified=? WHERE ContractID=? AND GoogleID=?");
 			pstmt.setString(1, newData.toJson());
 			pstmt.setLong(2, System.currentTimeMillis());
-			pstmt.setLong(3, contractID);
+			pstmt.setLong(3, contractId);
+			pstmt.setString(4, googleId);
 			pstmt.execute();
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
 	}
 
-	public void saveNewContract(String googleID, ContractData data) {
-		long contractID = createContract(googleID);
-		updateContract(contractID, data);
+	public void saveNewContract(String googleId, ContractData data) {
+		long contractID = createContract(googleId);
+		updateContract(contractID, googleId, data);
 	}
 
-	public ContractEntry getContractByContractID(long contractID) {
+	public ContractEntry getContractByContractId(long contractId) {
 		try (Connection c = DriverManager.getConnection(DB_URL)) {
 
 			PreparedStatement pstmt = c.prepareStatement(
 					"SELECT ContractID, GoogleID, ContractData, DateLastModified FROM Contracts WHERE ContractID=?");
-			pstmt.setLong(1, contractID);
+			pstmt.setLong(1, contractId);
 			ResultSet rs = pstmt.executeQuery();
 			if (!rs.next()) {
-				throw new IllegalArgumentException("Contract ID "+contractID+" does not exist");
+				throw new IllegalArgumentException("Contract ID "+contractId+" does not exist");
 			}
 			return new ContractEntry(rs.getLong(1), rs.getString(2), ContractData.fromJson(rs.getString(3)),
 					rs.getLong(4));
@@ -130,12 +131,12 @@ public class JsonDatabaseManager implements ContractStore {
 		}
 	}
 
-	public List<ContractEntry> getContractsByGoogleID(String googleID) {
+	public List<ContractEntry> getContractsByGoogleId(String googleId) {
 		try (Connection c = DriverManager.getConnection(DB_URL)) {
 
 			PreparedStatement pstmt = c.prepareStatement(
 					"SELECT ContractID, GoogleID, ContractData, DateLastModified FROM Contracts WHERE GoogleID=?");
-			pstmt.setString(1, googleID);
+			pstmt.setString(1, googleId);
 			ResultSet rs = pstmt.executeQuery();
 			List<ContractEntry> resultList = new ArrayList<>();
 			while (rs.next()) {

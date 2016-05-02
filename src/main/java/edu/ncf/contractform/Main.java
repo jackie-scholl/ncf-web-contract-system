@@ -117,7 +117,7 @@ public class Main {
 		@Override
 		public ModelAndView handle(Request req, Response res) {
 			long contractId = Long.parseLong(req.params(":contractId"));
-			ContractEntry contractEntry = contractStore.getContractByContractID(contractId);
+			ContractEntry contractEntry = contractStore.getContractByContractId(contractId);
 			if (!getGoogleIdFromCookie(req).equals(contractEntry.googleId)) {
 				throw new IllegalArgumentException(
 						"You are not the owner of this contract. Please go back to the contracts page");
@@ -183,7 +183,7 @@ public class Main {
 			//Optional<String> googleId = getGoogleID(qm.value("id_token"));
 			Optional<String> googleId = Optional.of(getGoogleIdFromCookie(req));
 			
-			List<ContractEntry> contractEntries = contractStore.getContractsByGoogleID(googleId.get());
+			List<ContractEntry> contractEntries = contractStore.getContractsByGoogleId(googleId.get());
 
 			Map<String, Object> resultObj = new HashMap<>();
 			resultObj.put("contracts", contractEntries);
@@ -207,7 +207,7 @@ public class Main {
 	private static class PDFContractHandler implements Route {
 		public Object handle(Request req, Response res) {
 			long contractId = Long.parseLong(req.params(":contractId"));
-			ContractEntry contractEntry = contractStore.getContractByContractID(contractId);
+			ContractEntry contractEntry = contractStore.getContractByContractId(contractId);
 			if (!getGoogleIdFromCookie(req).equals(contractEntry.googleId)) {
 				throw new IllegalArgumentException(
 						"You are not the owner of this contract. Please go back to the contracts page");
@@ -234,15 +234,15 @@ public class Main {
 			String googleId = getGoogleIdFromCookie(req);
 			long contractId = Long.parseLong(req.params(":contractId"));
 			
-			ContractEntry contractEntry = contractStore.getContractByContractID(contractId);
+			/*ContractEntry contractEntry = contractStore.getContractByContractId(contractId);
 			System.out.println(contractEntry);
 			if (!getGoogleIdFromCookie(req).equals(contractEntry.googleId)) {
 				throw new IllegalArgumentException(
 						"You are not the owner of this contract. Please go back to the contracts page");
-			}
+			}*/
 
 			ContractData contractData = getContractDataFromParams(qm, googleId);
-			contractStore.updateContract(contractId, contractData);
+			contractStore.updateContract(contractId, googleId, contractData);
 			System.out.println("Contract Saved");
 			contractStore.showContracts();
 			
@@ -268,7 +268,7 @@ public class Main {
 
 			ContractData contractData = getContractDataFromParams(qm,
 					googleId.get());
-			googleId.ifPresent(id -> contractStore.updateContract(contractStore.createContract(id), contractData));
+			googleId.ifPresent(id -> contractStore.updateContract(contractStore.createContract(id), id, contractData));
 			contractStore.showContracts();
 
 			res.raw().setContentType("application/pdf");
@@ -318,7 +318,7 @@ public class Main {
 	
 	private static String getGoogleIdFromCookie(Request req) {
 		//System.out.println("id_token2: " + req.cookie("id_token2"));
-		Optional<String> googleId = Optional.ofNullable(req.cookie("id_token2")).flatMap(Main::getGoogleID);
+		Optional<String> googleId = Optional.ofNullable(req.cookie("id_token3")).flatMap(Main::getGoogleID);
 		if (!googleId.isPresent()) {
 			throw new IllegalArgumentException(
 					"Google log-in cookie missing or invalid. Please go to /contracts and sign in");

@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.interactive.form.*;
+import org.eclipse.jetty.io.EofException;
 
 import com.google.common.collect.ImmutableSet;
 
@@ -77,9 +78,12 @@ public class PDFCreator {
 
 		// System.out.printf("Form created; %f milliseconds%n", (System.nanoTime() - startTime) / 1.0e6);
 
-		pdfDocument.save(outputStream);
-		pdfDocument.close();
-
+		try {
+			pdfDocument.save(outputStream);
+		} catch (EofException e) {
+			pdfDocument.close();
+		}
+		
 		// System.out.printf("Form saved; %f milliseconds%n", (System.nanoTime() - startTime) / 1.0e6);
 
 		System.out.println("Done!");

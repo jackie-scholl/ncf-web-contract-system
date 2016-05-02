@@ -47,7 +47,7 @@ public enum DynamoDBContractStore implements ContractStore {
 
 	public static void main(String... args) {
 		System.out.println("Table Description: " + INSTANCE.describeTable());
-		System.out.println("Contracts: " + instance().getContractsByGoogleID("105457190982729373873"));
+		System.out.println("Contracts: " + instance().getContractsByGoogleId("105457190982729373873"));
 	}
 
 	private TableDescription describeTable() {
@@ -108,14 +108,14 @@ public enum DynamoDBContractStore implements ContractStore {
 		return newContractId;
 	}
 
-	public ContractEntry getContractByContractID(long contractId) {
+	public ContractEntry getContractByContractId(long contractId) {
 		GetItemRequest getItemRequest = new GetItemRequest().withTableName(tableName).addKeyEntry("ContractId",
 				new AttributeValue(longToBase64(contractId))).withConsistentRead(true);
 		GetItemResult result = dynamoDB.getItem(getItemRequest);
 		return attributeMapToContractEntry(result.getItem());
 	}
 
-	public List<ContractEntry> getContractsByGoogleID(String googleId) {
+	public List<ContractEntry> getContractsByGoogleId(String googleId) {
 		QueryRequest req = new QueryRequest(tableName)
 				.withIndexName("GoogleId-index")
 				.addKeyConditionsEntry("GoogleId",
@@ -138,10 +138,11 @@ public enum DynamoDBContractStore implements ContractStore {
 		return attributeMapsToContractEntries(scanResult.getItems());
 	}
 
-	public void updateContract(long contractId, ContractData newContents) {
+	public void updateContract(long contractId, String googleId, ContractData newContents) {
 		UpdateItemRequest updateItemRequest = new UpdateItemRequest()
 				.withTableName(tableName)
 				.addKeyEntry("ContractId", new AttributeValue(longToBase64(contractId)))
+				.addKeyEntry("GoogleId", new AttributeValue(googleId))
 				.withReturnValues(ReturnValue.ALL_NEW);
 		UpdateItemResult updateResult = dynamoDB.updateItem(updateItemRequest);
 		ContractEntry updatedEntry = attributeMapToContractEntry(updateResult.getAttributes());

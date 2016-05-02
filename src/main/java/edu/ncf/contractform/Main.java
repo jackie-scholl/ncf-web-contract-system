@@ -63,14 +63,15 @@ public class Main {
 		FreeMarkerEngine freeMarker = createEngine();
 
 		contractStore = JsonDatabaseManager.instance();
-
+		//contractStore = DynamoDBContractStore.INSTANCE;
+		
 		Spark.get("/contract", "text/html", new WelcomePageStarter(), freeMarker);
 		Spark.post("/contract/saved", "application/pdf", new SavedContractHandler());
 		Spark.post("/contract/unsaved", "application/pdf", new UnsavedContractHandler());
 		Spark.get("/contracts", "text/html",  new ContractList(), freeMarker);
 		Spark.post("/contracts", new AddContract());
 		Spark.get("/contracts/:contractId", "text/html", new ContractForm(), freeMarker);
-		Spark.get("/contracts/:contractId", "application/pdf", new PDFContractHandler());
+		//Spark.get("/contracts/:contractId", "application/pdf", new PDFContractHandler());
 		Spark.get("/contracts/:contractId/pdf", new PDFContractHandler());
 		Spark.post("/contracts/:contractId/save", "text/html", new SaveContractHandler());
 		Spark.get("/api/contracts", "text/json", new ApiContractList());

@@ -178,20 +178,30 @@ public class Main {
 	 */
 	private static class ApiContractList implements Route {
 		public Object handle(Request req, Response res) {
+			long start = System.currentTimeMillis();
 			QueryParamsMap qm = req.queryMap();
 			System.out.println(qm.toMap());
-
+			
+			System.out.printf("Time taken so far (got query map): %d ms%n", System.currentTimeMillis() - start);
+			
 			//Optional<String> googleId = getGoogleID(qm.value("id_token"));
 			Optional<String> googleId = Optional.of(getGoogleIdFromCookie(req));
 			
+			System.out.printf("Time taken so far (got google id): %d ms%n", System.currentTimeMillis() - start);
+			
 			List<ContractEntry> contractEntries = contractStore.getContractsByGoogleId(googleId.get());
 
+			System.out.printf("Time taken so far (got contractEntries): %d ms%n", System.currentTimeMillis() - start);
+			
+			
 			Map<String, Object> resultObj = new HashMap<>();
 			resultObj.put("contracts", contractEntries);
 
 			String result = new Gson().toJson(resultObj);
 
 			System.out.println(result);
+			
+			System.out.printf("Time taken so far (result done): %d ms%n", System.currentTimeMillis() - start);
 
 			res.raw().setContentType("text/json");
 			try {
@@ -200,6 +210,8 @@ public class Main {
 			} catch (IOException e) {
 				throw new RuntimeException(e);
 			}
+			
+			System.out.printf("Time taken so far: %d ms%n", System.currentTimeMillis() - start);
 
 			return null;
 		}
@@ -329,6 +341,7 @@ public class Main {
 
 	private static Optional<String> getGoogleID(String idToken) {
 		Optional<Payload> optionalPayload = idToken.equals("ANON") ? Optional.empty() : verify(idToken);
+		System.out.println(System.currentTimeMillis());
 		if (optionalPayload.isPresent()) {
 			Payload payload = optionalPayload.get();
 			if (!payload.getHostedDomain().equals("ncf.edu")) {
@@ -350,7 +363,9 @@ public class Main {
 				.setIssuer("accounts.google.com")
 				.build();
 		try {
+			System.out.println("About to verify: " +System.currentTimeMillis());
 			GoogleIdToken idToken = verifier.verify(idTokenString);
+			System.out.println(System.currentTimeMillis());
 			//System.out.println("verified token: " + idToken);
 			return Optional.ofNullable(idToken).map(x -> x.getPayload());
 		} catch (GeneralSecurityException | IOException e) {

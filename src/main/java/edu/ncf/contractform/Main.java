@@ -62,8 +62,8 @@ public class Main {
 		// We render our responses with the FreeMaker template system.
 		FreeMarkerEngine freeMarker = createEngine();
 
-		//contractStore = JsonDatabaseManager.instance();
-		contractStore = DynamoDBContractStore.INSTANCE;
+		contractStore = JsonDatabaseManager.instance();
+		//contractStore = DynamoDBContractStore.INSTANCE;
 		
 		Spark.get("/contract", "text/html", new WelcomePageStarter(), freeMarker);
 		Spark.post("/contract/saved", "application/pdf", new SavedContractHandler());
@@ -130,7 +130,8 @@ public class Main {
 					.put("title", "Contract Form")
 					.put("id", contractId)
 					.build();
-			return new ModelAndView(variables, "contract2.ftl");
+			//return new ModelAndView(variables, "contract2.ftl");
+			return new ModelAndView(variables, "contractReact.ftl");
 		}
 	}
 

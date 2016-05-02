@@ -1,5 +1,5 @@
-var googleUser = {};
-var gIdToken = {};
+var googleUser = null;
+var gIdToken = null;
 var onSignInExtra = function() {}
 
 function hideLogout() {
@@ -18,6 +18,8 @@ function signOut() {
 		console.log('User signed out.');
 	});
 	Cookies.remove("id_token3");
+	googleUser = null;
+	gIdToken = null;
 	$(".logged-in").hide();
 	$(".logged-out").show();
 }
@@ -25,11 +27,12 @@ function signOut() {
 function onSignIn(success) {
 	console.log(JSON.stringify({message: "success", value: success}));
 	googleUser = success;
-	Cookies.set('id_token3', googleUser.getAuthResponse().id_token, {expires: 7});
+	gIdToken = googleUser.getAuthResponse().id_token;
+	//Cookies.set('id_token3', googleUser.getAuthResponse().id_token, {expires: 7});
+	Cookies.set('id_token3', gIdToken, {expires: 7});
 	
 	// Useful data for your client-side scripts:
 	var profile = googleUser.getBasicProfile();
-	
         
 	$(".logged-in").show();
 	$(".logged-out").hide();
@@ -37,13 +40,17 @@ function onSignIn(success) {
 	$(".user-full-name").html(profile.getName());
 
 	// The ID token you need to pass to your backend:
-	var id_token = googleUser.getAuthResponse().id_token;
-	$("#google_id_token").val(id_token);
-	gIdToken = id_token;
+	$("#google_id_token").val(gIdToken);
+	//gIdToken = id_token;
 	
 	$("#firstName").val(profile.getGivenName());
 	$("#lastName").val(profile.getFamilyName());
 	onSignInExtra();
+	
+	Cookies.remove("id_token2");
+	Cookies.remove("test_cookie");
+	Cookies.remove("SQLiteManager_currentLangue");
+	Cookies.remove("G_AUTHUSER_H");
 };
 
 function onSignInFailure(error) {

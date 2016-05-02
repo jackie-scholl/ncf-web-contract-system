@@ -1,25 +1,37 @@
-onSignInExtra = function() {
-	$("#content").html("hello!");
+/*onSignInExtra = function() {
 	$.getJSON("/api/contracts", {
-		id_token : googleUser.getAuthResponse().id_token
+		// id_token : googleUser.getAuthResponse().id_token
 	}, function(data) {
 		console.log(data);
-		data.contracts.sort((a, b) => b.dateLastModified - a.dateLastModified);
-		var items = [];
-		$.each(data.contracts, function(_, entry) {
-			items.push("<li id='" + entry.contractId + "'>" + link(entry)
-					+ "</li>");
-		});
-		
+		showContracts(data.contracts);
+	});
+}*/
+
+function loadContracts() {
+	$.getJSON("/api/contracts", {}, (data) => {console.log(data); showContracts(data.contracts);});
+}
+
+function showContracts(contracts) {
+	contracts.sort((a, b) => b.dateLastModified - a.dateLastModified);
+	var items = contracts.map((x, _1, _2) => "<li id='" + x.contractId + "'>" + link(x) + "</li>")
+	
+	$("#content").html(
 		$("<ul/>", {
 			"class" : "my-new-list",
 			html : items.join("")
-		}).appendTo("#content");
-	});
+		})
+	);
 }
 
-if (googleUser != null) {
-	onSignInExtra();
+/*
+ * if (googleUser) { console.log("Google user exists!"); onSignInExtra(); }
+ */
+
+if (Cookies.get("id_token3")) {
+	console.log("cookie exists!");
+	loadContracts();
+} else {
+	onSignInExtra = loadContracts;
 }
 
 function link(entry) {
@@ -30,10 +42,11 @@ function link(entry) {
 	}
 	return "<a href='/contracts/" + entry.contractId + "'>"
 			+ entry.contractData.semester + " " + entry.contractData.contractYear + "; "
-			//+ classes.join()
+			// + classes.join()
 			+ classesString
-			//+ entry.contractData.classes.forEach((y, _, _) => (y.courseName)) + "; "
-			//+ $.each(entry.contractData.classes, (_, x) => (x.courseName))
+			// + entry.contractData.classes.forEach((y, _, _) => (y.courseName))
+			// + "; "
+			// + $.each(entry.contractData.classes, (_, x) => (x.courseName))
 			+ "last modified " + timeSince(new Date(entry.dateLastModified)) + " ago </a>";
 }
 

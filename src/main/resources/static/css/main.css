@@ -31,4 +31,8 @@
     transform: rotate(180deg);
 }
 
+.logged-in {
+	display: none;
+}
+
 

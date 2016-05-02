@@ -24,7 +24,7 @@
   <h3 class="logged-out">Please sign in to view your contracts</h3>
   <a href="#" onclick="createContract();" id="new-contract-link" class="logged-in">New Contract</a>
 
-  <div id="content"></div>
+  <div id="content" class="logged-in"></div>
   <script src="/js/contract_list.js"></script>
 
 </#assign>

@@ -69,7 +69,7 @@ public enum DynamoDBContractStore implements ContractStore {
 		return putItemResult;
 	}
 
-	public String createContract(String googleId) {
+	public String createContract(String googleId, ContractData initialData) {
 		/*
 		 * This should never conflict with an existing contract ID, but we use a check down below just in case. Here is
 		 * the math to justify that we should never get the same ID twice:
@@ -83,7 +83,7 @@ public enum DynamoDBContractStore implements ContractStore {
 		 * effectively impossible.
 		 */
 		String newContractId = longToBase64(random.nextLong());
-		ContractEntry entry = new ContractEntry(newContractId, googleId, new ContractData(),
+		ContractEntry entry = new ContractEntry(newContractId, googleId, initialData,
 				System.currentTimeMillis());
 		Map<String, AttributeValue> item = contractEntryToAttributeMap(entry);
 		/*
@@ -115,6 +115,14 @@ public enum DynamoDBContractStore implements ContractStore {
 		return attributeMapToContractEntry(result.getItem());
 	}
 
+	public Optional<ContractEntry> getContract(String contractId, String googleId) {
+		GetItemRequest getItemRequest = new GetItemRequest().withTableName(tableName).addKeyEntry("ContractId",
+				new AttributeValue(contractId)).withConsistentRead(true);
+		GetItemResult result = dynamoDB.getItem(getItemRequest);
+		ContractEntry entry = attributeMapToContractEntry(result.getItem());
+		return Optional.of(entry).filter(e -> e.googleId.equals(googleId));
+	}
+
 	public List<ContractEntry> getContractsByGoogleId(String googleId) {
 		QueryRequest req = new QueryRequest(tableName)
 				.withIndexName("GoogleId-index")
@@ -122,18 +130,18 @@ public enum DynamoDBContractStore implements ContractStore {
 						new Condition()
 								.withComparisonOperator(ComparisonOperator.EQ)
 								.withAttributeValueList(new AttributeValue(googleId)));
-		System.out.println("About to send query: " +System.currentTimeMillis());
+		System.out.println("About to send query: " + System.currentTimeMillis());
 		QueryResult queryResult = dynamoDB.query(req);
-		System.out.println("Just recieved results: " +System.currentTimeMillis());
+		System.out.println("Just recieved results: " + System.currentTimeMillis());
 		List<ContractEntry> results = queryResultToContractEntries(queryResult);
 		return results;
 	}
 
-	public void showContracts() {
+	/*public void showContracts() {
 		System.out.println(getAllContracts());
-	}
+	}*/
 
-	private List<ContractEntry> getAllContracts() {
+	public List<ContractEntry> getAllContracts() {
 		ScanRequest scanRequest = new ScanRequest(tableName);
 		ScanResult scanResult = dynamoDB.scan(scanRequest);
 		System.out.println("Scan result: " + scanResult);
@@ -153,7 +161,7 @@ public enum DynamoDBContractStore implements ContractStore {
 				.withReturnValues(ReturnValue.ALL_NEW);
 		UpdateItemResult updateResult = dynamoDB.updateItem(updateItemRequest);
 		ContractEntry updatedEntry = attributeMapToContractEntry(updateResult.getAttributes());
-		//System.out.println("Updated entry: " + updatedEntry);
+		// System.out.println("Updated entry: " + updatedEntry);
 		// return updatedEntry;
 	}
 
@@ -187,9 +195,5 @@ public enum DynamoDBContractStore implements ContractStore {
 
 	private static String longToBase64(long contractId) {
 		return Base64.getUrlEncoder().encodeToString(Longs.toByteArray(contractId));
-	}
-
-	private static long base64ToLong(String contractId) {
-		return Longs.fromByteArray(Base64.getUrlDecoder().decode(contractId));
 	}
 }

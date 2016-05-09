@@ -7,13 +7,19 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
+import java.util.Optional;
 
 public class JsonDatabaseManager implements ContractStore {
 	//private static final String DB_URL = "jdbc:sqlite:JSONContractsNCF.db";
 	private static final String DB_URL = "jdbc:sqlite:/Users/jackie/Documents/workspace/contract-form/JSONContractsNCF.db";
 	
 	public static void main(String[] args) {
-		instance().showContracts();
+		for (ContractEntry e : instance().getAllContracts()) {
+			System.out.println(e);
+		}
+		String sqlStatement = "DELETE FROM Contracts WHERE ContractData='{}'";
+		//instance().executeStatement(sqlStatement);
+		//System.out.println(instance().getAllContracts());
 	}
 	
 	private JsonDatabaseManager() {}
@@ -58,7 +64,7 @@ public class JsonDatabaseManager implements ContractStore {
 		executeStatement("DROP TABLE IF EXISTS Contracts;");
 	}
 
-	public void showContracts() {
+	/*public void showContracts() {
 		try (Connection c = DriverManager.getConnection(DB_URL)) {
 			ResultSet rs = c.createStatement()
 					.executeQuery("SELECT * FROM Contracts;");
@@ -78,15 +84,16 @@ public class JsonDatabaseManager implements ContractStore {
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
-	}
+	}*/
 
-	public String createContract(String googleID) {
+	public String createContract(String googleId, ContractData initialData) {
 		try (Connection c = DriverManager.getConnection(DB_URL)) {
 			c.setAutoCommit(false);
 			PreparedStatement pstmt = c
-					.prepareStatement("INSERT INTO Contracts  (GoogleID, ContractData, DateLastModified) VALUES (?, '{}', ?);");
-			pstmt.setString(1, googleID);
-			pstmt.setLong(2, System.currentTimeMillis());
+					.prepareStatement("INSERT INTO Contracts  (GoogleID, ContractData, DateLastModified) VALUES (?, ?, ?);");
+			pstmt.setString(1, googleId);
+			pstmt.setString(2, initialData.toJson());
+			pstmt.setLong(3, System.currentTimeMillis());
 			pstmt.execute();
 			ResultSet rs = c.createStatement().executeQuery("SELECT last_insert_rowid();");
 			long rowId = rs.getLong(1);
@@ -111,10 +118,10 @@ public class JsonDatabaseManager implements ContractStore {
 		}
 	}
 
-	public void saveNewContract(String googleId, ContractData data) {
+	/*public void saveNewContract(String googleId, ContractData data) {
 		String contractId = createContract(googleId);
 		updateContract(contractId, googleId, data);
-	}
+	}*/
 
 	public ContractEntry getContractByContractId(String contractId) {
 		try (Connection c = DriverManager.getConnection(DB_URL)) {
@@ -132,6 +139,25 @@ public class JsonDatabaseManager implements ContractStore {
 			throw new RuntimeException(e);
 		}
 	}
+	
+	public Optional<ContractEntry> getContract(String contractId, String googleId) {
+		try (Connection c = DriverManager.getConnection(DB_URL)) {
+
+			PreparedStatement pstmt = c.prepareStatement(
+					"SELECT ContractID, GoogleID, ContractData, DateLastModified FROM Contracts WHERE ContractID=? AND GoogleID=?");
+			pstmt.setLong(1, base64ToLong(contractId));
+			pstmt.setString(2, googleId);
+			ResultSet rs = pstmt.executeQuery();
+			if (!rs.next()) {
+				return Optional.empty();
+				//throw new IllegalArgumentException("Contract ID "+contractId+" does not exist");
+			}
+			return Optional.of(new ContractEntry(longToBase64(rs.getLong(1)), rs.getString(2), ContractData.fromJson(rs.getString(3)),
+					rs.getLong(4)));
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+	}
 
 	public List<ContractEntry> getContractsByGoogleId(String googleId) {
 		try (Connection c = DriverManager.getConnection(DB_URL)) {
@@ -145,8 +171,7 @@ public class JsonDatabaseManager implements ContractStore {
 				resultList.add(new ContractEntry(longToBase64(rs.getLong(1)), rs.getString(2), ContractData.fromJson(rs.getString(3)),
 						rs.getLong(4)));
 			}
-			ImmutableList.copyOf(resultList);
-			return resultList;
+			return ImmutableList.copyOf(resultList);
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
@@ -162,8 +187,7 @@ public class JsonDatabaseManager implements ContractStore {
 				resultList.add(new ContractEntry(longToBase64(rs.getLong(1)), rs.getString(2), ContractData.fromJson(rs.getString(3)),
 						rs.getLong(4)));
 			}
-			ImmutableList.copyOf(resultList);
-			return resultList;
+			return ImmutableList.copyOf(resultList);
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}

@@ -81,6 +81,7 @@ var ContractForm = React.createClass({
 			(data) => {
 				console.log("Recieved contract entry from server");
 				this.setState(data.contract.contractData);
+				setTimeout(() => {console.log(this.state);}, 10);
 			}
 		);
 	},
@@ -136,13 +137,9 @@ var ContractForm = React.createClass({
 var ClassesTable = React.createClass({
 	updateHandlerGenerator: function(index) {
 		return ((value) => {
-			console.log("updating classes table; index: " + index + "; value: " + JSON.stringify(value));
 			var newState = this.props.magic.value.slice();
-			console.log(newState);
 			newState[index] = value;
-			console.log(newState);
 			this.props.magic.handleUpdate(newState);
-			console.log("done updating classes table");
 		});
 	},
 	magic: function(index) {
@@ -179,15 +176,9 @@ var ClassesTable = React.createClass({
 var Class = React.createClass({
 	updateHandlerGenerator: function(identifier) {
 		return ((value) => {
-			console.log("updating class; identifier: " + identifier + " value: " + JSON.stringify(value));
-			//var newState = this.props.magic.value;
 			var newState = classDataFrom(this.props.magic.value);
-			console.log(newState);
 			newState[identifier] = value;
-			console.log(newState);
-			console.log(this.props.magic.value);
 			this.props.magic.handleUpdate(newState);
-			console.log("class update done");
 		});
 	},
 	magic: function(identifier) {
@@ -200,20 +191,47 @@ var Class = React.createClass({
 				<td><TextInput2 placeHolder="12345" magic={this.magic("courseCode")}/> </td>
 				<td><TextInput2 placeHolder="Basket-weaving 101" magic={this.magic("courseName")}/> </td>
 				<td><CheckBox2 magic={this.magic("isInternship")}/></td>
-				<td>
-					<SelectInput magic={this.magic("sessionName")}>
-						<SelectOption value='' display='Select One' />
-						<SelectOption value='A' display='Full Term' />
-						<SelectOption value='M1' display='Module 1' />
-						<SelectOption value='M2' display='Module 2' />
-						<SelectOption value='1MC' display='Full Term For Module Credit' />
-					</SelectInput>
-				</td>
+				<td><SelectInput displayName="" magic={this.magic("sessionName")}>
+					<SelectOption value='' display='Select One' />
+					<SelectOption value='A' display='Full Term' />
+					<SelectOption value='M1' display='Module 1' />
+					<SelectOption value='M2' display='Module 2' />
+					<SelectOption value='1MC' display='Full Term For Module Credit' />
+				</SelectInput></td>
 				<td><TextInput2 placeHolder="President #trublu" magic={this.magic("instructorName")}/></td>
 			</tr>
 		);
 	}
 });
+
+/*
+<SelectInput2 displayName="session2" magic={this.magic("sessionName")}
+	options={[
+		{value:'', display:'Select One'},
+		{value:'A', display:'Full Term'},
+		{value:'M1', display:'Module 1'},
+		{value:'M2', display:'Module 2'},
+		{value:'1MC', display:'Full Term For Module Credit'}
+	]}
+/>
+*/
+
+/*<SessionSelector magic={this.magic("sessionName")} />*/
+/*var SessionSelector = React.createClass({
+	render: function() {
+		var indexToSelect = this.props.children.findIndex((x) => (x.props.value === this.props.magic.value), this);
+
+		return (
+			<SelectInput displayName="session" magic={this.props.magic}>
+				<SelectOption value='' display='Select One' />
+				<SelectOption value='A' display='Full Term' />
+				<SelectOption value='M1' display='Module 1' />
+				<SelectOption value='M2' display='Module 2' />
+				<SelectOption value='1MC' display='Full Term For Module Credit' />
+			</SelectInput>
+		);
+	}
+});*/
 
 var TextInput = React.createClass({
 	handleChange: function(event) {
@@ -252,7 +270,6 @@ var TextArea = React.createClass({
 	}
 });
 
-
 var TextInput2 = React.createClass({
 	handleChange: function(event) {
 		this.props.magic.handleUpdate(event.target.value);
@@ -289,16 +306,33 @@ var CheckBox2 = React.createClass({
 	}
 });
 
+var SelectInput2 = React.createClass({
+	render: function() {
+		var options = this.props.options.map((x, i) => (
+			<SelectOption value={x.value} display={x.display} selected={x.value === this.props.magic.value} key={x.value} />
+		));
+		return (
+			<SelectInput displayName={this.props.displayName} magic={this.props.magic}>
+				{options}
+			</SelectInput>
+		);
+	}
+});
+
 var SelectInput = React.createClass({
 	handleChange: function(event) {
 		this.props.magic.handleUpdate(event.target.value);
 	},
 	render: function() {
+		//var indexToSelect = this.props.children.findIndex((x) => (x.props.value === this.props.magic.value), this);
+		//console.log("displayName: "+this.props.displayName+"; value: "+this.props.magic.value+"; index: "+indexToSelect);
+		//console.log(this.props.children[indexToSelect].props);
+		//this.props.children[indexToSelect].props.selected = true;
 		return (
 			<span>
 			  {this.props.displayName}
 				<select
-					selected={this.props.magic.value}
+					value={this.props.magic.value}
 					onChange={this.handleChange}
 				>
 				{this.props.children}
@@ -309,9 +343,10 @@ var SelectInput = React.createClass({
 });
 
 var SelectOption = React.createClass({
+
 	render: function() {
 		return (
-			<option value={this.props.value}> {this.props.display} </option>
+			<option value={this.props.value} selected={this.props.selected}> {this.props.display} </option>
 		);
 	}
 });

@@ -31,25 +31,10 @@ var classDataFrom = function(data) {
 
 var ContractForm = React.createClass({
 	getInitialState: function() {
-		var defaultYear = new Date().getFullYear();
-		var month = new Date().getMonth();
-		var defaultSemester = '';
-		if (month == 7 || month == 8) {
-			// month is August or September, assume Fall semester
-			defaultSemester = 'Fall';
-		} else if (month == 0 || month == 1) {
-			// month is January or February, assume Spring semester
-			defaultSemester = 'Spring';
-		}
-		//var defaultClass = {courseCode: '', courseName: '', isInternship: false,
-		//		instuctorName: '', sessionName: ''};
-		//var defaultClass = ClassData('', '', false, '', '');
-		var defaultClass = emptyClassData();
-		console.log(defaultClass);
 		return {
-			semester: defaultSemester, studyLocation: '', contractYear: defaultYear,
+			semester: '', studyLocation: '', contractYear: '',
 			firstName: '', lastName: '', nNumber: '', expectedGradYear: '', boxNumber: '',
-			classes: [defaultClass, defaultClass, defaultClass, defaultClass]
+			classes: []
 		};
 	},
 	updateHandlerGenerator: function(identifier) {

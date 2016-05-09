@@ -2,23 +2,32 @@ var contractId = $("#contract-id").text();
 
 console.log("contract id: " + contractId);
 
-/*function range(start, end) {
-	var diff = end-start;
-	return Array.from(Array(diff)).map((_, i) => i).map((x) => x+start);
-}*/
-
-//console.log(range(100, 110));
-
 var ContractBox = React.createClass({
 	render: function() {
 		return (
 			<div className="contractBox">
 				<h2>Contract Form</h2>
-				<ContractForm />
+				<ContractForm pollInterval = {this.props.pollInterval} />
 			</div>
 		);
 	}
 });
+
+function ClassData(courseCode, courseName, isInternship, instructorName, sessionName) {
+	console.assert(isInternship === true || isInternship === false, "bad value: " + isInternship);
+	return {courseCode: courseCode, courseName: courseName, isInternship: isInternship,
+			instuctorName: instructorName, sessionName: sessionName};
+}
+
+var emptyClassData = function() {
+	return new ClassData('', '', false, '', '');
+}
+
+var classDataFrom = function(data) {
+	console.log("About to pull class data");
+	console.log(data);
+	return new ClassData(data.courseCode, data.courseName, data.isInternship, data.instuctorName, data.sessionName);
+}
 
 var ContractForm = React.createClass({
 	getInitialState: function() {
@@ -32,8 +41,11 @@ var ContractForm = React.createClass({
 			// month is January or February, assume Spring semester
 			defaultSemester = 'Spring';
 		}
-		var defaultClass = {courseCode: '', courseName: '', isInternship: false,
-				instuctorName: '', sessionName: ''};
+		//var defaultClass = {courseCode: '', courseName: '', isInternship: false,
+		//		instuctorName: '', sessionName: ''};
+		//var defaultClass = ClassData('', '', false, '', '');
+		var defaultClass = emptyClassData();
+		console.log(defaultClass);
 		return {
 			semester: defaultSemester, studyLocation: '', contractYear: defaultYear,
 			firstName: '', lastName: '', nNumber: '', expectedGradYear: '', boxNumber: '',
@@ -63,6 +75,20 @@ var ContractForm = React.createClass({
 			}
 		);
 	},
+	loadContractFromServer: function() {
+		$.getJSON('/api/contracts/'+contractId,
+			{},
+			(data) => {
+				console.log("Recieved contract entry from server");
+				this.setState(data.contract.contractData);
+			}
+		);
+	},
+  componentDidMount: function() {
+		//this.setState({firstName: "Jane"});
+    this.loadContractFromServer();
+    setInterval(this.loadContractFromServer, this.props.pollInterval);
+  },
 	magic: function(identifier) {
 		return {value: this.state[identifier], handleUpdate: this.updateHandlerGenerator(identifier)};
 	},
@@ -80,18 +106,17 @@ var ContractForm = React.createClass({
 			<div className="contractForm">
 			<button onClick={this.resetState}>Reset state</button>
 			<form id="contractForm" class="blank-form" action={"/contracts/"+this.props.contractId+"/save"}>
-				Semester&nbsp;
-				<SelectInput magic={this.magic('semester')}>
+				<SelectInput displayName="Semester" magic={this.magic('semester')}>
 					<SelectOption value="" display="Select One" />
 					<SelectOption value="Spring" display="Spring" />
 					<SelectOption value="Fall" display="Fall" />
 				</SelectInput>
-				<SelectInput magic={this.magic('studyLocation')}>
+				<TextInput displayName="Year" magic={this.magic('contractYear')} />
+				<SelectInput displayName="Study Location" magic={this.magic('studyLocation')}>
 					<SelectOption value="" display="Select One" />
 					<SelectOption value="On Campus" display="On Campus" />
 					<SelectOption value="Off Campus" display="Off Campus" />
 				</SelectInput>
-				<TextInput displayName="Year" magic={this.magic('contractYear')} />
 				<TextInput displayName="First Name" placeHolder="Jane" magic={this.magic('firstName')} />
 				<TextInput displayName="Last Name" placeHolder="Doe" magic={this.magic('lastName')} />
 				<TextInput displayName="N Number" placeHolder="123456789" magic={this.magic('nNumber')} />
@@ -108,8 +133,87 @@ var ContractForm = React.createClass({
 	}
 });
 
-// <FirstName />
-// <TextInput displayName="Last Name" placeHolder="Doe" handleUpdate={(x) => {this.state.lastName=x;}}/>
+var ClassesTable = React.createClass({
+	updateHandlerGenerator: function(index) {
+		return ((value) => {
+			console.log("updating classes table; index: " + index + "; value: " + JSON.stringify(value));
+			var newState = this.props.magic.value.slice();
+			console.log(newState);
+			newState[index] = value;
+			console.log(newState);
+			this.props.magic.handleUpdate(newState);
+			console.log("done updating classes table");
+		});
+	},
+	magic: function(index) {
+		return {value: this.props.magic.value[index], handleUpdate: this.updateHandlerGenerator(index)};
+	},
+	handleChange: function(event) {
+		this.props.magic.handleUpdate(event.target.value);
+	},
+	handleUpdate: function(newValue) {
+		this.props.magic.handleUpdate(newValue);
+	},
+	render: function() {
+		var magic_x = this.magic
+		var classNodes = this.props.magic.value.map(function(clazz, i) {
+			return (
+				<Class number={i} magic={magic_x(i)} key={i}/>
+			);
+		});
+		return (
+			<table class="classes-table"><tbody>
+					<tr>
+							<td><pre>Course	</pre></td>
+							<td><pre>Course name	</pre></td>
+							<td><pre>Internship	</pre></td>
+							<td><pre>Session	</pre></td>
+							<td><pre>Name of instructor/evaluator	</pre></td>
+					</tr>
+					{classNodes}
+			</tbody></table>
+		);
+	}
+});
+
+var Class = React.createClass({
+	updateHandlerGenerator: function(identifier) {
+		return ((value) => {
+			console.log("updating class; identifier: " + identifier + " value: " + JSON.stringify(value));
+			//var newState = this.props.magic.value;
+			var newState = classDataFrom(this.props.magic.value);
+			console.log(newState);
+			newState[identifier] = value;
+			console.log(newState);
+			console.log(this.props.magic.value);
+			this.props.magic.handleUpdate(newState);
+			console.log("class update done");
+		});
+	},
+	magic: function(identifier) {
+		return {value: this.props.magic.value[identifier], handleUpdate: this.updateHandlerGenerator(identifier)};
+	},
+	render: function() {
+		var row = this.props.number;
+		return (
+			<tr>
+				<td><TextInput2 placeHolder="12345" magic={this.magic("courseCode")}/> </td>
+				<td><TextInput2 placeHolder="Basket-weaving 101" magic={this.magic("courseName")}/> </td>
+				<td><CheckBox2 magic={this.magic("isInternship")}/></td>
+				<td>
+					<SelectInput magic={this.magic("sessionName")}>
+						<SelectOption value='' display='Select One' />
+						<SelectOption value='A' display='Full Term' />
+						<SelectOption value='M1' display='Module 1' />
+						<SelectOption value='M2' display='Module 2' />
+						<SelectOption value='1MC' display='Full Term For Module Credit' />
+					</SelectInput>
+				</td>
+				<td><TextInput2 placeHolder="President #trublu" magic={this.magic("instructorName")}/></td>
+			</tr>
+		);
+	}
+});
 
 var TextInput = React.createClass({
 	handleChange: function(event) {
@@ -148,78 +252,7 @@ var TextArea = React.createClass({
 	}
 });
 
-var ClassesTable = React.createClass({
-	updateHandlerGenerator: function(index) {
-		return ((value) => {
-			var newState = this.props.magic.value;
-			newState[index] = value;
-			this.props.magic.handleUpdate(newState);
-		});
-	},
-	magic: function(index) {
-		return {value: this.props.magic.value[index], handleUpdate: this.updateHandlerGenerator(index)};
-	},
-	handleChange: function(event) {
-		this.handleUpdate(event.target.value);
-	},
-	handleUpdate: function(newValue) {
-		this.props.magic.handleUpdate(newValue);
-	},
-	render: function() {
-		var magic_x = this.magic
-		var classNodes = this.props.magic.value.map(function(clazz, i) {
-			return (
-				<Class number={i} magic={magic_x(i)} key={i}/>
-			);
-		});
-		return (
-			<table id="board1" class="board1"><tbody>
-					<tr>
-							<td><pre>Course	</pre></td>
-							<td><pre>Course name	</pre></td>
-							<td><pre>Internship	</pre></td>
-							<td><pre>Session	</pre></td>
-							<td><pre>Name of instructor/evaluator	</pre></td>
-					</tr>
-					{classNodes}
-			</tbody></table>
-		);
-	}
-});
 
-var Class = React.createClass({
-	updateHandlerGenerator: function(identifier) {
-		return ((value) => {
-			var newState = this.props.magic.value;
-			newState[identifier] = value;
-			this.props.magic.handleUpdate(newState);
-			console.log(newState);
-		});
-	},
-	magic: function(identifier) {
-		return {value: this.props.magic.value[identifier], handleUpdate: this.updateHandlerGenerator(identifier)};
-	},
-	render: function() {
-		var row = this.props.number;
-		return (
-			<tr>
-				<td><TextInput2 placeHolder="12345" magic={this.magic("courseCode")}/> </td>
-				<td><TextInput2 placeHolder="Basket-weaving 101" magic={this.magic("courseName")}/> </td>
-				<td><CheckBox2 magic={this.magic("isInternship")}/></td>
-				<td>
-					<SelectInput magic={this.magic("sessionName")}>
-						<SelectOption value='' display='Select One' />
-						<SelectOption value='A' display='Full Term' />
-						<SelectOption value='M1' display='Module 1' />
-						<SelectOption value='M2' display='Module 2' />
-						<SelectOption value='1MC' display='Full Term For Module Credit' />
-					</SelectInput>
-				</td>
-				<td><TextInput2 placeHolder="President #trublu" magic={this.magic("instructorName")}/></td>
-			</tr>
-		);
-	}
-});
 
 /*
 //<td><input type="text" id={"Course number"+row} name={"Course number"+row} placeholder="12345"></input> </td>
@@ -277,6 +310,7 @@ var SelectInput = React.createClass({
 	render: function() {
 		return (
 			<span>
+			  {this.props.displayName}
 				<select
 					selected={this.props.magic.value}
 					onChange={this.handleChange}
@@ -315,11 +349,6 @@ var BasicComponent = React.createClass({
 
 
 ReactDOM.render(
-	<ContractBox />,
+	<ContractBox pollInterval={10000} />,
 	document.getElementById('content')
 );
-
-/*
- * ReactDOM.render( <CommentBox url="/api/comments" pollInterval={2000} />,
- * document.getElementById('content') );
- */

@@ -1,4 +1,4 @@
-.board {
+.classes-table {
     font-family: Verdana;
     padding: 0;
     margin: auto;
@@ -6,7 +6,7 @@
     height: 400px;
     -webkit-user-select: none;
 }
-.board td {
+.classes-table td {
     width: 100px;
     height: 100px;
     border: 0;

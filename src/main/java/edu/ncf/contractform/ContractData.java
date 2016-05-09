@@ -75,7 +75,7 @@ class ClassData {
 		this.courseName = courseName;
 		this.isInternship = isInternship;
 		this.instructorName = instructorName;
-		if (sessionName == null) {} else if (LEGAL_SESSIONS.contains(sessionName)) {
+		if (sessionName == null || sessionName.equals("")) {} else if (LEGAL_SESSIONS.contains(sessionName)) {
 			this.sessionName = sessionName;
 		} else {
 			throw new IllegalArgumentException("Illegal session name "+sessionName+"; Session name must be one of the following: " + LEGAL_SESSIONS);

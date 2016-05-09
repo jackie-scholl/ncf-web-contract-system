@@ -14,7 +14,7 @@ function loadContracts() {
 function showContracts(contracts) {
 	contracts.sort((a, b) => b.dateLastModified - a.dateLastModified);
 	var items = contracts.map((x, _1, _2) => "<li id='" + x.contractId + "'>" + link(x) + "</li>")
-	
+
 	$("#content").html(
 		$("<ul/>", {
 			"class" : "my-new-list",
@@ -36,6 +36,7 @@ if (Cookies.get("id_token3")) {
 
 function link(entry) {
 	var classesString = "";
+	console.log(entry);
 	var classes = entry.contractData.classes.map((x, _1, _2) => (x.courseName)).filter((x, _1, _2) => (x !== ""));
 	if (classes.length > 0) {
 		classesString = "[" + classes.join() + "]; ";

@@ -220,6 +220,7 @@ public class Main {
 	
 	private static class PDFContractHandler implements Route {
 		public Object handle(Request req, Response res) {
+			long start = System.currentTimeMillis();
 			String contractId = req.params(":contractId");
 			ContractEntry contractEntry = contractStore.getContractByContractId(contractId);
 			if (!getGoogleIdFromCookie(req).equals(contractEntry.googleId)) {
@@ -235,6 +236,8 @@ public class Main {
 			} catch (IOException e) {
 				throw new RuntimeException(e);
 			}
+			
+			System.out.println("Time: " + (System.currentTimeMillis() - start));
 
 			return null;
 		}

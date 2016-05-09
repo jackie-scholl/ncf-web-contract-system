@@ -204,35 +204,6 @@ var Class = React.createClass({
 	}
 });
 
-/*
-<SelectInput2 displayName="session2" magic={this.magic("sessionName")}
-	options={[
-		{value:'', display:'Select One'},
-		{value:'A', display:'Full Term'},
-		{value:'M1', display:'Module 1'},
-		{value:'M2', display:'Module 2'},
-		{value:'1MC', display:'Full Term For Module Credit'}
-	]}
-/>
-*/
-
-/*<SessionSelector magic={this.magic("sessionName")} />*/
-/*var SessionSelector = React.createClass({
-	render: function() {
-		var indexToSelect = this.props.children.findIndex((x) => (x.props.value === this.props.magic.value), this);
-
-		return (
-			<SelectInput displayName="session" magic={this.props.magic}>
-				<SelectOption value='' display='Select One' />
-				<SelectOption value='A' display='Full Term' />
-				<SelectOption value='M1' display='Module 1' />
-				<SelectOption value='M2' display='Module 2' />
-				<SelectOption value='1MC' display='Full Term For Module Credit' />
-			</SelectInput>
-		);
-	}
-});*/
-
 var TextInput = React.createClass({
 	handleChange: function(event) {
 		this.props.magic.handleUpdate(event.target.value);
@@ -306,28 +277,11 @@ var CheckBox2 = React.createClass({
 	}
 });
 
-var SelectInput2 = React.createClass({
-	render: function() {
-		var options = this.props.options.map((x, i) => (
-			<SelectOption value={x.value} display={x.display} selected={x.value === this.props.magic.value} key={x.value} />
-		));
-		return (
-			<SelectInput displayName={this.props.displayName} magic={this.props.magic}>
-				{options}
-			</SelectInput>
-		);
-	}
-});
-
 var SelectInput = React.createClass({
 	handleChange: function(event) {
 		this.props.magic.handleUpdate(event.target.value);
 	},
 	render: function() {
-		//var indexToSelect = this.props.children.findIndex((x) => (x.props.value === this.props.magic.value), this);
-		//console.log("displayName: "+this.props.displayName+"; value: "+this.props.magic.value+"; index: "+indexToSelect);
-		//console.log(this.props.children[indexToSelect].props);
-		//this.props.children[indexToSelect].props.selected = true;
 		return (
 			<span>
 			  {this.props.displayName}

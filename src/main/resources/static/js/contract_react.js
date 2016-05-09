@@ -253,20 +253,6 @@ var TextArea = React.createClass({
 });
 
 
-
-/*
-//<td><input type="text" id={"Course number"+row} name={"Course number"+row} placeholder="12345"></input> </td>
-<td><input type="text" id={"course name"+row} name={"Course name"+row} placeholder="Basket-weaving 101"></input> </td>
-	<select id={"session"+row} name={"session"+row}>
-		<option value=''>Select One</option>
-		<option value='A'>Full Term</option>
-		<option value='M1'>Module 1</option>
-		<option value='M2'>Module 2</option>
-		<option value='1MC'>Full Term For Module Credit</option>
-	</select>
-	*/
-
-
 var TextInput2 = React.createClass({
 	handleChange: function(event) {
 		this.props.magic.handleUpdate(event.target.value);

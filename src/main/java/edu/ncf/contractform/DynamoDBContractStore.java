@@ -137,10 +137,6 @@ public enum DynamoDBContractStore implements ContractStore {
 		return results;
 	}
 
-	/*public void showContracts() {
-		System.out.println(getAllContracts());
-	}*/
-
 	public List<ContractEntry> getAllContracts() {
 		ScanRequest scanRequest = new ScanRequest(tableName);
 		ScanResult scanResult = dynamoDB.scan(scanRequest);

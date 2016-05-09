@@ -51,54 +51,15 @@ public class Main {
 		contractStore = JsonDatabaseManager.instance();
 		// contractStore = DynamoDBContractStore.INSTANCE;
 
-		// Spark.get("/contract", "text/html", new WelcomePageStarter(), freeMarker);
-		// Spark.post("/contract/saved", "application/pdf", new SavedContractHandler());
-		// Spark.post("/contract/unsaved", "application/pdf", new UnsavedContractHandler());
 		Spark.get("/contracts", "text/html", new ContractList(), freeMarker);
 		Spark.post("/contracts", new AddContract());
 		Spark.get("/contracts/:contractId", "text/html", new ContractForm(), freeMarker);
-		// Spark.get("/contracts/:contractId", "application/pdf", new PDFContractHandler());
 		Spark.get("/contracts/:contractId/pdf", new PDFContractHandler());
-		// Spark.post("/contracts/:contractId/save", "text/html", new SaveContractHandler());
 		Spark.post("/contracts/:contractId/save2", "text/html", new SaveContractHandler2());
 		Spark.get("/api/contracts", "text/json", new ApiContractList());
 		Spark.get("/api/contracts/:contractId", "text/json", new LoadContractHandler());
-
-		// Spark.post("/results", new ResultsHandler(), freeMarker);
 	}
 
-	/**
-	 * returns the blank form.
-	 */
-	/*private static class UnsavedContractHandler implements Route {
-		public Object handle(Request req, Response res) {
-
-			ContractData contractData = new ContractData();
-
-			res.raw().setContentType("application/pdf");
-			try {
-				PDFCreator.buildPDF(res.raw().getOutputStream(), contractData);
-			} catch (IOException e) {
-				throw new RuntimeException(e);
-			}
-
-			return null;
-		}
-	}*/
-
-	/**
-	 * Serves as the first load of the game. This is called using GET while the PlayHandler is called using POST (since
-	 * it's a form submission)
-	 */
-	/*private static class WelcomePageStarter implements TemplateViewRoute {
-
-		@Override
-		public ModelAndView handle(Request req, Response res) {
-			Map<String, Object> variables = new ImmutableMap.Builder<String, Object>()
-					.put("title", "Contract Form").build();
-			return new ModelAndView(variables, "contract.ftl");
-		}
-	}*/
 
 	private static class ContractForm implements TemplateViewRoute {
 		@Override
@@ -142,14 +103,6 @@ public class Main {
 			res.status(201); // Created
 			res.header("Location", "/contracts/" + contractId);
 			res.type("text/json");
-			/*res.raw().setContentType("text/json");
-			try {
-				res.raw().getOutputStream().print(result);
-				res.raw().getOutputStream().close();
-			} catch (IOException e) {
-				throw new RuntimeException(e);
-			}*/
-
 			System.out.println("Add contract done");
 
 			return result;
@@ -163,8 +116,6 @@ public class Main {
 		public Object handle(Request req, Response res) {
 			long start = System.currentTimeMillis();
 
-			// Optional<String> googleId = getGoogleID(qm.value("id_token"));
-			//Optional<String> googleId = Optional.of(getGoogleIdFromCookie(req));
 			String googleId = GooglePayload.fromRequest(req).googleId();
 
 			System.out.printf("Time taken so far (got google id): %d ms%n", System.currentTimeMillis() - start);
@@ -179,13 +130,6 @@ public class Main {
 			System.out.printf("Time taken so far (result done): %d ms%n", System.currentTimeMillis() - start);
 			
 			res.type("text/json");
-			/*res.raw().setContentType("text/json");
-			try {
-				res.raw().getOutputStream().print(result);
-				res.raw().getOutputStream().close();
-			} catch (IOException e) {
-				throw new RuntimeException(e);
-			}*/
 
 			System.out.println("Contract list done\n");
 
@@ -216,27 +160,6 @@ public class Main {
 		}
 	}
 
-	/*private static class SaveContractHandler implements Route {
-		public Object handle(Request req, Response res) {
-			QueryParamsMap qm = req.queryMap();
-
-			String googleId = GooglePayload.fromRequest(req).googleId();
-			String contractId = req.params(":contractId");
-
-			ContractData contractData = getContractDataFromParams(qm, googleId);
-			// System.out.println("Contract Data from params: "+contractData);
-			contractStore.updateContract(contractId, googleId, contractData);
-			System.out.println("Contract Saved");
-			// contractStore.showContracts();
-
-			res.redirect("/contracts/" + contractId + "/pdf");
-
-			res.status(204);
-
-			return null;
-		}
-	}*/
-
 	private static class SaveContractHandler2 implements Route {
 		public Object handle(Request req, Response res) {
 			System.out.println("Starting to save contract: ");
@@ -261,9 +184,7 @@ public class Main {
 	private static class LoadContractHandler implements Route {
 		public Object handle(Request req, Response res) {
 			System.out.println("Starting to load contract: ");
-			//Payload p = GooglePayload.fromRequest(req).googleId();
 			String googleId = GooglePayload.fromRequest(req).googleId();
-			// String googleId = getGoogleIdFromCookie(req);
 			String contractId = req.params(":contractId");
 
 			Optional<ContractEntry> entry = contractStore.getContract(contractId, googleId);
@@ -277,14 +198,6 @@ public class Main {
 				System.out.println("Contract returned\n");
 				res.type("text/json");
 				return result;
-				// res.status(200);
-				/*res.raw().setContentType("text/json");
-				try {
-					res.raw().getOutputStream().print(result);
-					res.raw().getOutputStream().close();
-				} catch (IOException e) {
-					throw new RuntimeException(e);
-				}*/
 			} else {
 				System.out.println("entry not present");
 				res.status(404);
@@ -294,68 +207,7 @@ public class Main {
 			}
 		}
 	}
-
-	/**
-	 * Returns the generated PDF.
-	 */
-	/*private static class SavedContractHandler implements Route {
-		public Object handle(Request req, Response res) {
-			QueryParamsMap qm = req.queryMap();
-			System.out.println(qm.toMap());
 	
-			Optional<String> googleId = getGoogleID(qm.value("id_token"));
-	
-			ContractData contractData = getContractDataFromParams(qm,
-					googleId.get());
-			googleId.ifPresent(id -> contractStore.updateContract(contractStore.createContract(id), id, contractData));
-			System.out.println(contractStore.getAllContracts());
-			
-			res.raw().setContentType("application/pdf");
-			try {
-				PDFCreator.buildPDF(res.raw().getOutputStream(), contractData);
-			} catch (IOException e) {
-				throw new RuntimeException(e);
-			}
-	
-			return null;
-		}
-	}*/
-
-	/*private static ContractData getContractDataFromParams(QueryParamsMap qm,
-			String googleId) {
-		ContractData data = new ContractData();
-		data.contractYear = qm.value("year");
-		if (ContractData.LEGAL_SEMESTERS.contains(qm.value("Semester"))) {
-			data.semester = qm.value("Semester");
-		} else {
-			throw new IllegalArgumentException(
-					"Semester must be one of the following: " +
-							ContractData.LEGAL_SEMESTERS);
-		}
-		data.lastName = qm.value("lastName");
-		data.firstName = qm.value("firstName");
-		data.nNumber = qm.value("n_number");
-		data.expectedGradYear = qm.value("expected_grad_year");
-		data.studyLocation = qm.value("location");
-		data.boxNumber = qm.value("box number");
-		data.goals = qm.value("goals");
-		data.certificationCriteria = qm.value("cert");
-		data.descriptionsOtherActivities = qm.value("other");
-		data.advisorName = qm.value("advisor name");
-		ClassData[] classData = new ClassData[8];
-		for (int i = 0; i < classData.length; i++) {
-			classData[i] = getClassDataFromParams(qm, i);
-		}
-		data.classes = classData;
-		return data;
-	}*/
-
-	/*private static ClassData getClassDataFromParams(QueryParamsMap qm, int index) {
-		return new ClassData(qm.value("Course number" + index), qm.value("Course name" + index),
-				(qm.value("internship" + index) != null), qm.value("session" + index), qm.value("Instructor" + index));
-	}*/
-	
-
 	// You need not worry about understanding what's below here.
 	private static FreeMarkerEngine createEngine() {
 		Configuration config = new Configuration();
@@ -387,5 +239,4 @@ public class Main {
 			res.body(stacktrace.toString());
 		}
 	}
-
 }

@@ -10,16 +10,13 @@ import java.util.List;
 import java.util.Optional;
 
 public class JsonDatabaseManager implements ContractStore {
-	//private static final String DB_URL = "jdbc:sqlite:JSONContractsNCF.db";
-	private static final String DB_URL = "jdbc:sqlite:/Users/jackie/Documents/workspace/contract-form/JSONContractsNCF.db";
+	private static final String DB_URL = "jdbc:sqlite:JSONContractsNCF.db";
+	//private static final String DB_URL = "jdbc:sqlite:/Users/jackie/Documents/workspace/contract-form/JSONContractsNCF.db";
 	
 	public static void main(String[] args) {
 		for (ContractEntry e : instance().getAllContracts()) {
 			System.out.println(e);
 		}
-		String sqlStatement = "DELETE FROM Contracts WHERE ContractData='{}'";
-		//instance().executeStatement(sqlStatement);
-		//System.out.println(instance().getAllContracts());
 	}
 	
 	private JsonDatabaseManager() {}
@@ -64,28 +61,6 @@ public class JsonDatabaseManager implements ContractStore {
 		executeStatement("DROP TABLE IF EXISTS Contracts;");
 	}
 
-	/*public void showContracts() {
-		try (Connection c = DriverManager.getConnection(DB_URL)) {
-			ResultSet rs = c.createStatement()
-					.executeQuery("SELECT * FROM Contracts;");
-
-			ResultSetMetaData rsmd = rs.getMetaData();
-			int columnsNumber = rsmd.getColumnCount();
-
-			// Iterate through the data in the result set and display it.
-			while (rs.next()) {
-				// Print one row
-				for (int i = 1; i <= columnsNumber; i++) {
-					System.out.print(rs.getString(i) + " "); // Print one element of a row
-				}
-				System.out.println();// Move to the next line to print the next row.
-			}
-
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
-		}
-	}*/
-
 	public String createContract(String googleId, ContractData initialData) {
 		try (Connection c = DriverManager.getConnection(DB_URL)) {
 			c.setAutoCommit(false);
@@ -118,11 +93,6 @@ public class JsonDatabaseManager implements ContractStore {
 		}
 	}
 
-	/*public void saveNewContract(String googleId, ContractData data) {
-		String contractId = createContract(googleId);
-		updateContract(contractId, googleId, data);
-	}*/
-
 	public ContractEntry getContractByContractId(String contractId) {
 		try (Connection c = DriverManager.getConnection(DB_URL)) {
 
@@ -150,7 +120,6 @@ public class JsonDatabaseManager implements ContractStore {
 			ResultSet rs = pstmt.executeQuery();
 			if (!rs.next()) {
 				return Optional.empty();
-				//throw new IllegalArgumentException("Contract ID "+contractId+" does not exist");
 			}
 			return Optional.of(new ContractEntry(longToBase64(rs.getLong(1)), rs.getString(2), ContractData.fromJson(rs.getString(3)),
 					rs.getLong(4)));

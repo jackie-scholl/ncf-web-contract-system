@@ -16,7 +16,7 @@ var ContractBox = React.createClass({
 function ClassData(courseCode, courseName, isInternship, instructorName, sessionName) {
 	console.assert(isInternship === true || isInternship === false, "bad value: " + isInternship);
 	return {courseCode: courseCode, courseName: courseName, isInternship: isInternship,
-			instuctorName: instructorName, sessionName: sessionName};
+			instructorName: instructorName, sessionName: sessionName};
 }
 
 var emptyClassData = function() {
@@ -119,11 +119,71 @@ var ContractForm = React.createClass({
 	}
 });
 
+var resizeArray = function(array, minSize, maxSize, testerCallback, spaceFillerCallback) {
+	console.log("existing array length: "+array.length);
+	for (var i = array.length-1; i >= 0; i--) {
+		var x = array[i];
+		var hasData = testerCallback(x);
+		if (hasData) {
+			console.log(x);
+			break;
+		}
+	}
+	console.log("index of last class with data: " + i);
+	var newLength = i + 2; // there should be exactly one empty element at the end of the array
+	console.log("new length: " + newLength);
+	if (newLength > maxSize) {
+		newLength = maxSize;
+	}
+	if (newLength < minSize) {
+		newLength = minSize;
+	}
+	if (array.length == newLength) {
+		// we're good!
+	} else if (array.length > newLength) {
+		array = array.slice(0, newLength);
+	} else if (array.length < newLength) {
+		while (array.length < newLength) {
+			console.log("adding a thing");
+			array = array.concat(spaceFillerCallback());
+		}
+	}
+	return array;
+}
+
+var testResizeArray = function() {
+	var zeroTester = (x) => (x != 0);
+	var zeroFiller = () => (0);
+	console.assert(arraysEqual(resizeArray([0, 0, 1, 0, 0, 0], 0, 100, zeroTester, zeroFiller), [0, 0, 1, 0]));
+	console.assert(arraysEqual(resizeArray([1, 0, 0, 6], 0, 100, zeroTester, zeroFiller), [1, 0, 0, 6, 0]));
+}
+
+testResizeArray();
+
+function arraysEqual(a1,a2) {
+    return JSON.stringify(a1)==JSON.stringify(a2);
+}
+
 var ClassesTable = React.createClass({
 	updateHandlerGenerator: function(index) {
 		return ((value) => {
 			var newState = this.props.magic.value.slice();
 			newState[index] = value;
+			/*console.log(newState.length);
+			for (var i = newState.length-1; i >= 0; i--) {
+				var x = newState[i];
+				console.log(x);
+				var hasData = (x.courseCode !== '' || x.courseName !== ''
+					|| x.isInternship == true || x.instructorName !== '');
+				if (hasData) {
+					break;
+				}
+			}
+			var newLength = i + 2;*/
+			var testerCallback = (x) => (x.courseCode !== "" || x.courseName !== ""
+				|| x.isInternship == true || x.instructorName !== "");
+			var testerCallback2 = (x) => (x.courseName !== "");
+			newState = resizeArray(newState, 4, 9, testerCallback, emptyClassData);
 			this.props.magic.handleUpdate(newState);
 		});
 	},
@@ -162,7 +222,10 @@ var Class = React.createClass({
 	updateHandlerGenerator: function(identifier) {
 		return ((value) => {
 			var newState = classDataFrom(this.props.magic.value);
+			console.log("identifier: " + identifier+"; value: "+value);
 			newState[identifier] = value;
+			console.log("new class state: ");
+			console.log(newState);
 			this.props.magic.handleUpdate(newState);
 		});
 	},
@@ -183,7 +246,7 @@ var Class = React.createClass({
 					<SelectOption value='M2' display='Module 2' />
 					<SelectOption value='1MC' display='Full Term For Module Credit' />
 				</SelectInput></td>
-				<td><TextInput2 placeHolder="President #trublu" magic={this.magic("instructorName")}/></td>
+				<td><TextInput2 placeHolder="President trublu" magic={this.magic("instructorName")}/></td>
 			</tr>
 		);
 	}
@@ -282,7 +345,6 @@ var SelectInput = React.createClass({
 });
 
 var SelectOption = React.createClass({
-
 	render: function() {
 		return (
 			<option value={this.props.value} selected={this.props.selected}> {this.props.display} </option>

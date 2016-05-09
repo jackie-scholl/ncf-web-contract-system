@@ -80,9 +80,9 @@ public class PDFCreator {
 
 		try {
 			pdfDocument.save(outputStream);
-		} catch (EofException e) {
-			pdfDocument.close();
-		}
+		} catch (EofException e) {}
+
+		pdfDocument.close();
 		
 		// System.out.printf("Form saved; %f milliseconds%n", (System.nanoTime() - startTime) / 1.0e6);
 

@@ -74,6 +74,7 @@ public class Main {
 		//Spark.get("/contracts/:contractId", "application/pdf", new PDFContractHandler());
 		Spark.get("/contracts/:contractId/pdf", new PDFContractHandler());
 		Spark.post("/contracts/:contractId/save", "text/html", new SaveContractHandler());
+		Spark.post("/contracts/:contractId/save2", "text/html", new SaveContractHandler2());
 		Spark.get("/api/contracts", "text/json", new ApiContractList());
 
 		// Spark.post("/results", new ResultsHandler(), freeMarker);
@@ -266,6 +267,32 @@ public class Main {
 			res.redirect("/contracts/"+contractId+"/pdf");
 			
 			res.status(204);
+
+			return null;
+		}
+	}
+	
+	private static class SaveContractHandler2 implements Route {
+		public Object handle(Request req, Response res) {
+			QueryParamsMap qm = req.queryMap();
+
+			String googleId = getGoogleIdFromCookie(req);
+			String contractId = req.params(":contractId");
+			
+			//System.out.println(req.raw().getContentType());
+			//System.out.println(req.raw().getParameterMap());
+			//System.out.println(req.raw().getParameterMap().get("data")[0]);
+			String json = req.raw().getParameter("data");
+			ContractData contractData = ContractData.fromJson(json);
+			//ContractData contractData = ;
+			System.out.println("Contract Data from params: "+contractData);
+			contractStore.updateContract(contractId, googleId, contractData);
+			System.out.println("Contract Saved");
+			//contractStore.showContracts();
+			
+			res.redirect("/contracts/"+contractId+"/pdf");
+			
+			//res.status(204);
 
 			return null;
 		}

@@ -45,8 +45,23 @@ var ContractForm = React.createClass({
 			var newState = {};
 			newState[identifier] = value;
 			this.setState(newState);
-			console.log(this.state);
-			console.log(JSON.stringify(this.state));});
+			setTimeout(this.updateTrigger, 10);
+		});
+	},
+	updateTrigger: function() {
+		console.log(this.state);
+		console.log(JSON.stringify(this.state));
+		$.post('/contracts/'+contractId+'/save2',
+			{data: JSON.stringify(this.state)},
+			(data) => {
+				console.log("Saved to server");
+				var options = {
+				   width: "100%",
+				   height: "1140px"
+				};
+				PDFObject.embed('/contracts/'+contractId+'/pdf', $("#display-pdf"), options);
+			}
+		);
 	},
 	magic: function(identifier) {
 		return {value: this.state[identifier], handleUpdate: this.updateHandlerGenerator(identifier)};
@@ -60,6 +75,7 @@ var ContractForm = React.createClass({
 	},
 	render: function() {
 		var contractYearNodes = Array.apply(null, Array(5)).map(function (_, i) {return i;});
+
 		return (
 			<div className="contractForm">
 			<button onClick={this.resetState}>Reset state</button>
@@ -276,6 +292,14 @@ var SelectOption = React.createClass({
 	render: function() {
 		return (
 			<option value={this.props.value}> {this.props.display} </option>
+		);
+	}
+});
+
+var DisplayPDF = React.createClass({
+	render: function() {
+		return (
+			<embed src={this.props.source} width="500" height="375" type='application/pdf' align='center' />
 		);
 	}
 });

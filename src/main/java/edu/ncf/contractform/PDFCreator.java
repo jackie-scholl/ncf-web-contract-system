@@ -86,7 +86,7 @@ public class PDFCreator {
 		
 		// System.out.printf("Form saved; %f milliseconds%n", (System.nanoTime() - startTime) / 1.0e6);
 
-		System.out.println("Done!");
+		//System.out.println("Done!");
 	}
 
 	public static void buildPDF(OutputStream outputStream, ContractData contractData) throws IOException {
@@ -119,13 +119,13 @@ public class PDFCreator {
 		if (classes.length > 9) {
 			throw new IllegalArgumentException("More classes than room on sheet");
 		}
-		if (contractData.semester != null && contractData.contractYear != null) {
+		if (contractData.semester != null && !contractData.semester.equals("") && contractData.contractYear != null) {
 			if (ContractData.LEGAL_SEMESTERS.contains(contractData.semester)) {
 				setTextField(contractData.semester, (String) contractData.contractYear);
 				setOtherFieldValue("Semester", (String) contractData.semester);
 			} else {
 				throw new IllegalArgumentException(
-						"Semester must be one of the following: " + ContractData.LEGAL_SEMESTERS);
+						"Semester must be one of the following: " + ContractData.LEGAL_SEMESTERS + " but was "+contractData.semester);
 			}
 		}
 		setOtherFieldValue("On Campus/Off Campus", contractData.studyLocation);
@@ -153,12 +153,12 @@ public class PDFCreator {
 		String oneMCExtra = (classNumber == 1 ? "" : "_" + classNumber);
 		setTextField("1MC" + oneMCExtra, classData.instructorName);
 
-		if (classData.sessionName != null) {
+		if (classData.sessionName != null && !classData.sessionName.equals("")) {
 			if (ClassData.LEGAL_SESSIONS.contains(classData.sessionName)) {
 				setCheckBox("Session " + classData.sessionName + " " + classNumber, true);
 			} else {
 				throw new IllegalArgumentException(
-						"Session name must be one of the following: " + ClassData.LEGAL_SESSIONS);
+						"Session name must be one of the following: " + ClassData.LEGAL_SESSIONS + " but was "+classData.sessionName);
 			}
 		}
 
@@ -178,7 +178,7 @@ public class PDFCreator {
 	}
 
 	private void setOtherFieldValue(String fieldName, String value) throws IOException {
-		if (value == null) {
+		if (value == null || value.equals("")) {
 			return;
 		}
 		PDField field = acroForm.getField(fieldName);

@@ -345,7 +345,7 @@ public class Main {
 
 	private static Optional<String> getGoogleID(String idToken) {
 		Optional<Payload> optionalPayload = idToken.equals("ANON") ? Optional.empty() : verify(idToken);
-		System.out.println(System.currentTimeMillis());
+		//System.out.println(System.currentTimeMillis());
 		if (optionalPayload.isPresent()) {
 			Payload payload = optionalPayload.get();
 			if (!payload.getHostedDomain().equals("ncf.edu")) {
@@ -367,9 +367,9 @@ public class Main {
 				.setIssuer("accounts.google.com")
 				.build();
 		try {
-			System.out.println("About to verify: " +System.currentTimeMillis());
+			//System.out.println("About to verify: " +System.currentTimeMillis());
 			GoogleIdToken idToken = verifier.verify(idTokenString);
-			System.out.println(System.currentTimeMillis());
+			//System.out.println(System.currentTimeMillis());
 			//System.out.println("verified token: " + idToken);
 			return Optional.ofNullable(idToken).map(x -> x.getPayload());
 		} catch (GeneralSecurityException | IOException e) {

@@ -1,5 +1,4 @@
 //var contractId = $("#contract-id").text();
-
 //console.log("contract id: " + contractId);
 
 var FullPage = React.createClass({
@@ -16,14 +15,21 @@ var FullPage = React.createClass({
 		window.location.hash = '#' + contractId;
 		this.setState({contractId: contractId});
 	},
+	handleContractListUpdate: function(contracts) {
+		if (this.state.contractId === null && contracts.length > 0) {
+			this.changeContractId(contracts[0].contractId);
+		}
+	},
 	render: function() {
 		var optionalContract = null;
 		if (this.state.contractId != null) {
-			optionalContract = <ContractBox contractId={this.state.contractId} pollInterval={20000} />
+			optionalContract = <ContractBox contractId={this.state.contractId}
+					pollInterval={20000} />
 		}
 		return (
 			<div>
-				<ContractList changeContractId={this.changeContractId} pollInterval={200000} />
+				<ContractList changeContractId={this.changeContractId}
+						onUpdate={this.handleContractListUpdate} pollInterval={200000} />
 				{optionalContract}
 			</div>
 		);
@@ -43,6 +49,7 @@ var ContractList = React.createClass({
 				console.log(data);
 				data.contracts.sort((a, b) => b.dateLastModified - a.dateLastModified);
 				this.setState({contracts: data.contracts});
+				this.props.onUpdate(data.contracts);
 			}
 		);
 	},

@@ -29,31 +29,31 @@ public class GooglePayload {
 	}
 
 	public String googleId() {
-		//printDebug();
+		// printDebug();
 		return payload.getSubject();
 	}
 
 	public Payload payload() {
 		return payload;
 	}
-	
+
 	public String firstName() {
 		return (String) payload.get("given_name");
 	}
-	
+
 	public String lastName() {
 		return (String) payload.get("family_name");
 	}
 
 	public void printDebug() {
-		//System.out.println(payload.get("given_name"));
+		// System.out.println(payload.get("given_name"));
 		System.out.println(payload.keySet());
 	}
 
 	public static GooglePayload fromRequest(Request req) {
 		return fromIdTokenString(
 				getCookieFromRequest(req, idTokenCookieName)
-				.orElseThrow(() -> VerificationException.COOKIE_MISSING));
+						.orElseThrow(() -> VerificationException.COOKIE_MISSING));
 	}
 
 	private static Optional<String> getCookieFromRequest(Request req, String cookieName) {
@@ -62,7 +62,8 @@ public class GooglePayload {
 
 	private static GooglePayload fromIdTokenString(String idTokenString) {
 		try {
-			return fromGoogleIdToken(verifier.verify(idTokenString));
+			return fromGoogleIdToken(Optional.ofNullable(verifier.verify(idTokenString))
+					.orElseThrow(() -> new VerificationException("invalid token")));
 		} catch (GeneralSecurityException | IOException e) {
 			e.printStackTrace();
 			throw new VerificationException("There was an issue verifying the provided Google ID token string");
@@ -70,7 +71,8 @@ public class GooglePayload {
 	}
 
 	private static GooglePayload fromGoogleIdToken(GoogleIdToken idToken) {
-		return fromPayload(idToken.getPayload());
+		return fromPayload(Optional.ofNullable(idToken.getPayload())
+				.orElseThrow(() -> new VerificationException("Payload empty")));
 	}
 
 	private static GooglePayload fromPayload(Payload payload) {

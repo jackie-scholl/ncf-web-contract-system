@@ -55,9 +55,20 @@ public class Main {
 		Spark.post("/contracts", new AddContract());
 		Spark.get("/contracts/:contractId", "text/html", new ContractForm(), freeMarker);
 		Spark.get("/contracts/:contractId/pdf", new PDFContractHandler());
-		Spark.post("/contracts/:contractId/save2", "text/html", new SaveContractHandler2());
+		Spark.post("/contracts/:contractId/save2", "text/html", new SaveContractHandler());
+
+		Spark.get("/contracts2", "text/html", Main::handleMainPage, freeMarker);
+		
 		Spark.get("/api/contracts", "text/json", new ApiContractList());
 		Spark.get("/api/contracts/:contractId", "text/json", new LoadContractHandler());
+		Spark.post("/api/contracts/:contractId/save", "text/json", new SaveContractHandler());
+		Spark.post("/api/contracts", "text/json", new AddContract());
+	}
+	
+	private static ModelAndView handleMainPage(Request req, Response res) {
+		Map<String, Object> variables = ImmutableMap.of();
+		System.out.println("Done returning single page app");
+		return new ModelAndView(variables, "single_page_app.ftl");
 	}
 
 
@@ -160,7 +171,7 @@ public class Main {
 		}
 	}
 
-	private static class SaveContractHandler2 implements Route {
+	private static class SaveContractHandler implements Route {
 		public Object handle(Request req, Response res) {
 			System.out.println("Starting to save contract: ");
 			String googleId = GooglePayload.fromRequest(req).googleId();

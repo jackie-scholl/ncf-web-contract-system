@@ -1,7 +1,7 @@
 <!DOCTYPE html>
   <head>
     <meta charset="utf-8">
-    <title>${title}</title>
+    <title>Contracts</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- In real-world webapps, css is usually minified and
          concatenated. Here, separate normalize from our code, and
@@ -19,6 +19,13 @@
     <script src='/js/main.js'></script>
     <script src="/js/jquery-2.1.1.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.0.3/js.cookie.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.0.1/react.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.0.1/react-dom.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.6.16/browser.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.5/marked.min.js"></script>
+    <script src="/js/pdfobject.min.js"></script>
 
     <meta name="google-signin-scope" content="profile email">
     <meta name="google-signin-client_id" content="784978983695-km7e0k6q09qmrmgk3r2aortu0oqdk2tk.apps.googleusercontent.com">
@@ -38,9 +45,9 @@
 		    </div>
 	  </div>
 
-    ${heading}
+    <div id="content"></div>
 
-    ${content}
+    <script type="text/babel" src="/js/single_page_app.js"></script>
 
   </body>
 </html>

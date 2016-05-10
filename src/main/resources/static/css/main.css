@@ -35,4 +35,28 @@
 	display: none;
 }
 
+.left-sidebar {
+  width: 220px;
+  float: left;
+  background-color: #E0E0FF;
+}
 
+.main {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 600px;
+}
+
+.login-area {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 200px;
+}
+
+#contractForm >table >tbody >tr >td:first-child >span >input {
+  max-width: 4em;
+}
+
+#contractForm >table >tbody >tr >td:nth-child(4) >span >select {
+  max-width: 7em;
+}

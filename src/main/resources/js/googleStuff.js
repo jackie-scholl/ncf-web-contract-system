@@ -2,7 +2,9 @@
 
 var googleUser = null;
 var gIdToken = null;
-var onSignInExtra = function() {}
+var onSignInExtra = function() {};
+
+console.log('hey there!');
 
 function hideLogout() {
 	$(".logged-in").hide();
@@ -60,8 +62,8 @@ function onSignInFailure(error) {
 	console.log(JSON.stringify({message: "fail", value: error}));
 }
 
-module.exports = {
+/*module.exports = {
 	signOut: signOut,
 	onSignIn: onSignIn,
 	onSignInFailure: onSignInFailure
-}
+}*/

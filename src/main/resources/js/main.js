@@ -13,6 +13,8 @@ function onSignIn(success) {
 }
 var onSignInFailure = GoogleStuff.onSignInFailure;*/
 
+const apiRoot = 'http://localhost:4230';
+
 var FullPage = React.createClass({
 	getInitialState: function() {
 		console.log("window.location.hash: "+window.location.hash);
@@ -55,7 +57,7 @@ var ContractList = React.createClass({
 		};
 	},
 	loadContractsFromServer: function() {
-		$.getJSON("/api/contracts",
+		$.getJSON(apiRoot+"/api/contracts",
 			{},
 			(data) => {
 				console.log(data);
@@ -67,7 +69,7 @@ var ContractList = React.createClass({
 	},
 	createContract: function(e) {
 		e.preventDefault();
-		$.post("/api/contracts",
+		$.post(apiRoot+"/api/contracts",
 			(data) => {
 				console.log(data);
 				this.props.changeContractId(data.contractId);
@@ -210,7 +212,6 @@ function arraysEqual(a1,a2) {
     return JSON.stringify(a1)==JSON.stringify(a2);
 }
 
-
 var ContractBox = React.createClass({
 	render: function() {
 		return (
@@ -241,7 +242,7 @@ var ContractForm = React.createClass({
 	updateTrigger: function() {
 		console.log(this.state);
 		console.log(JSON.stringify(this.state));
-		$.post('/contracts/'+this.props.contractId+'/save2',
+		$.post(apiRoot+'/api/contracts/'+this.props.contractId+'/save',
 			{data: JSON.stringify(this.state)},
 			(data) => {
 				console.log("Saved to server");
@@ -250,7 +251,7 @@ var ContractForm = React.createClass({
 		);
 	},
 	updatePDF: function() {
-		const url = '/contracts/'+this.props.contractId+'/pdf';
+		const url = apiRoot+'/contracts/'+this.props.contractId+'/pdf';
 		const internalHTML = "<a href="+url+">Click here to see PDF</a>";
 		const pdfHTML = "<iframe src='"+url+"' width='100%' height='830px'>"+internalHTML+"</object>";
 		$("#display-pdf").html(pdfHTML);
@@ -261,8 +262,8 @@ var ContractForm = React.createClass({
 		PDFObject.embed('/contracts/'+this.props.contractId+'/pdf', $("#display-pdf"), options);*/
 	},
 	loadContractFromServer: function() {
-		console.log('/api/contracts/'+this.props.contractId);
-		$.getJSON('/api/contracts/'+this.props.contractId,
+		console.log(apiRoot+'/api/contracts/'+this.props.contractId);
+		$.getJSON(apiRoot+'/api/contracts/'+this.props.contractId,
 			{},
 			(data) => {
 				console.log("Recieved contract entry from server");
@@ -286,7 +287,7 @@ var ContractForm = React.createClass({
 		return (
 			<div className="contractForm">
 			<form id="contractForm" class="blank-form"
-						action={"/contracts/"+this.props.contractId+"/save"}>
+						action={apiRoot+"/contracts/"+this.props.contractId+"/save"}>
 				<SelectInput displayName="Semester" magic={this.magic('semester')}>
 					<SelectOption value="" display="Select One" />
 					<SelectOption value="Spring" display="Spring" />
@@ -516,7 +517,6 @@ var SelectOption = React.createClass({
 	}
 });
 
-
 var BasicComponent = React.createClass({
 	render: function() {
 		return (
@@ -524,7 +524,6 @@ var BasicComponent = React.createClass({
 		);
 	}
 });
-
 
 ReactDOM.render(
 	<FullPage />,

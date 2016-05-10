@@ -14,6 +14,8 @@ function onSignIn(success) {
 }
 var onSignInFailure = GoogleStuff.onSignInFailure;*/
 
+const apiRoot = 'http://localhost:4230';
+
 var FullPage = React.createClass({
 	displayName: 'FullPage',
 
@@ -60,7 +62,7 @@ var ContractList = React.createClass({
 		};
 	},
 	loadContractsFromServer: function () {
-		$.getJSON("/api/contracts", {}, data => {
+		$.getJSON(apiRoot + "/api/contracts", {}, data => {
 			console.log(data);
 			data.contracts.sort((a, b) => b.dateLastModified - a.dateLastModified);
 			this.setState({ contracts: data.contracts });
@@ -69,7 +71,7 @@ var ContractList = React.createClass({
 	},
 	createContract: function (e) {
 		e.preventDefault();
-		$.post("/api/contracts", data => {
+		$.post(apiRoot + "/api/contracts", data => {
 			console.log(data);
 			this.props.changeContractId(data.contractId);
 		});
@@ -258,13 +260,13 @@ var ContractForm = React.createClass({
 	updateTrigger: function () {
 		console.log(this.state);
 		console.log(JSON.stringify(this.state));
-		$.post('/contracts/' + this.props.contractId + '/save2', { data: JSON.stringify(this.state) }, data => {
+		$.post(apiRoot + '/api/contracts/' + this.props.contractId + '/save', { data: JSON.stringify(this.state) }, data => {
 			console.log("Saved to server");
 			this.updatePDF();
 		});
 	},
 	updatePDF: function () {
-		const url = '/contracts/' + this.props.contractId + '/pdf';
+		const url = apiRoot + '/contracts/' + this.props.contractId + '/pdf';
 		const internalHTML = "<a href=" + url + ">Click here to see PDF</a>";
 		const pdfHTML = "<iframe src='" + url + "' width='100%' height='830px'>" + internalHTML + "</object>";
 		$("#display-pdf").html(pdfHTML);
@@ -275,8 +277,8 @@ var ContractForm = React.createClass({
   PDFObject.embed('/contracts/'+this.props.contractId+'/pdf', $("#display-pdf"), options);*/
 	},
 	loadContractFromServer: function () {
-		console.log('/api/contracts/' + this.props.contractId);
-		$.getJSON('/api/contracts/' + this.props.contractId, {}, data => {
+		console.log(apiRoot + '/api/contracts/' + this.props.contractId);
+		$.getJSON(apiRoot + '/api/contracts/' + this.props.contractId, {}, data => {
 			console.log("Recieved contract entry from server");
 			this.setState(data.contract.contractData);
 			this.updatePDF();
@@ -304,7 +306,7 @@ var ContractForm = React.createClass({
 			React.createElement(
 				'form',
 				{ id: 'contractForm', 'class': 'blank-form',
-					action: "/contracts/" + this.props.contractId + "/save" },
+					action: apiRoot + "/contracts/" + this.props.contractId + "/save" },
 				React.createElement(
 					SelectInput,
 					{ displayName: 'Semester', magic: this.magic('semester') },
@@ -603,14 +605,6 @@ var SelectOption = React.createClass({
 	}
 });
 
-/*var DisplayPDF = React.createClass({
-	render: function() {
-		return (
-			<embed src={this.props.source} width="500" height="375" type='application/pdf' align='center' />
-		);
-	}
-});*/
-
 var BasicComponent = React.createClass({
 	displayName: 'BasicComponent',
 
@@ -620,60 +614,6 @@ var BasicComponent = React.createClass({
 });
 
 ReactDOM.render(React.createElement(FullPage, null), document.getElementById('content'));
-
-var googleUser = null;
-var gIdToken = null;
-var onSignInExtra = function () {};
-
-function hideLogout() {
-	$(".logged-in").hide();
-}
-
-function newContract() {
-	$(".blank-form").show();
-}
-
-function signOut() {
-	console.log('Signing out ' + googleUser.getBasicProfile().getName());
-	var auth2 = gapi.auth2.getAuthInstance();
-	auth2.disconnect();
-	auth2.signOut().then(function () {
-		console.log('User signed out.');
-	});
-	Cookies.remove("id_token3");
-	googleUser = null;
-	gIdToken = null;
-	$(".logged-in").hide();
-	$(".logged-out").show();
-}
-
-function onSignIn(success) {
-	console.log(JSON.stringify({ message: "success", value: success }));
-	googleUser = success;
-	gIdToken = googleUser.getAuthResponse().id_token;
-	Cookies.set('id_token3', gIdToken, { expires: 7 });
-
-	// Useful data for your client-side scripts:
-	var profile = googleUser.getBasicProfile();
-
-	$(".logged-in").show();
-	$(".logged-out").hide();
-
-	$(".user-full-name").html(profile.getName());
-
-	// The ID token you need to pass to your backend:
-	$("#google_id_token").val(gIdToken);
-	//gIdToken = id_token;
-
-	$("#firstName").val(profile.getGivenName());
-	$("#lastName").val(profile.getFamilyName());
-	onSignInExtra();
-};
-
-function onSignInFailure(error) {
-	var errorString = "Sorry, something went wrong with the Google sign-in; please let us know about the issue";
-	console.log(JSON.stringify({ message: "fail", value: error }));
-}
 
 },{"jquery":3,"react":169,"react-dom":4}],2:[function(require,module,exports){
 // shim for using process in browser

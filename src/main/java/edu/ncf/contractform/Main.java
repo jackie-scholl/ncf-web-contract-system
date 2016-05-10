@@ -40,7 +40,8 @@ public class Main {
 
 		// We need to serve some simple static files containing CSS and JavaScript.
 		// This tells Spark where to look for urls of the form "/static/*".
-		Spark.externalStaticFileLocation("src/main/resources/static");
+		//Spark.externalStaticFileLocation("src/main/resources/static");
+		Spark.externalStaticFileLocation("target/resources");
 
 		// Development is easier if we show exceptions in the browser.
 		Spark.exception(Exception.class, new ExceptionPrinter());

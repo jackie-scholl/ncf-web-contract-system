@@ -3,11 +3,7 @@
     <meta charset="utf-8">
     <title>Contracts</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- In real-world webapps, css is usually minified and
-         concatenated. Here, separate normalize from our code, and
-         avoid minification for clarity. -->
-    <link rel="stylesheet" href="/css/normalize.css">
-    <link rel="stylesheet" href="/css/html5bp.css">
+
     <link rel="stylesheet" href="/css/main.css">
     <link href='http://fonts.googleapis.com/css?family=Oleo+Script'
           rel='stylesheet' type='text/css'>
@@ -15,12 +11,13 @@
           rel='stylesheet' type='text/css'>
     <link href='http://fonts.googleapis.com/css?family=Just+Another+Hand'
           rel='stylesheet' type='text/css'>
-    <!-- Again, we're serving up the unminified source for clarity. -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.0.3/js.cookie.min.js"></script>
-    <script src="/js/jquery-2.1.1.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+
+
 
     <!--
-
+    <script src="/js/jquery-2.1.1.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.0.1/react.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.0.1/react-dom.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.6.16/browser.js"></script>
@@ -37,7 +34,7 @@
   <body>
   	<div id="login-area" class="login-area">
 		    <div id="login" class="logged-out">
-          <div class="g-signin2" id="my-signin" data-onsuccess="onSignIn" data-onfailure="onSignInFailure"
+          <div class="g-signin2" id="my-signin" data-onsuccess="onSignIn2" data-onfailure="onSignInFailure"
 				      data-width="240" data-longtitle="true" data-theme="dark">
           </div>
         </div>
@@ -49,9 +46,28 @@
 
     <div id="content"></div>
 
-    <script src="/js/googleStuff.js"></script>
     <!--<script type="text/babel" src="/js/single_page_app.js"></script>-->
-    <script src="/js/bundle.js"></script>
+    <script src="/js/googleStuff.js"></script>
+    <script src="/js/main.js"></script>
+
+    <script>
+      function onSignIn2(googleUser) {
+        // Useful data for your client-side scripts:
+        var profile = googleUser.getBasicProfile();
+        console.log("ID: " + profile.getId()); // Don't send this directly to your server!
+        console.log('Full Name: ' + profile.getName());
+        console.log('Given Name: ' + profile.getGivenName());
+        console.log('Family Name: ' + profile.getFamilyName());
+        console.log("Image URL: " + profile.getImageUrl());
+        console.log("Email: " + profile.getEmail());
+
+        // The ID token you need to pass to your backend:
+        var id_token = googleUser.getAuthResponse().id_token;
+        console.log("ID Token: " + id_token);
+
+        onSignIn(googleUser);
+      };
+    </script>
 
 
   </body>

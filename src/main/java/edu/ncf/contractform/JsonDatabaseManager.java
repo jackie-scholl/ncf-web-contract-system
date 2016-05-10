@@ -82,7 +82,7 @@ public class JsonDatabaseManager implements ContractStore {
 	public void updateContract(String contractId, String googleId, ContractData newData) {
 		try (Connection c = DriverManager.getConnection(DB_URL)) {
 			PreparedStatement pstmt = c
-					.prepareStatement("UPDATE Contracts SET ContractData=?, DateLastModified=? WHERE ContractID=? AND GoogleID=?");
+					.prepareStatement("UPDATE Contracts SET ContractData=?, DateLastModified=? WHERE ContractID=? AND GoogleID=?;");
 			pstmt.setString(1, newData.toJson());
 			pstmt.setLong(2, System.currentTimeMillis());
 			pstmt.setLong(3, base64ToLong(contractId));
@@ -97,7 +97,7 @@ public class JsonDatabaseManager implements ContractStore {
 		try (Connection c = DriverManager.getConnection(DB_URL)) {
 
 			PreparedStatement pstmt = c.prepareStatement(
-					"SELECT ContractID, GoogleID, ContractData, DateLastModified FROM Contracts WHERE ContractID=?");
+					"SELECT ContractID, GoogleID, ContractData, DateLastModified FROM Contracts WHERE ContractID=?;");
 			pstmt.setLong(1, base64ToLong(contractId));
 			ResultSet rs = pstmt.executeQuery();
 			if (!rs.next()) {
@@ -114,7 +114,7 @@ public class JsonDatabaseManager implements ContractStore {
 		try (Connection c = DriverManager.getConnection(DB_URL)) {
 
 			PreparedStatement pstmt = c.prepareStatement(
-					"SELECT ContractID, GoogleID, ContractData, DateLastModified FROM Contracts WHERE ContractID=? AND GoogleID=?");
+					"SELECT ContractID, GoogleID, ContractData, DateLastModified FROM Contracts WHERE ContractID=? AND GoogleID=?;");
 			pstmt.setLong(1, base64ToLong(contractId));
 			pstmt.setString(2, googleId);
 			ResultSet rs = pstmt.executeQuery();
@@ -132,7 +132,7 @@ public class JsonDatabaseManager implements ContractStore {
 		try (Connection c = DriverManager.getConnection(DB_URL)) {
 
 			PreparedStatement pstmt = c.prepareStatement(
-					"SELECT ContractID, GoogleID, ContractData, DateLastModified FROM Contracts WHERE GoogleID=?");
+					"SELECT ContractID, GoogleID, ContractData, DateLastModified FROM Contracts WHERE GoogleID=?;");
 			pstmt.setString(1, googleId);
 			ResultSet rs = pstmt.executeQuery();
 			List<ContractEntry> resultList = new ArrayList<>();
@@ -149,7 +149,7 @@ public class JsonDatabaseManager implements ContractStore {
 	public List<ContractEntry> getAllContracts() {
 		try (Connection c = DriverManager.getConnection(DB_URL)) {
 			PreparedStatement pstmt = c.prepareStatement(
-					"SELECT ContractID, GoogleID, ContractData, DateLastModified FROM Contracts");
+					"SELECT ContractID, GoogleID, ContractData, DateLastModified FROM Contracts;");
 			ResultSet rs = pstmt.executeQuery();
 			List<ContractEntry> resultList = new ArrayList<>();
 			while (rs.next()) {

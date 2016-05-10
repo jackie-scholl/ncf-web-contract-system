@@ -9,3 +9,4 @@ nbactions.xml
 .settings/org.eclipse.m2e.core.prefs
 ContractsNCF.db
 JSONContractsNCF.db
+node_modules

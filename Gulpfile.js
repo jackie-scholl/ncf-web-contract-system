@@ -26,7 +26,7 @@ gulp.task('clean', function() {
   return del([target]);
 });
 
-gulp.task('scss', ['clean'], function() {
+gulp.task('scss', function() {
   return gulp
     .src(paths.scss)
     .pipe(sourcemaps.init())
@@ -35,7 +35,7 @@ gulp.task('scss', ['clean'], function() {
     .pipe(gulp.dest(target+'css/'));
 });
 
-gulp.task('scripts', ['clean'], function() {
+gulp.task('scripts', function() {
   // Minify and copy all JavaScript (except vendor scripts)
   // with sourcemaps all the way down
   return gulp.src(paths.scripts)
@@ -48,7 +48,7 @@ gulp.task('scripts', ['clean'], function() {
     .pipe(gulp.dest(target+'js'));
 });
 
-gulp.task('html', ['clean'], function() {
+gulp.task('html', function() {
   return gulp.src(paths.html)
     .pipe(gulp.dest(target));
 })

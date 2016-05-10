@@ -14,8 +14,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.0.3/js.cookie.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
 
-
-
     <!--
     <script src="/js/jquery-2.1.1.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.0.1/react.js"></script>
@@ -34,7 +32,7 @@
   <body>
   	<div id="login-area" class="login-area">
 		    <div id="login" class="logged-out">
-          <div class="g-signin2" id="my-signin" data-onsuccess="onSignIn2" data-onfailure="onSignInFailure"
+          <div class="g-signin2" id="my-signin" data-onsuccess="onSignIn" data-onfailure="onSignInFailure"
 				      data-width="240" data-longtitle="true" data-theme="dark">
           </div>
         </div>
@@ -46,27 +44,72 @@
 
     <div id="content"></div>
 
-    <!--<script type="text/babel" src="/js/single_page_app.js"></script>-->
     <script src="/js/googleStuff.js"></script>
     <script src="/js/main.js"></script>
 
     <script>
-      function onSignIn2(googleUser) {
+      var googleUser = null;
+      var gIdToken = null;
+      var onSignInExtra = function() {};
+
+      console.log('hey there!');
+
+      function hideLogout() {
+        $(".logged-in").hide();
+      }
+
+      function newContract() {
+          $(".blank-form").show();
+      }
+
+      function signOut() {
+        console.log('Signing out ' + googleUser.getBasicProfile().getName());
+        var auth2 = gapi.auth2.getAuthInstance();
+        auth2.disconnect();
+        auth2.signOut().then(function() {
+          console.log('User signed out.');
+        });
+        Cookies.remove("id_token3");
+        googleUser = null;
+        gIdToken = null;
+        $(".logged-in").hide();
+        $(".logged-out").show();
+      }
+
+      function onSignIn(success) {
+        console.log(JSON.stringify({message: "success", value: success}));
+        googleUser = success;
+        gIdToken = googleUser.getAuthResponse().id_token;
+        //Cookies.set('id_token3', googleUser.getAuthResponse().id_token, {expires: 7});
+        Cookies.set('id_token3', gIdToken, {expires: 7});
+
         // Useful data for your client-side scripts:
         var profile = googleUser.getBasicProfile();
-        console.log("ID: " + profile.getId()); // Don't send this directly to your server!
-        console.log('Full Name: ' + profile.getName());
-        console.log('Given Name: ' + profile.getGivenName());
-        console.log('Family Name: ' + profile.getFamilyName());
-        console.log("Image URL: " + profile.getImageUrl());
-        console.log("Email: " + profile.getEmail());
+
+        $(".logged-in").show();
+        $(".logged-out").hide();
+
+        $(".user-full-name").html(profile.getName());
 
         // The ID token you need to pass to your backend:
-        var id_token = googleUser.getAuthResponse().id_token;
-        console.log("ID Token: " + id_token);
+        $("#google_id_token").val(gIdToken);
+        //gIdToken = id_token;
 
-        onSignIn(googleUser);
+        $("#firstName").val(profile.getGivenName());
+        $("#lastName").val(profile.getFamilyName());
+        onSignInExtra();
+
+        Cookies.remove("id_token2");
+        Cookies.remove("test_cookie");
+        Cookies.remove("SQLiteManager_currentLangue");
+        Cookies.remove("G_AUTHUSER_H");
       };
+
+      function onSignInFailure(error) {
+        console.log("oops");
+        var errorString = "Sorry, something went wrong with the Google sign-in; please let us know about the issue";
+        console.log(JSON.stringify({message: "fail", value: error}));
+      }
     </script>
 
 

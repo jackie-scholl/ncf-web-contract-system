@@ -132,8 +132,8 @@ public enum DynamoDBContractStore implements ContractStore {
 								.withAttributeValueList(new AttributeValue(googleId)));
 		System.out.println("About to send query: " + System.currentTimeMillis());
 		QueryResult queryResult = dynamoDB.query(req);
-		System.out.println("Just recieved results: " + System.currentTimeMillis());
 		List<ContractEntry> results = queryResultToContractEntries(queryResult);
+		System.out.println("Just recieved results: " + System.currentTimeMillis());
 		return results;
 	}
 

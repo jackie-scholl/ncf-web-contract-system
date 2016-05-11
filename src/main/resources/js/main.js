@@ -408,7 +408,7 @@ var Class = React.createClass({
 					<SelectOption value='M2' display='Module 2' />
 					<SelectOption value='1MC' display='Full Term For Module Credit' />
 				</SelectInput></td>
-				<td><TextInput2 placeHolder="President trublu"
+				<td><TextInput2 placeHolder="President #trublu"
 						magic={this.magic("instructorName")}/></td>
 			</tr>
 		);

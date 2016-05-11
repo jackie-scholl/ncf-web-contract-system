@@ -49,8 +49,7 @@ public class Main {
 		// We render our responses with the FreeMaker template system.
 		FreeMarkerEngine freeMarker = createEngine();
 
-		//contractStore = JsonDatabaseManager.instance();
-		contractStore = DynamoDBContractStore.INSTANCE;
+		contractStore = ContractStore.getDefaultContractStore();
 
 		Spark.get("/contracts", "text/html", new ContractList(), freeMarker);
 		Spark.post("/contracts", new AddContract());

@@ -13,4 +13,8 @@ public interface ContractStore {
 	@Deprecated default	public void showContracts() {
 		System.out.println(getAllContracts());
 	};
+	public static ContractStore getDefaultContractStore() {
+		//return DynamoDBContractStore.instance();
+		return JsonDatabaseManager.instance();
+	}
 }

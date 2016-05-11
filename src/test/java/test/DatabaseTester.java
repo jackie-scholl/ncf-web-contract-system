@@ -2,7 +2,9 @@ package test;
 
 
 import org.junit.Test;
-import edu.ncf.contractform.JsonDatabaseManager;
+
+import edu.ncf.contractform.SQLiteContractManager;
+import edu.ncf.contractform.SQLiteContractManagerTest;
 
 import static org.junit.Assert.*;
 
@@ -24,7 +26,7 @@ public class DatabaseTester {
     
     @Test
     public void testGetAllContractsNotNull() {
-    	assertNotNull("should not be null", JsonDatabaseManager.instance().getAllContracts());
+    	assertNotNull("should not be null", SQLiteContractManager.getDefault().getAllContracts());
     }
     
 }

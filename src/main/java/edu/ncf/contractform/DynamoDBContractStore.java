@@ -56,12 +56,6 @@ public enum DynamoDBContractStore implements ContractStore {
 		return tableDescription;
 	}
 
-	private void insertContractEntriesFromLocalDb() {
-		for (ContractEntry e : JsonDatabaseManager.instance().getAllContracts()) {
-			System.out.println(INSTANCE.insertContract(e));
-		}
-	}
-
 	private PutItemResult insertContract(ContractEntry entry) {
 		Map<String, AttributeValue> item = contractEntryToAttributeMap(entry);
 		PutItemRequest putItemRequest = new PutItemRequest(tableName, item);

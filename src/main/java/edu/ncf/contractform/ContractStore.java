@@ -13,8 +13,13 @@ public interface ContractStore {
 	@Deprecated default	public void showContracts() {
 		System.out.println(getAllContracts());
 	};
+	
+	public static final ContractStore LOCAL_SQLITE = SQLiteContractManager.getDefault(),
+									DYNAMO_DB = DynamoDBContractStore.instance();
+	
+	static final ContractStore DEFAULT = LOCAL_SQLITE;
 	public static ContractStore getDefaultContractStore() {
 		//return DynamoDBContractStore.instance();
-		return JsonDatabaseManager.instance();
+		return DEFAULT;
 	}
 }

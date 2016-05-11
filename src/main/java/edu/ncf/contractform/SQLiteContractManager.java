@@ -9,19 +9,30 @@ import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
-public class JsonDatabaseManager implements ContractStore {
-	private static final String DB_URL = "jdbc:sqlite:JSONContractsNCF.db";
-	//private static final String DB_URL = "jdbc:sqlite:/Users/jackie/Documents/workspace/contract-form/JSONContractsNCF.db";
+public class SQLiteContractManager implements ContractStore {
+	private static final String LOCAL_DB_URL = "jdbc:sqlite:JSONContractsNCF.db";
+	private final String dbUrl;
 	
 	public static void main(String[] args) {
-		for (ContractEntry e : instance().getAllContracts()) {
+		for (ContractEntry e : getDefault().getAllContracts()) {
 			System.out.println(e);
 		}
 	}
 	
-	private JsonDatabaseManager() {}
+	public static ContractStore getDefault() {
+		return new SQLiteContractManager(LOCAL_DB_URL);
+	}
 	
-	private static enum JsonDatabaseManagerSingleton {
+	static SQLiteContractManager getTest(String testDatabaseName) {
+		return new SQLiteContractManager("jdbc:sqlite:" + testDatabaseName);
+	}
+	
+	private SQLiteContractManager(String dbUrl) {
+		this.dbUrl = dbUrl;
+		createTableIfNeeded();
+	}
+	
+	/*private static enum JsonDatabaseManagerSingleton {
 		INSTANCE;
 		private final JsonDatabaseManager jsonDatabaseManager;
 
@@ -29,14 +40,14 @@ public class JsonDatabaseManager implements ContractStore {
 			this.jsonDatabaseManager = new JsonDatabaseManager();
 			jsonDatabaseManager.createTables();
 		}
-	}
+	}*/
 	
-	public static JsonDatabaseManager instance() {
+	/*public static JsonDatabaseManager instance() {
 		return JsonDatabaseManagerSingleton.INSTANCE.jsonDatabaseManager;
-	}
+	}*/
 	
 	private void executeStatement(String statement) {
-		try (Connection c = DriverManager.getConnection(DB_URL)) {
+		try (Connection c = DriverManager.getConnection(dbUrl)) {
 			Statement stmt = c.createStatement();
 			System.out.println(statement);
 			stmt.execute(statement);
@@ -47,7 +58,7 @@ public class JsonDatabaseManager implements ContractStore {
 		}
 	}
 
-	public void createTables() {
+	public void createTableIfNeeded() {
 		String createStudentsTable = "CREATE TABLE IF NOT EXISTS Contracts ("
 				+ "ContractID            INTEGER PRIMARY KEY NOT NULL, "
 				+ "GoogleID              VarChar           NOT NULL, "
@@ -62,7 +73,7 @@ public class JsonDatabaseManager implements ContractStore {
 	}
 
 	public String createContract(String googleId, ContractData initialData) {
-		try (Connection c = DriverManager.getConnection(DB_URL)) {
+		try (Connection c = DriverManager.getConnection(dbUrl)) {
 			c.setAutoCommit(false);
 			PreparedStatement pstmt = c
 					.prepareStatement("INSERT INTO Contracts  (GoogleID, ContractData, DateLastModified) VALUES (?, ?, ?);");
@@ -80,7 +91,7 @@ public class JsonDatabaseManager implements ContractStore {
 	}
 
 	public void updateContract(String contractId, String googleId, ContractData newData) {
-		try (Connection c = DriverManager.getConnection(DB_URL)) {
+		try (Connection c = DriverManager.getConnection(dbUrl)) {
 			PreparedStatement pstmt = c
 					.prepareStatement("UPDATE Contracts SET ContractData=?, DateLastModified=? WHERE ContractID=? AND GoogleID=?;");
 			pstmt.setString(1, newData.toJson());
@@ -94,7 +105,7 @@ public class JsonDatabaseManager implements ContractStore {
 	}
 
 	public ContractEntry getContractByContractId(String contractId) {
-		try (Connection c = DriverManager.getConnection(DB_URL)) {
+		try (Connection c = DriverManager.getConnection(dbUrl)) {
 
 			PreparedStatement pstmt = c.prepareStatement(
 					"SELECT ContractID, GoogleID, ContractData, DateLastModified FROM Contracts WHERE ContractID=?;");
@@ -111,7 +122,7 @@ public class JsonDatabaseManager implements ContractStore {
 	}
 	
 	public Optional<ContractEntry> getContract(String contractId, String googleId) {
-		try (Connection c = DriverManager.getConnection(DB_URL)) {
+		try (Connection c = DriverManager.getConnection(dbUrl)) {
 
 			PreparedStatement pstmt = c.prepareStatement(
 					"SELECT ContractID, GoogleID, ContractData, DateLastModified FROM Contracts WHERE ContractID=? AND GoogleID=?;");
@@ -129,7 +140,7 @@ public class JsonDatabaseManager implements ContractStore {
 	}
 
 	public List<ContractEntry> getContractsByGoogleId(String googleId) {
-		try (Connection c = DriverManager.getConnection(DB_URL)) {
+		try (Connection c = DriverManager.getConnection(dbUrl)) {
 
 			PreparedStatement pstmt = c.prepareStatement(
 					"SELECT ContractID, GoogleID, ContractData, DateLastModified FROM Contracts WHERE GoogleID=?;");
@@ -147,7 +158,7 @@ public class JsonDatabaseManager implements ContractStore {
 	}
 	
 	public List<ContractEntry> getAllContracts() {
-		try (Connection c = DriverManager.getConnection(DB_URL)) {
+		try (Connection c = DriverManager.getConnection(dbUrl)) {
 			PreparedStatement pstmt = c.prepareStatement(
 					"SELECT ContractID, GoogleID, ContractData, DateLastModified FROM Contracts;");
 			ResultSet rs = pstmt.executeQuery();

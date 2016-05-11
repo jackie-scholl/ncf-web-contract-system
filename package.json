@@ -9,7 +9,9 @@
   "author": "",
   "homepage": "https://bitbucket.org/tmir-chan/contract-form#readme",
   "devDependencies": {
+    "babel-core": "^6.8.0",
     "babel-preset-react": "^6.5.0",
+    "babel-runtime": "^6.6.1",
     "del": "^2.2.0",
     "gulp": "^3.9.1",
     "gulp-babel": "^6.1.2",
@@ -20,6 +22,7 @@
     "jquery": "^2.2.3",
     "js-cookie": "^2.1.1",
     "react": "^15.0.2",
-    "react-dom": "^15.0.2"
+    "react-dom": "^15.0.2",
+    "through2": "^2.0.1"
   }
 }

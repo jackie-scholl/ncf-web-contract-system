@@ -1,14 +1,9 @@
 var gulp = require('gulp');
 var sass = require('gulp-sass');
-var concat = require('gulp-concat');
 var sourcemaps = require('gulp-sourcemaps');
 var del = require('del');
 var react = require('gulp-react');
 var babel = require('gulp-babel');
-var browserify = require('browserify');
-var transform = require('vinyl-transform');
-var through2 = require('through2');
-var vueify = require('vueify');
 var gulpBrowser = require('gulp-browser');
 
 const resources = 'src/main/resources/';

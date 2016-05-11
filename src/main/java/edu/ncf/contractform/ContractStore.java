@@ -14,8 +14,8 @@ public interface ContractStore {
 		System.out.println(getAllContracts());
 	};
 	
-	public static final ContractStore LOCAL_SQLITE = SQLiteContractManager.getDefault(),
-									DYNAMO_DB = DynamoDBContractStore.instance();
+	public static final ContractStore LOCAL_SQLITE = SQLiteContractManager.getDefault()
+									;// ,DYNAMO_DB = DynamoDBContractStore.instance();
 	
 	static final ContractStore DEFAULT = LOCAL_SQLITE;
 	public static ContractStore getDefaultContractStore() {

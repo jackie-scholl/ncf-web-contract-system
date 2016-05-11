@@ -32,20 +32,6 @@ public class SQLiteContractManager implements ContractStore {
 		createTableIfNeeded();
 	}
 	
-	/*private static enum JsonDatabaseManagerSingleton {
-		INSTANCE;
-		private final JsonDatabaseManager jsonDatabaseManager;
-
-		private JsonDatabaseManagerSingleton() {
-			this.jsonDatabaseManager = new JsonDatabaseManager();
-			jsonDatabaseManager.createTables();
-		}
-	}*/
-	
-	/*public static JsonDatabaseManager instance() {
-		return JsonDatabaseManagerSingleton.INSTANCE.jsonDatabaseManager;
-	}*/
-	
 	private void executeStatement(String statement) {
 		try (Connection c = DriverManager.getConnection(dbUrl)) {
 			Statement stmt = c.createStatement();
@@ -98,23 +84,6 @@ public class SQLiteContractManager implements ContractStore {
 			pstmt.setLong(3, base64ToLong(contractId));
 			pstmt.setString(4, googleId);
 			pstmt.execute();
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	public ContractEntry getContractByContractId(String contractId) {
-		try (Connection c = DriverManager.getConnection(dbUrl)) {
-
-			PreparedStatement pstmt = c.prepareStatement(
-					"SELECT ContractID, GoogleID, ContractData, DateLastModified FROM Contracts WHERE ContractID=?;");
-			pstmt.setLong(1, base64ToLong(contractId));
-			ResultSet rs = pstmt.executeQuery();
-			if (!rs.next()) {
-				throw new IllegalArgumentException("Contract ID "+contractId+" does not exist");
-			}
-			return new ContractEntry(longToBase64(rs.getLong(1)), rs.getString(2), ContractData.fromJson(rs.getString(3)),
-					rs.getLong(4));
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}

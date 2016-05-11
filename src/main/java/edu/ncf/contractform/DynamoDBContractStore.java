@@ -56,13 +56,6 @@ public enum DynamoDBContractStore implements ContractStore {
 		return tableDescription;
 	}
 
-	private PutItemResult insertContract(ContractEntry entry) {
-		Map<String, AttributeValue> item = contractEntryToAttributeMap(entry);
-		PutItemRequest putItemRequest = new PutItemRequest(tableName, item);
-		PutItemResult putItemResult = dynamoDB.putItem(putItemRequest);
-		return putItemResult;
-	}
-
 	public String createContract(String googleId, ContractData initialData) {
 		/*
 		 * This should never conflict with an existing contract ID, but we use a check down below just in case. Here is
@@ -100,13 +93,6 @@ public enum DynamoDBContractStore implements ContractStore {
 					"Tried to create new item, but ContractId already exists; this is terrible. See comments.", e);
 		}
 		return newContractId;
-	}
-
-	public ContractEntry getContractByContractId(String contractId) {
-		GetItemRequest getItemRequest = new GetItemRequest().withTableName(tableName).addKeyEntry("ContractId",
-				new AttributeValue(contractId)).withConsistentRead(true);
-		GetItemResult result = dynamoDB.getItem(getItemRequest);
-		return attributeMapToContractEntry(result.getItem());
 	}
 
 	public Optional<ContractEntry> getContract(String contractId, String googleId) {

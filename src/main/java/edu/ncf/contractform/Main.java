@@ -46,60 +46,15 @@ public class Main {
 		// Development is easier if we show exceptions in the browser.
 		Spark.exception(Exception.class, new ExceptionPrinter());
 
-		// We render our responses with the FreeMaker template system.
-		FreeMarkerEngine freeMarker = createEngine();
-
 		contractStore = ContractStore.getDefaultContractStore();
-
-		Spark.get("/contracts", "text/html", new ContractList(), freeMarker);
-		Spark.post("/contracts", new AddContract());
-		Spark.get("/contracts/:contractId", "text/html", new ContractForm(), freeMarker);
-		Spark.get("/contracts/:contractId/pdf", new PDFContractHandler());
-		Spark.post("/contracts/:contractId/save2", "text/html", new SaveContractHandler());
-
-		Spark.get("/contracts2", "text/html", Main::handleMainPage, freeMarker);
 		
+		Spark.get("/contracts/:contractId/pdf", new PDFContractHandler());
 		Spark.get("/api/contracts", "text/json", new ApiContractList());
 		Spark.get("/api/contracts/:contractId", "text/json", new LoadContractHandler());
 		Spark.post("/api/contracts/:contractId/save", "text/json", new SaveContractHandler());
 		Spark.post("/api/contracts", "text/json", new AddContract());
 	}
 	
-	private static ModelAndView handleMainPage(Request req, Response res) {
-		Map<String, Object> variables = ImmutableMap.of();
-		System.out.println("Done returning single page app");
-		return new ModelAndView(variables, "single_page_app.ftl");
-	}
-
-
-	private static class ContractForm implements TemplateViewRoute {
-		@Override
-		public ModelAndView handle(Request req, Response res) {
-			String contractId = req.params(":contractId");
-			// use details from contractEntry to pre-fill the contract form
-			Map<String, Object> variables = new ImmutableMap.Builder<String, Object>()
-					.put("title", "Contract Form")
-					.put("id", contractId)
-					.build();
-			System.out.println("Done returning blank contract form");
-			// return new ModelAndView(variables, "contract2.ftl");
-			return new ModelAndView(variables, "contractReact.ftl");
-		}
-	}
-
-	/**
-	 * Shows the various contracts the user has
-	 */
-	private static class ContractList implements TemplateViewRoute {
-		@Override
-		public ModelAndView handle(Request req, Response res) {
-			Map<String, Object> variables = new ImmutableMap.Builder<String, Object>()
-					.put("title", "Contract List")
-					.build();
-			return new ModelAndView(variables, "contractList.ftl");
-		}
-	}
-
 	private static class AddContract implements Route {
 		public Object handle(Request req, Response res) {
 			GooglePayload payload = GooglePayload.fromRequest(req);
@@ -219,20 +174,6 @@ public class Main {
 		}
 	}
 	
-	// You need not worry about understanding what's below here.
-	private static FreeMarkerEngine createEngine() {
-		Configuration config = new Configuration();
-		File templates = new File("src/main/resources/spark/template/freemarker");
-		try {
-			config.setDirectoryForTemplateLoading(templates);
-		} catch (IOException ioe) {
-			System.out.printf("ERROR: Unable use %s for template loading.\n",
-					templates);
-			System.exit(1);
-		}
-		return new FreeMarkerEngine(config);
-	}
-
 	private static final int INTERNAL_SERVER_ERROR = 500;
 
 	private static class ExceptionPrinter implements ExceptionHandler {

@@ -49,7 +49,6 @@ public class SQLiteContractManager implements ContractStore {
 	private void executeStatement(String statement) {
 		try (Connection c = DriverManager.getConnection(dbUrl)) {
 			Statement stmt = c.createStatement();
-			System.out.println(statement);
 			stmt.execute(statement);
 			stmt.close();
 			c.close();

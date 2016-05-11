@@ -36,7 +36,7 @@ public class Main {
 	 * a results url.
 	 */
 	private static void runSparkServer() {
-		Spark.setPort(4230);
+		Spark.setPort(4231);
 
 		// We need to serve some simple static files containing CSS and JavaScript.
 		// This tells Spark where to look for urls of the form "/static/*".

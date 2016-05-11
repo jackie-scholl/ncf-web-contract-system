@@ -22,8 +22,9 @@ const target = 'target/resources/';
 // Not all tasks need to use streams
 // A gulpfile is just another node program and you can use any package available on npm
 gulp.task('clean', function() {
-  // You can use multiple globbing patterns as you would with `gulp.src`
-  return del([target]);
+  return del([target+"**"]).then(paths => {
+    console.log('Deleted files and folders:\n', paths.join('\n'));
+  });
 });
 
 gulp.task('scss', function() {

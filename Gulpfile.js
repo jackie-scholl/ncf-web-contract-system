@@ -59,4 +59,6 @@ gulp.task('watch', function() {
   gulp.watch(paths.html, ['html']);
 });
 
+gulp.task('single', ['clean', 'scss', 'scripts', 'html']);
+
 gulp.task('default', ['watch', 'scss', 'scripts', 'html']);

@@ -13,7 +13,7 @@ function onSignIn(success) {
 }
 var onSignInFailure = GoogleStuff.onSignInFailure;*/
 
-const apiRoot = 'http://localhost:4230';
+const apiRoot = '';
 
 var FullPage = React.createClass({
 	getInitialState: function() {

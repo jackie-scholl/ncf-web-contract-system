@@ -51,8 +51,8 @@ gulp.task('scripts', function() {
 
 gulp.task('html', function() {
   return gulp.src(paths.html)
-    .pipe(gulp.dest(target));
-})
+    .pipe(gulp.dest(target+'index.html'));
+});
 
 gulp.task('watch', function() {
   gulp.watch(paths.scss, ['scss']);

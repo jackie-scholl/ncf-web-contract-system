@@ -1,17 +1,6 @@
 var $ = require('jquery');
 var React = require('react');
 var ReactDOM = require('react-dom');
-//var PDFObject = require('pdfobject');
-
-/*var GoogleStuff = require('./googleStuff.js');
-
-var signOut = GoogleStuff.signOut;
-
-function onSignIn(success) {
-	console.log("Signed in!!!");
-	GoogleStuff.onSignIn(success);
-}
-var onSignInFailure = GoogleStuff.onSignInFailure;*/
 
 const apiRoot = '';
 
@@ -43,7 +32,7 @@ var FullPage = React.createClass({
 		return (
 			<div>
 				<ContractList changeContractId={this.changeContractId}
-						onUpdate={this.handleContractListUpdate} pollInterval={200000} />
+						onUpdate={this.handleContractListUpdate} pollInterval={20000} />
 				{optionalContract}
 			</div>
 		);
@@ -312,7 +301,7 @@ var ContractForm = React.createClass({
 							magic={this.magic('certificationCriteria')} />
 				<TextArea displayName="Description and Other Activities" placeHolder="skydive"
 							magic={this.magic('descriptionsOtherActivities')} />
-				<TextInput displayName="Advisor Name" placeHolder="God" magic={this.magic('advisorName')} />
+				<TextInput displayName="Advisor Name" placeHolder="Good" magic={this.magic('advisorName')} />
 			</form>
 			<div id="display-pdf" />
 			</div>

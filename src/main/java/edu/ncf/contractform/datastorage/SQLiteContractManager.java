@@ -1,7 +1,9 @@
-package edu.ncf.contractform;
+package edu.ncf.contractform.datastorage;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.primitives.Longs;
+
+import edu.ncf.contractform.ContractData;
 
 import java.sql.*;
 import java.util.ArrayList;

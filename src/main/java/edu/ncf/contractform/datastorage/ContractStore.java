@@ -1,7 +1,9 @@
-package edu.ncf.contractform;
+package edu.ncf.contractform.datastorage;
 
 import java.util.List;
 import java.util.Optional;
+
+import edu.ncf.contractform.ContractData;
 
 public interface ContractStore {
 	public Optional<ContractEntry> getContract(String contractId, String googleId);

@@ -1,7 +1,9 @@
-package edu.ncf.contractform;
+package edu.ncf.contractform.datastorage;
 
 import java.util.Set;
 
+//import edu.ncf.contractform.ClassData;
+import edu.ncf.contractform.ContractData;
 import spark.QueryParamsMap;
 
 import java.sql.*;
@@ -61,7 +63,7 @@ public class DatabaseManager {
                     + "\'" + cd.advisorName + "\');";
             stmt.executeUpdate(sql);
             
-            for (ClassData classData : cd.classes) {
+            /*for (ClassData classData : cd.classes) {
                 //Only insert classes with course names
                 if (classData.courseName != null
                         && classData.courseName != "") {
@@ -77,7 +79,7 @@ public class DatabaseManager {
                     
                     stmt.executeUpdate(sql);
                 }
-            }
+            }*/
 
             stmt.close();
             c.commit();

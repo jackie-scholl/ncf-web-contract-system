@@ -1,8 +1,9 @@
-@import 'normalize';
-@import 'html5bp';
+//@import 'normalize';
+//@import 'html5bp';
+@import 'dashboard';
 
 
-.classes-table {
+/*.classes-table {
     font-family: Verdana;
     padding: 0;
     margin: auto;
@@ -55,12 +56,13 @@
   margin-left: auto;
   margin-right: auto;
   max-width: 200px;
-}
+}*/
 
-#contractForm >table >tbody >tr >td:first-child >span >input {
+/*#contractForm >table >tbody >tr >td:first-child >span >input {
   max-width: 4em;
 }
 
 #contractForm >table >tbody >tr >td:nth-child(4) >span >select {
   max-width: 7em;
 }
+*/

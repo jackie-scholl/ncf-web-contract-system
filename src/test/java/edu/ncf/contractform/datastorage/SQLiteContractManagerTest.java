@@ -1,4 +1,4 @@
-package edu.ncf.contractform;
+package edu.ncf.contractform.datastorage;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -11,6 +11,8 @@ import java.nio.file.NoSuchFileException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import edu.ncf.contractform.datastorage.SQLiteContractManager;
 
 public class SQLiteContractManagerTest {
 	private SQLiteContractManager instance;

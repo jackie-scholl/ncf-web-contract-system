@@ -1,4 +1,4 @@
-package edu.ncf.contractform;
+package edu.ncf.contractform.datastorage;
 
 import java.security.SecureRandom;
 import java.util.*;
@@ -12,6 +12,8 @@ import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
 import com.amazonaws.services.dynamodbv2.model.*;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.primitives.Longs;
+
+import edu.ncf.contractform.ContractData;
 
 public enum DynamoDBContractStore implements ContractStore {
 	INSTANCE;

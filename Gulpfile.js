@@ -6,7 +6,7 @@ const react = require('gulp-react');
 const babel = require('gulp-babel');
 const gulpBrowser = require('gulp-browser');
 const child_process = require('child_process');
-const browserSync = require('browser-sync').create();
+//const browserSync = require('browser-sync').create();
 
 const resources = 'src/main/resources/';
 const paths = {
@@ -17,6 +17,22 @@ const paths = {
   java: 'src/main/java/**/*'
 };
 const target = 'target/resources/';
+
+const paths2 = {
+  src: {
+    resourcesBase : 'src/main/resources/',
+    scss: resources+'scss/**/*.scss',
+    scripts: resources+'js/**/*.js',
+    html: resources+'index.html',
+    all: resources+'**',
+  },
+  target: {
+    scss: target+'scss/**/*.scss',
+    scripts: target+'js/**/*.js',
+    html: target+'index.html',
+    all: target+'**',
+  }
+};
 
 // Not all tasks need to use streams
 // A gulpfile is just another node program and you can use any package available on npm
@@ -31,7 +47,7 @@ gulp.task('scss', ['clean'], function() {
     .pipe(sass().on('error', sass.logError))
     .pipe(sourcemaps.write('./stylesheets/maps'))
     .pipe(gulp.dest(target+'css/'))
-    .pipe(browserSync.stream());
+    ;//.pipe(browserSync.stream());
 });
 
 gulp.task('scripts', ['clean'], function() {
@@ -45,13 +61,13 @@ gulp.task('scripts', ['clean'], function() {
       .pipe(gulpBrowser.browserify())
     .pipe(sourcemaps.write())
     .pipe(gulp.dest(target+'js'))
-    .pipe(browserSync.stream());
+    ;//.pipe(browserSync.stream());
 });
 
 gulp.task('html', ['clean'], function() {
   return gulp.src(paths.html)
     .pipe(gulp.dest(target))
-    .pipe(browserSync.stream());
+    ;//.pipe(browserSync.stream());
 });
 
 /*gulp.task('testShell', () => {
@@ -129,20 +145,21 @@ gulp.task('watchJava', () => {
 });
 
 gulp.task('watch', function() {
-  /*gulp.watch(paths.scss, ['scss']);
-  gulp.watch(paths.scripts, ['scripts']);
-  gulp.watch(paths.html, ['html']);*/
+  //gulp.watch([paths.scss, paths.scripts, paths.html], ['scss', 'scripts', 'html']);
+  //gulp.watch(paths.scss, ['scss']);
+  //gulp.watch(paths.scripts, ['scripts']);
+  //gulp.watch(paths.html, ['html']);
   //livereload.listen();
   /*browserSync.init({
         server: "./target/resources",
         port: 4232
     });*/
-  browserSync.init({
+  /*browserSync.init({
     proxy: {
       target: 'http://localhost:4231'
     },
     port: 4232
-  });
+  });*/
   gulp.watch(paths.all, ['scss', 'scripts', 'html']);
 });
 

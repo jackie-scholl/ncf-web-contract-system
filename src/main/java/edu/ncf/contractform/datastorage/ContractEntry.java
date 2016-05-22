@@ -1,6 +1,8 @@
-package edu.ncf.contractform;
+package edu.ncf.contractform.datastorage;
 
 import com.google.gson.Gson;
+
+import edu.ncf.contractform.ContractData;
 
 public class ContractEntry {
 	public String contractId;

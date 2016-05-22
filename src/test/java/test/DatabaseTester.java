@@ -3,8 +3,8 @@ package test;
 
 import org.junit.Test;
 
-import edu.ncf.contractform.SQLiteContractManager;
-import edu.ncf.contractform.SQLiteContractManagerTest;
+import edu.ncf.contractform.datastorage.SQLiteContractManager;
+import edu.ncf.contractform.datastorage.SQLiteContractManagerTest;
 
 import static org.junit.Assert.*;
 

@@ -9,6 +9,8 @@ import java.util.*;
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
 
+import edu.ncf.contractform.datastorage.ContractEntry;
+import edu.ncf.contractform.datastorage.ContractStore;
 import joptsimple.OptionParser;
 import freemarker.template.Configuration;
 import spark.*;
@@ -40,21 +42,20 @@ public class Main {
 
 		// We need to serve some simple static files containing CSS and JavaScript.
 		// This tells Spark where to look for urls of the form "/static/*".
-		//Spark.externalStaticFileLocation("src/main/resources/static");
 		Spark.externalStaticFileLocation("target/resources");
 
 		// Development is easier if we show exceptions in the browser.
 		Spark.exception(Exception.class, new ExceptionPrinter());
 
 		contractStore = ContractStore.getDefaultContractStore();
-		
+
 		Spark.get("/contracts/:contractId/pdf", new PDFContractHandler());
 		Spark.get("/api/contracts", "text/json", new ApiContractList());
 		Spark.get("/api/contracts/:contractId", "text/json", new LoadContractHandler());
 		Spark.post("/api/contracts/:contractId/save", "text/json", new SaveContractHandler());
 		Spark.post("/api/contracts", "text/json", new AddContract());
 	}
-	
+
 	private static class AddContract implements Route {
 		public Object handle(Request req, Response res) {
 			GooglePayload payload = GooglePayload.fromRequest(req);
@@ -84,20 +85,20 @@ public class Main {
 
 			String googleId = GooglePayload.fromRequest(req).googleId();
 
-			System.out.printf("Time taken so far (got google id): %d ms%n", System.currentTimeMillis() - start);
+			//System.out.printf("Time taken so far (got google id): %d ms%n", System.currentTimeMillis() - start);
 
 			List<ContractEntry> contractEntries = contractStore.getContractsByGoogleId(googleId);
 
-			System.out.printf("Time taken so far (got contractEntries): %d ms%n", System.currentTimeMillis() - start);
+			//System.out.printf("Time taken so far (got contractEntries): %d ms%n", System.currentTimeMillis() - start);
 
 			String result = new Gson().toJson(ImmutableMap.of("contracts", contractEntries));
-			System.out.println(result);
+			//System.out.println(result);
 
-			System.out.printf("Time taken so far (result done): %d ms%n", System.currentTimeMillis() - start);
-			
+			//System.out.printf("Time taken so far (result done): %d ms%n", System.currentTimeMillis() - start);
+
 			res.type("text/json");
 
-			System.out.println("Contract list done\n");
+			//System.out.println("Contract list done\n");
 
 			return result;
 		}
@@ -119,7 +120,7 @@ public class Main {
 				} catch (IOException e) {
 					throw new RuntimeException(e);
 				}
-				System.out.println("Time to construct PDF: " + (System.currentTimeMillis() - start) + "\n");
+				System.out.println("Time to construct PDF: " + (System.currentTimeMillis() - start));
 			}
 
 			return null;
@@ -149,7 +150,7 @@ public class Main {
 
 	private static class LoadContractHandler implements Route {
 		public Object handle(Request req, Response res) {
-			System.out.println("Starting to load contract: ");
+			//System.out.println("Starting to load contract: ");
 			String googleId = GooglePayload.fromRequest(req).googleId();
 			String contractId = req.params(":contractId");
 
@@ -159,13 +160,13 @@ public class Main {
 				String result = new Gson()
 						.toJson(ImmutableMap.of("contract", entry.get()));
 
-				System.out.println(result);
+				//System.out.println(result);
 
-				System.out.println("Contract returned\n");
+				//System.out.println("Contract returned");
 				res.type("text/json");
 				return result;
 			} else {
-				System.out.println("entry not present");
+				System.out.println("Entry not present.");
 				res.status(404);
 				//res.body("Contract ID does not exist or you do not have access");
 				System.out.println("Contract does not exist");
@@ -173,7 +174,7 @@ public class Main {
 			}
 		}
 	}
-	
+
 	private static final int INTERNAL_SERVER_ERROR = 500;
 
 	private static class ExceptionPrinter implements ExceptionHandler {

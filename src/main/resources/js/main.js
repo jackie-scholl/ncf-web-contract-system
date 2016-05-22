@@ -256,7 +256,8 @@ function timeSince(date) {
 	if (interval > 1) {
 		return interval + " minutes";
 	}
-	return Math.floor(seconds) + " seconds";
+	return "just now";
+	//return Math.floor(seconds) + " seconds";
 }
 
 function ClassData(courseCode, courseName, isInternship, instructorName, sessionName) {
@@ -327,6 +328,7 @@ var ContractBox = React.createClass({
 		//console.log(newData);
 		var updatedContract = Object.assign({}, this.props.value);
 		updatedContract.contractData = newData;
+		updatedContract.dateLastModified = new Date().getTime();
 		//console.log(updatedContract);
 		this.props.handleUpdate(updatedContract);
 	},
@@ -374,7 +376,7 @@ var ContractForm = React.createClass({
 					<SelectOption value="Spring" display="Spring" />
 					<SelectOption value="Fall" display="Fall" />
 				</SelectInput>
-				<TextInput displayName="Year" magic={this.magic('contractYear')} />
+			<TextInput displayName="Year" magic={this.magic('contractYear')} />
 				<SelectInput displayName="Study Location" magic={this.magic('studyLocation')}>
 					<SelectOption value="" display="Select One" />
 					<SelectOption value="On Campus" display="On Campus" />
@@ -400,6 +402,36 @@ var ContractForm = React.createClass({
 		);
 	}
 });
+
+/*
+	<SemesterYearSelector yearMagic={this.magic('contractYear')} semesterMagic={this.magic('semester')} />
+var SemesterYearSelector = React.createClass({
+	handleYearChange: function(event) {
+		this.props.yearMagic.handleUpdate(event.target.value);
+	},
+	handleSemesterChange: function(event) {
+		this.props.semesterMagic.handleUpdate(event.target.value);
+	},
+	render: function() {
+		return (
+			<div class="row">
+			  <div class="col-lg-6">
+			    <div class="input-group">
+			      <div class="input-group-btn">
+			        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Action <span class="caret"></span></button>
+			        <ul class="dropdown-menu">
+			          <li><a href="#">Fall</a></li>
+			          <li><a href="#">Spring</a></li>
+			          <li><a href="#">Something else here</a></li>
+			        </ul>
+			      </div>
+			      <input type="text" class="form-control" aria-label="..." />
+			    </div>
+			  </div>
+			</div>
+		);
+	}
+});*/
 
 var ClassesTable = React.createClass({
 	updateHandlerGenerator: function(index) {
@@ -493,8 +525,8 @@ var TextInput = React.createClass({
 	},
 	render: function() {
 		return (
-			<div>
-				{this.props.displayName}:
+			<div class="form-group">
+				<label>{this.props.displayName}</label>
 				<input
 					type="text"
 					value={this.props.magic.value}
@@ -538,6 +570,7 @@ var TextInput2 = React.createClass({
 					value={this.props.magic.value}
 					onChange={this.handleChange}
 					placeholder={this.props.placeHolder}
+					className="form-control"
 				/>
 			</span>
 		);
@@ -556,6 +589,7 @@ var CheckBox2 = React.createClass({
 					checked={this.props.magic.value}
 					onChange={this.handleChange}
 					placeholder={this.props.placeHolder}
+					className="form-control"
 				/>
 			</span>
 		);
@@ -569,10 +603,12 @@ var SelectInput = React.createClass({
 	render: function() {
 		return (
 			<span>
-			  {this.props.displayName}
+			  <label htmlFor={this.props.displayName}>{this.props.displayName}</label>
 				<select
 					value={this.props.magic.value}
 					onChange={this.handleChange}
+					className="form-control"
+					id={this.props.displayName}
 				>
 				{this.props.children}
 				</select>

@@ -316,15 +316,16 @@ var ContractBox = React.createClass({
 		this.props.handleUpdate(updatedContract);
 	},
 	render: function() {
+		console.log(this.props.contractEntry);
 		return (
 			<div className="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
 				<h1 className="page-header">Contract Form</h1>
 				<ContractForm pollInterval={this.props.pollInterval}
 					contractId={this.props.contractEntry.contractId}
-					contractEntry={this.props.contractEntry.contractData}
+					value={this.props.contractEntry.contractData}
 					handleUpdate={this.handleUpdate}
 				/>
-				<LivePreview value={this.props.value} />
+				<LivePreview value={this.props.contractEntry} />
 			</div>
 		);
 	}
@@ -332,7 +333,7 @@ var ContractBox = React.createClass({
 
 var LivePreview = React.createClass({
 	render: function() {
-		const contractDataJson = JSON.stringify(this.props.contractEntry.contractData);
+		const contractDataJson = JSON.stringify(this.props.value.contractData);
 		const contractPdfUrl = "/renderContract?contractData="+contractDataJson;
 		return (
 			<iframe src={contractPdfUrl} width="100%" height="1000px">

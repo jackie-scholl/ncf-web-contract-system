@@ -353,7 +353,7 @@ var ContractForm = React.createClass({
 			handleUpdate: this.updateHandlerGenerator(identifier)};
 	},
 	render: function() {
-		var contractYearNodes = Array.apply(null, Array(5)).map(function (_, i) {return i;});
+		var contractYearNodes = Array.apply(null, Array(5)).map((_, i) => (i));
 		return (
 			<div className="contractForm">
 			<form id="contractForm" class="blank-form">

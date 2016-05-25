@@ -141,7 +141,7 @@ var FullPage = React.createClass({
 		if (this.state.contractId != null && this.state.contractMap.has(this.state.contractId)) {
 			optionalContract =
 					<ContractBox
-						value={this.state.contractMap.get(this.state.contractId)}
+						contractEntry={this.state.contractMap.get(this.state.contractId)}
 						handleUpdate={this.handleContractBoxUpdate}
 						pollInterval={2000}
 					/>
@@ -171,7 +171,7 @@ var ContractList = React.createClass({
 		this.props.createContract();
 	},
 	render: function() {
-		var contracts = [...this.props.contractMap.values()]
+		var contractEntries = [...this.props.contractMap.values()]
 				.sort((a, b) => b.dateLastModified - a.dateLastModified)
 				.map((x) =>
 					(<ContractElement value={x} key={x.contractId}
@@ -184,7 +184,7 @@ var ContractList = React.createClass({
 					<li><a href="" onClick={this.createContract} id="new-contract-link" className="logged-in">New Contract</a></li>
 				</ul>
 	      <ul className="nav nav-sidebar">
-					{contracts}
+					{contractEntries}
 				</ul>
 			</div>
 		);
@@ -309,9 +309,9 @@ var ContractBox = React.createClass({
 	handleUpdate: function(newData) {
 		//console.log("handling contract box update. newData: ");
 		//console.log(newData);
-		var updatedContract = Object.assign({}, this.props.value);
-		updatedContract.contractData = newData;
-		updatedContract.dateLastModified = new Date().getTime();
+		var updatedContractEntry = Object.assign({}, this.props.contractEntry);
+		updatedContractEntry.contractData = newData;
+		updatedContractEntry.dateLastModified = new Date().getTime();
 		//console.log(updatedContract);
 		this.props.handleUpdate(updatedContract);
 	},
@@ -320,8 +320,8 @@ var ContractBox = React.createClass({
 			<div className="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
 				<h1 className="page-header">Contract Form</h1>
 				<ContractForm pollInterval={this.props.pollInterval}
-					contractId={this.props.value.contractId}
-					value={this.props.value.contractData}
+					contractId={this.props.contractEntry.contractId}
+					contractEntry={this.props.contractEntry.contractData}
 					handleUpdate={this.handleUpdate}
 				/>
 				<LivePreview value={this.props.value} />
@@ -332,7 +332,7 @@ var ContractBox = React.createClass({
 
 var LivePreview = React.createClass({
 	render: function() {
-		const contractDataJson = JSON.stringify(this.props.value.contractData);
+		const contractDataJson = JSON.stringify(this.props.contractEntry.contractData);
 		const contractPdfUrl = "/renderContract?contractData="+contractDataJson;
 		return (
 			<iframe src={contractPdfUrl} width="100%" height="1000px">

@@ -90,6 +90,11 @@
 			<artifactId>google-api-client-gson</artifactId>
 			<version>1.21.0</version>
 		</dependency>
+		<dependency>
+			<groupId>com.amazonaws</groupId>
+			<artifactId>aws-lambda-java-core</artifactId>
+			<version>1.1.0</version>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -116,6 +121,48 @@
 						<descriptorRef>jar-with-dependencies</descriptorRef>
 					</descriptorRefs>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>com.github.wvengen</groupId>
+				<artifactId>proguard-maven-plugin</artifactId>
+				<version>2.0.11</version>
+				<configuration>
+					<options>
+						<option>-keep public class
+							com.github.raptortech_js.aws.testing.jersey6.Hello {
+							*; }</option>
+						<!-- <option>-keep public class
+							com.github.raptortech_js.aws.tests.aws_lambda_hello_world.Hello {
+							*; }</option> -->
+						<!-- <option>-keepclassmembers class * { void finalizeReferent(); } 
+							</option> <option>-keepclassmembers public class com.google.common.base.internal.Finalizer 
+							{ *** startFinalizer(***, ***); }</option> -->
+						<!-- <option>-dontnote com.google.common.**</option> <option>-dontnote 
+							javax.annotation.**</option> -->
+						<!-- <option>-dontnote com.amazonaws.services.lambda.runtime.**</option> -->
+						<!-- <option>-keeppackagenames com.amazonaws.**</option> -->
+						<!-- <option>-keepnames public class com.amazonaws.** { *; }</option> -->
+						<option>-printseeds</option>
+						<option>-optimizationpasses 5</option>
+						<option>-allowaccessmodification</option>
+					</options>
+					<libs>
+						<lib>${java.home}/lib/rt.jar</lib>
+						<lib>${java.home}/lib/jsse.jar</lib>
+					</libs>
+				</configuration>
+
+				<executions>
+					<execution>
+						<id>execution2</id>
+						<phase>package</phase>
+						<configuration>
+						</configuration>
+						<goals>
+							<goal>proguard</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>

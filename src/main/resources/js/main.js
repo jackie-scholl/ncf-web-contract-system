@@ -313,7 +313,7 @@ var ContractBox = React.createClass({
 		updatedContractEntry.contractData = newData;
 		updatedContractEntry.dateLastModified = new Date().getTime();
 		//console.log(updatedContract);
-		this.props.handleUpdate(updatedContract);
+		this.props.handleUpdate(updatedContractEntry);
 	},
 	render: function() {
 		console.log(this.props.contractEntry);

@@ -25,19 +25,22 @@ const paths2 = {
     scripts: resources+'js/**/*.js',
     html: resources+'index.html',
     all: resources+'**',
+    resources2: 'resources2/**'
   },
   target: {
     scss: target+'scss/**/*.scss',
     scripts: target+'js/**/*.js',
     html: target+'index.html',
-    all: target+'**',
+    resources2: target+'resources2/'
   }
 };
+
+//paths2.target.all = [paths2.target.scss, paths2.target.scripts, paths2.target.html];
 
 // Not all tasks need to use streams
 // A gulpfile is just another node program and you can use any package available on npm
 gulp.task('clean', function() {
-  return del([target+'**']);
+  return del([paths2.target.scss, paths2.target.scripts, paths2.target.html]);
 });
 
 gulp.task('scss', ['clean'], function() {
@@ -67,6 +70,16 @@ gulp.task('scripts', ['clean'], function() {
 gulp.task('html', ['clean'], function() {
   return gulp.src(paths.html)
     .pipe(gulp.dest(target))
+    ;//.pipe(browserSync.stream());
+});
+
+gulp.task('clean2', function() {
+  return del([paths2.target.resources2]);
+});
+
+gulp.task('resources2', ['clean2'], function() {
+  return gulp.src(paths2.src.resources2)
+    .pipe(gulp.dest(paths2.target.resources2))
     ;//.pipe(browserSync.stream());
 });
 
@@ -161,8 +174,9 @@ gulp.task('watch', function() {
     port: 4232
   });*/
   gulp.watch(paths.all, ['scss', 'scripts', 'html']);
+  gulp.watch(paths2.src.resources2, ['resources2']);
 });
 
-gulp.task('single', ['scss', 'scripts', 'html']);
+gulp.task('single', ['scss', 'scripts', 'html', 'resources2']);
 
-gulp.task('default', ['watch', 'scss', 'scripts', 'html', 'watchJava', 'maven2']);
+gulp.task('default', ['watch', 'scss', 'scripts', 'html', 'watchJava', 'maven2', 'resources2']);

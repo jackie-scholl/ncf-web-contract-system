@@ -82,12 +82,12 @@ var FullPage = React.createClass({
 			});
 		}
 	},
-	setContract: function(contract) {
+	setContractEntry: function(contractEntry) {
 		if (!this.state.contractDataset) {
 			alert('oops! dataset doesn\'t exist yet');
 		} else {
-			const contractString = JSON.stringify(contract);
-			this.state.contractDataset.put(contract.contractId, contractString,
+			const contractString = JSON.stringify(contractEntry);
+			this.state.contractDataset.put(contractEntry.contractId, contractString,
 				() => {this.initContractMap();}
 			);
 		}
@@ -116,8 +116,8 @@ var FullPage = React.createClass({
 			this.changeContractId(contracts[0].contractId);
 		}
 	},
-	handleContractBoxUpdate: function(newContract) {
-		this.setContract(newContract);
+	handleContractBoxUpdate: function(newContractEntry) {
+		this.setContractEntry(newContractEntry);
 	},
 	createContract: function() {
 		var array = new Uint8Array(15);
@@ -130,10 +130,10 @@ var FullPage = React.createClass({
 			firstName: '', lastName: '', nNumber: '', expectedGradYear: '', boxNumber: '',
 			classes: [{courseCode: '', courseName: '', isInternship: '', instructorName: '', sessionName: ''}]
 		};
-		const contract = {contractId: contractId, googleId: 'nah',
+		const contractEntry = {contractId: contractId, googleId: 'nah',
 				contractData: baseContractData, dateLastModified: new Date().getTime()};
-		console.log(contract);
-		this.setContract(contract);
+		console.log(contractEntry);
+		this.setContractEntry(contractEntry);
 		this.changeContractId(contractId);
 	},
 	render: function() {

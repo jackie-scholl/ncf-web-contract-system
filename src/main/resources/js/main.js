@@ -129,7 +129,8 @@ var FullPage = React.createClass({
 		const baseContractData = {
 			semester: '', studyLocation: '', contractYear: '',
 			firstName: '', lastName: '', nNumber: '', expectedGradYear: '', boxNumber: '',
-			classes: [{courseCode: '', courseName: '', isInternship: '', instructorName: '', sessionName: ''}]
+			classes: [{courseCode: '', courseName: '', isInternship: '', instructorName: '',
+						sessionName: ''}]
 		};
 		const contractEntry = {contractId: contractId, googleId: 'nah',
 				contractData: baseContractData, dateLastModified: new Date().getTime()};
@@ -272,7 +273,7 @@ var resizeArray = function(array, minSize, maxSize, testerCallback, spaceFillerC
 			break;
 		}
 	}
-	//console.log("index of last class with data: " + i);
+	console.log("index of last class with data: " + i);
 	var newLength = i + 2; // there should be exactly one empty element at the end of the array
 	if (newLength > maxSize) {
 		newLength = maxSize;
@@ -417,8 +418,8 @@ var ClassesTable = React.createClass({
 		return ((value) => {
 			var newState = this.props.magic.value.slice();
 			newState[index] = value;
-			var testerCallback = (x) => (x.courseCode !== "" || x.courseName !== ""
-				|| x.isInternship == true || x.instructorName !== "");
+			var testerCallback = (x) => (x.courseCode || x.courseName
+				|| x.isInternship || x.instructorName );
 			var testerCallback2 = (x) => (x.courseName !== "");
 			newState = resizeArray(newState, 4, 9, testerCallback, emptyClassData);
 			this.props.magic.handleUpdate(newState);

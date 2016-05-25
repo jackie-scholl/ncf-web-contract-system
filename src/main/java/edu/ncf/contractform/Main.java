@@ -31,10 +31,10 @@ public class Main {
 
 		// Development is easier if we show exceptions in the browser.
 		Spark.exception(Exception.class, new ExceptionPrinter());
-		
+
 		Spark.get("/renderContract", Main::renderContractPDF);
 	}
-	
+
 	private static Object renderContractPDF(Request req, Response res) {
 		long start = System.currentTimeMillis();
 

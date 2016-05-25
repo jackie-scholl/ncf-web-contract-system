@@ -15,7 +15,7 @@ import com.google.common.collect.ImmutableSet;
 
 public class PDFCreator {
 	public static final boolean FLATTEN_PDF = true;
-	
+
 	public static void main(String[] args) throws IOException {
 		buildPDFToDisk(buildSampleContract());
 	}
@@ -82,10 +82,10 @@ public class PDFCreator {
 		} catch (EofException e) {}
 
 		pdfDocument.close();
-		
+
 		// System.out.printf("Form saved; %f milliseconds%n", (System.nanoTime() - startTime) / 1.0e6);
 
-		//System.out.println("Done!");
+		// System.out.println("Done!");
 	}
 
 	private static void buildPDF(OutputStream outputStream, InputStream formTemplateStream, ContractData contractData)

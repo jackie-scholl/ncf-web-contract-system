@@ -44,10 +44,6 @@ public class PDFCreator {
 				new ClassData("80142", "Distributed Computing", true, Session.A, "David Gillman"),
 		};
 
-		/*data.classes = new ClassData[] {
-				new ClassData("12345", "Learning Stuff 101", false, Session.A, "Professor McSmarty Pants")
-		};*/
-
 		return data;
 	}
 
@@ -114,23 +110,14 @@ public class PDFCreator {
 	}
 
 	private void fill(ContractData contractData) throws IOException {
-		ClassData[] classes = contractData.classes;
-		if (classes == null) {
-			classes = new ClassData[] {};
+		contractData.normalize(false);
+		if (!contractData.semester.equals("")) {
+			setOtherFieldValue("Semester", (String) contractData.semester);
+			setTextField(contractData.semester, (String) contractData.contractYear);
 		}
-		if (classes.length > 9) {
-			throw new IllegalArgumentException("More classes than room on sheet");
+		if (!contractData.studyLocation.equals("")) {
+			setOtherFieldValue("On Campus/Off Campus", contractData.studyLocation);
 		}
-		if (contractData.semester != null && !contractData.semester.equals("") && contractData.contractYear != null) {
-			if (ContractData.LEGAL_SEMESTERS.contains(contractData.semester)) {
-				setTextField(contractData.semester, (String) contractData.contractYear);
-				setOtherFieldValue("Semester", (String) contractData.semester);
-			} else {
-				throw new IllegalArgumentException(
-						"Semester must be one of the following: " + ContractData.LEGAL_SEMESTERS + " but was "+contractData.semester);
-			}
-		}
-		setOtherFieldValue("On Campus/Off Campus", contractData.studyLocation);
 		setTextField("Name", contractData.lastName);
 		setTextField("First", contractData.firstName);
 		setTextField("N", contractData.nNumber);
@@ -139,14 +126,15 @@ public class PDFCreator {
 		setTextField("GOALS Specify Short and Long Term", contractData.goals);
 		setTextField("CERTIFICATION CRITERIA required minimum workload of 3 units", contractData.certificationCriteria);
 		setTextField("DESCRIPTIONS AND OTHER ACTIVITIES", contractData.descriptionsOtherActivities);
-		for (int i = 0; i < classes.length; i++) {
-			if (classes[i] != null) {
-				fillClass(i + 1, classes[i]);
-			}
+		for (int i = 0; i < contractData.classes.length; i++) {
+			fillClass(i + 1, contractData.classes[i]);
 		}
 	}
 
 	private void fillClass(int classNumber, ClassData classData) throws IOException {
+		if (classData == null) {
+			return;
+		}
 		setTextField("courses only " + classNumber, classData.courseCode);
 
 		setTextField("Course Name " + classNumber, classData.courseName);
@@ -155,13 +143,8 @@ public class PDFCreator {
 		String oneMCExtra = (classNumber == 1 ? "" : "_" + classNumber);
 		setTextField("1MC" + oneMCExtra, classData.instructorName);
 
-		if (classData.sessionName != null && !classData.sessionName.equals("")) {
-			if (ClassData.LEGAL_SESSIONS.contains(classData.sessionName)) {
-				setCheckBox("Session " + classData.sessionName + " " + classNumber, true);
-			} else {
-				throw new IllegalArgumentException(
-						"Session name must be one of the following: " + ClassData.LEGAL_SESSIONS + " but was "+classData.sessionName);
-			}
+		if (!classData.sessionName.equals("")) {
+			setCheckBox("Session " + classData.sessionName + " " + classNumber, true);
 		}
 
 		// The internship check boxes are really weird; the first one is called "Check Box2", and then it goes 2, 3, ...
@@ -180,13 +163,10 @@ public class PDFCreator {
 	}
 
 	private void setOtherFieldValue(String fieldName, String value) throws IOException {
-		if (value == null || value.equals("")) {
+		if (value == null) {
 			return;
 		}
 		PDField field = acroForm.getField(fieldName);
-		/*if (!(field instanceof PDCheckBox)) {
-			throw new IllegalArgumentException("Field is not a check box: " + fieldName + ", " + field);
-		}*/
 		field.setValue(value);
 	}
 

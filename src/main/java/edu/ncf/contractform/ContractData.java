@@ -1,5 +1,6 @@
 package edu.ncf.contractform;
 
+import java.util.Arrays;
 import java.util.Set;
 
 import com.google.common.collect.ImmutableSet;
@@ -28,11 +29,54 @@ public class ContractData {
 		return new Gson().fromJson(json, ContractData.class);
 	}
 	
+	public void normalize(boolean errorOnIssues) {
+		if (this.classes == null) {
+			if (errorOnIssues) {
+				throw new IllegalArgumentException("classes must not be null");
+			}
+			this.classes = new ClassData[]{};
+		}
+		if (classes.length > 9) {
+			if (errorOnIssues) {
+				throw new IllegalArgumentException("classes must have no more than 9 entries, due to room on sheet");
+			}
+			this.classes = Arrays.copyOf(classes, 9);
+		}
+		for (int i=0; i<classes.length; i++) {
+			ClassData d = classes[i];
+			if (d == null) {
+				if (errorOnIssues) {
+					throw new IllegalArgumentException("Null class at index "+i);
+				}
+				d = new ClassData();
+				classes[i] = d;
+			}
+			d.normalize(errorOnIssues);
+		}
+		
+		if (this.semester == null) {
+			this.semester = "";
+		}
+		
+		if (!LEGAL_SEMESTERS.contains(this.semester)) {
+			throw new IllegalArgumentException("Semester must be one of " + LEGAL_SEMESTERS + " but was "+semester);
+		}
+		
+		
+		
+	}
+	
+	private static String emptyToNull(String s) {
+		return (s.equals(""))? null : s;
+	}
+	
 	public String toString() {
 		return toJson();
 	}
 
-	public final static Set<String> LEGAL_SEMESTERS = ImmutableSet.copyOf(new String[] { "Fall", "Spring" });
+	public final static Set<String> LEGAL_SEMESTERS = ImmutableSet.copyOf(new String[] { "", "Fall", "Spring" });
+	public final static Set<String> LEGAL_STUDY_LOCATIONS = ImmutableSet.copyOf(new String[] { "", "On Campus", "Off Campus" });
+	
 }
 
 class ClassData {
@@ -46,7 +90,6 @@ class ClassData {
 
 	public ClassData(String courseCode, String courseName, Boolean isInternship, String sessionName,
 			String instructorName) {
-		super();
 		this.courseCode = courseCode;
 		this.courseName = courseName;
 		this.isInternship = isInternship;
@@ -63,6 +106,24 @@ class ClassData {
 	public ClassData(String courseCode, String courseName, Boolean isInternship, Session session,
 			String instructorName) {
 		this(courseCode, courseName, isInternship, session.fieldName, instructorName);
+	}
+	
+	public void normalize(boolean errorOnIssues) {
+		if (sessionName != null && !sessionName.equals("") && !LEGAL_SESSIONS.contains(sessionName)) {
+			throw new IllegalArgumentException("Illegal session name "+sessionName+"; Session name must be one of the following: " + LEGAL_SESSIONS);
+		}
+	}
+	
+	public boolean isEmpty() {
+		return isEmpty(courseCode)
+				&& isEmpty(courseName)
+				&& (isInternship == null || isInternship.booleanValue() == false)
+				&& isEmpty(instructorName)
+				&& isEmpty(sessionName);
+	}
+	
+	private static boolean isEmpty(String str) {
+		return str == null || str.equals("");
 	}
 
 	public final static Set<String> LEGAL_SESSIONS = ImmutableSet.copyOf(new String[] { "A", "M1", "M2", "1MC" });

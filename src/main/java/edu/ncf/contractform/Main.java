@@ -1,14 +1,19 @@
 package edu.ncf.contractform;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.HashMap;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 
 import spark.*;
 
 public class Main {
+	private static final boolean REQUIRE_GOOGLE = false;
+
 	public static void main(String[] args) {
 		runSparkServer();
 	}
@@ -32,13 +37,11 @@ public class Main {
 	
 	private static Object renderContractPDF(Request req, Response res) {
 		long start = System.currentTimeMillis();
-		GooglePayload.fromRequest(req);
-
-		ContractData contractData = new Gson().fromJson(req.queryParams("contractData"), ContractData.class);
 
 		res.raw().setContentType("application/pdf");
 		try {
-			PDFCreator.buildPDF(res.raw().getOutputStream(), contractData);
+			RenderContractRequest.renderContractPDF(req.queryParams("renderContractRequest"),
+					res.raw().getOutputStream(), REQUIRE_GOOGLE);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}

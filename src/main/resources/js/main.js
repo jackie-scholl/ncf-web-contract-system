@@ -14,10 +14,11 @@ var FullPage = React.createClass({
 		//console.log(h);
 		const contractId = h? h.slice(1) : null;
 		const contractDataset = null;
-		return {contractId: contractId, contractDataset: null, contractMap: new Map()};
+		return {contractId: contractId, contractDataset: null, contractMap: new Map(), logins: {}};
 	},
 	cognitoSetup: function() {
 		const logins = gIdToken ? {'accounts.google.com': gIdToken} : {};
+		this.setState({logins: logins});
 		//console.log(logins);
 		const y = this;
 		//console.log('gid: '+gIdToken);
@@ -143,6 +144,7 @@ var FullPage = React.createClass({
 					<ContractBox
 						contractEntry={this.state.contractMap.get(this.state.contractId)}
 						handleUpdate={this.handleContractBoxUpdate}
+						logins={this.state.logins}
 						pollInterval={2000}
 					/>
 		}
@@ -325,7 +327,7 @@ var ContractBox = React.createClass({
 					value={this.props.contractEntry.contractData}
 					handleUpdate={this.handleUpdate}
 				/>
-				<LivePreview value={this.props.contractEntry} />
+				<LivePreview value={this.props.contractEntry} logins={this.props.logins} />
 			</div>
 		);
 	}
@@ -333,8 +335,15 @@ var ContractBox = React.createClass({
 
 var LivePreview = React.createClass({
 	render: function() {
-		const contractDataJson = JSON.stringify(this.props.value.contractData);
-		const contractPdfUrl = "/renderContract?contractData="+contractDataJson;
+		const renderContractRequest = {
+			contractData: this.props.value.contractData,
+			authentication: this.props.logins,
+			options: {
+				flatten_pdf: true
+			}
+		}
+		const requestJson = JSON.stringify(renderContractRequest);
+		const contractPdfUrl = "/renderContract?renderContractRequest="+requestJson;
 		return (
 			<iframe src={contractPdfUrl} width="100%" height="1000px">
 				<a href={contractPdfUrl}>

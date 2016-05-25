@@ -60,7 +60,7 @@ public class GooglePayload {
 		return Optional.ofNullable(req.cookie(cookieName)).filter(s -> !s.equals(""));
 	}
 
-	private static GooglePayload fromIdTokenString(String idTokenString) {
+	public static GooglePayload fromIdTokenString(String idTokenString) {
 		try {
 			return fromGoogleIdToken(Optional.ofNullable(verifier.verify(idTokenString))
 					.orElseThrow(() -> new VerificationException("invalid token")));

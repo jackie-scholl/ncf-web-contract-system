@@ -1,8 +1,7 @@
 package edu.ncf.contractform;
 
 import java.io.*;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -47,8 +46,8 @@ public class PDFCreator {
 		return data;
 	}
 
-	private static void buildPDF(OutputStream outputStream, InputStream formTemplateStream, ContractData contractData)
-			throws IOException {
+	private static void buildPDF(OutputStream outputStream, InputStream formTemplateStream, ContractData contractData,
+			Map<String, Object> options) throws IOException {
 		// long startTime = System.nanoTime();
 
 		PDDocument pdfDocument = PDDocument.load(formTemplateStream);
@@ -67,7 +66,9 @@ public class PDFCreator {
 		PDFCreator creator = new PDFCreator(acroForm);
 		creator.fill(contractData);
 
-		if (FLATTEN_PDF) {
+		boolean flattenPDF = Optional.ofNullable((Boolean) options.get("flatten_pdf")).orElse(FLATTEN_PDF)
+				.booleanValue();
+		if (flattenPDF) {
 			Set<String> fieldsToRemove = ImmutableSet.of("Clear Form", "Print Form", "Save Form");
 			List<PDField> fieldsToKeep = acroForm.getFields().stream()
 					.filter(x -> !fieldsToRemove.contains(x.getFullyQualifiedName())).collect(Collectors.toList());
@@ -87,9 +88,14 @@ public class PDFCreator {
 		//System.out.println("Done!");
 	}
 
-	public static void buildPDF(OutputStream outputStream, ContractData contractData) throws IOException {
+	private static void buildPDF(OutputStream outputStream, InputStream formTemplateStream, ContractData contractData)
+			throws IOException {
+		buildPDF(outputStream, formTemplateStream, contractData, new HashMap<>());
+	}
+
+	public static void buildPDF(OutputStream outputStream, ContractData contractData, Map<String, Object> options) throws IOException {
 		buildPDF(new BufferedOutputStream(outputStream), PDFCreator.class.getResourceAsStream("/Contract.pdf"),
-				contractData);
+				contractData, options);
 	}
 
 	public static void buildPDFToDisk(ContractData contractData) throws IOException {
@@ -97,9 +103,9 @@ public class PDFCreator {
 				PDFCreator.class.getResourceAsStream("/Contract.pdf"), contractData);
 	}
 
-	public static byte[] buildPDFToBlob(ContractData contractData) throws IOException {
+	public static byte[] buildPDFToBlob(ContractData contractData, Map<String, Object> options) throws IOException {
 		ByteArrayOutputStream os = new ByteArrayOutputStream(300 * 1024);
-		buildPDF(os, contractData);
+		buildPDF(os, contractData, options);
 		return os.toByteArray();
 	}
 

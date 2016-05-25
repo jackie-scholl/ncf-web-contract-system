@@ -179,13 +179,6 @@ var ContractList = React.createClass({
 	createContract: function(e) {
 		e.preventDefault();
 		this.props.createContract();
-		//alert('sorry, contract creation not working right now');
-		/*$.post(apiRoot+"/api/contracts",
-			(data) => {
-				console.log(data);
-				this.props.changeContractId(data.contractId);
-			}
-		);*/
 	},
 	render: function() {
 		var contracts = [...this.props.contractMap.values()]
@@ -349,15 +342,8 @@ var ContractBox = React.createClass({
 var ContractForm = React.createClass({
 	updateHandlerGenerator: function(identifier) {
 		return ((value) => {
-			//console.log("handling update");
-			//console.log(this.props.value);
 			var newState = Object.assign({}, this.props.value);
-			//console.log("state so far:");
-			//console.log(newState);
-			//console.log("identifier: " + identifier+"; value: "+value);
 			newState[identifier] = value;
-			//console.log("new contract form state: ");
-			//console.log(newState);
 			this.props.handleUpdate(newState);
 		});
 	},
@@ -382,20 +368,27 @@ var ContractForm = React.createClass({
 					<SelectOption value="On Campus" display="On Campus" />
 					<SelectOption value="Off Campus" display="Off Campus" />
 				</SelectInput>
-				<TextInput displayName="First Name" placeHolder="Jane" magic={this.magic('firstName')} />
-				<TextInput displayName="Last Name" placeHolder="Doe" magic={this.magic('lastName')} />
-				<TextInput displayName="N Number" placeHolder="123456789" magic={this.magic('nNumber')} />
+				<TextInput displayName="First Name" placeHolder="Jane"
+							magic={this.magic('firstName')} />
+				<TextInput displayName="Last Name" placeHolder="Doe"
+							magic={this.magic('lastName')} />
+				<TextInput displayName="N Number" placeHolder="123456789"
+							magic={this.magic('nNumber')} />
 				<TextInput displayName="Expected Year of Graduation" placeHolder="never"
 							magic={this.magic('expectedGradYear')} />
-				<TextInput displayName="Box Number" placeHolder="123" magic={this.magic('boxNumber')} />
-				<TextArea displayName="Goals" placeHolder="live the good life" magic={this.magic('goals')} />
+				<TextInput displayName="Box Number" placeHolder="123"
+							magic={this.magic('boxNumber')} />
+				<TextArea displayName="Goals" placeHolder="live the good life"
+							magic={this.magic('goals')} />
 				<ClassesTable magic={this.magic('classes')}/>
 				<TextArea displayName="Certification Criteria"
 							placeHolder="Three out of four credits."
 							magic={this.magic('certificationCriteria')} />
-				<TextArea displayName="Description and Other Activities" placeHolder="skydive"
+				<TextArea displayName="Description and Other Activities"
+							placeHolder="skydive"
 							magic={this.magic('descriptionsOtherActivities')} />
-				<TextInput displayName="Advisor Name" placeHolder="Good" magic={this.magic('advisorName')} />
+				<TextInput displayName="Advisor Name" placeHolder="Prezzy O'shea"
+							magic={this.magic('advisorName')} />
 			</form>
 			<div id="display-pdf" />
 			</div>
@@ -418,7 +411,9 @@ var SemesterYearSelector = React.createClass({
 			  <div class="col-lg-6">
 			    <div class="input-group">
 			      <div class="input-group-btn">
-			        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Action <span class="caret"></span></button>
+			        <button type="button" class="btn btn-default dropdown-toggle"
+							data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Action
+							<span class="caret"></span></button>
 			        <ul class="dropdown-menu">
 			          <li><a href="#">Fall</a></li>
 			          <li><a href="#">Spring</a></li>

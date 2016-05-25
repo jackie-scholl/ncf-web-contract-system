@@ -334,10 +334,26 @@ var ContractBox = React.createClass({
 					value={this.props.value.contractData}
 					handleUpdate={this.handleUpdate}
 				/>
+				<LivePreview value={this.props.value} />
 			</div>
 		);
 	}
 });
+
+var LivePreview = React.createClass({
+	render: function() {
+		const contractDataJson = JSON.stringify(this.props.value.contractData);
+		const contractPdfUrl = "/renderContract?contractData="+contractDataJson;
+		return (
+			<iframe src={contractPdfUrl} width="100%" height="1000px">
+				<a href={contractPdfUrl}>
+					Click here to see PDF
+				</a>
+			</iframe>
+		);
+	}
+});
+
 
 var ContractForm = React.createClass({
 	updateHandlerGenerator: function(identifier) {

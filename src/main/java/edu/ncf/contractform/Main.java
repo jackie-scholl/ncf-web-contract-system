@@ -54,6 +54,8 @@ public class Main {
 		Spark.get("/api/contracts/:contractId", "text/json", new LoadContractHandler());
 		Spark.post("/api/contracts/:contractId/save", "text/json", new SaveContractHandler());
 		Spark.post("/api/contracts", "text/json", new AddContract());
+		
+		Spark.get("/renderContract", new RenderContractPDF());
 	}
 
 	private static class AddContract implements Route {
@@ -122,6 +124,25 @@ public class Main {
 				}
 				System.out.println("Time to construct PDF: " + (System.currentTimeMillis() - start));
 			}
+
+			return null;
+		}
+	}
+	
+	private static class RenderContractPDF implements Route {
+		public Object handle(Request req, Response res) {
+			long start = System.currentTimeMillis();
+			GooglePayload.fromRequest(req);
+
+			ContractData contractData = new Gson().fromJson(req.queryParams("contractData"), ContractData.class);
+
+			res.raw().setContentType("application/pdf");
+			try {
+				PDFCreator.buildPDF(res.raw().getOutputStream(), contractData);
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
+			System.out.println("Time to construct PDF: " + (System.currentTimeMillis() - start));
 
 			return null;
 		}

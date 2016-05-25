@@ -35,8 +35,6 @@ const paths2 = {
   }
 };
 
-//paths2.target.all = [paths2.target.scss, paths2.target.scripts, paths2.target.html];
-
 // Not all tasks need to use streams
 // A gulpfile is just another node program and you can use any package available on npm
 gulp.task('clean', function() {
@@ -63,14 +61,12 @@ gulp.task('scripts', ['clean'], function() {
         }))
       .pipe(gulpBrowser.browserify())
     .pipe(sourcemaps.write())
-    .pipe(gulp.dest(target+'js'))
-    ;//.pipe(browserSync.stream());
+    .pipe(gulp.dest(target+'js'));
 });
 
 gulp.task('html', ['clean'], function() {
   return gulp.src(paths.html)
     .pipe(gulp.dest(target))
-    ;//.pipe(browserSync.stream());
 });
 
 gulp.task('clean2', function() {
@@ -82,47 +78,6 @@ gulp.task('resources2', ['clean2'], function() {
     .pipe(gulp.dest(paths2.target.resources2))
     ;//.pipe(browserSync.stream());
 });
-
-/*gulp.task('testShell', () => {
-  const child = child_process.exec('ls',
-    (error, stdout, stderr) => {
-      console.log(`stdout: ${stdout}`);
-      console.log(`stderr: ${stderr}`);
-      if (error !== null) {
-        console.log(`exec error: ${error}`);
-      }
-  });
-});*/
-
-/*var currentMavenTaskChild = null;
-
-gulp.task('maven', (callback) => {
-  console.log('maven task called');
-  if (currentMavenTaskChild !== null) {
-    currentMavenTaskChild.kill();
-  }
-  const child = child_process.spawn('mvn', ['test', 'exec:java', '-Dexec.mainClass=edu.ncf.contractform.Main']);
-  currentMavenTaskChild = child;
-  console.log('spawning new process');
-
-  child.stdout.on('data', (data) => {
-    process.stdout.write(`${data}`);
-  });
-
-  child.stderr.on('data', (data) => {
-    process.stderr.write(`${data}`);
-  });
-
-  child.on('close', (code) => {
-    console.log(`maven process exited with code ${code}`);
-    if (currentMavenTaskChild === child) {
-      currentMavenTaskChild = null;
-    }
-    callback();
-  });
-
-  setTimeout(()=>{child.kill();}, 15000);
-});*/
 
 
 var currentMaven2TaskChild = null;
@@ -158,21 +113,6 @@ gulp.task('watchJava', () => {
 });
 
 gulp.task('watch', function() {
-  //gulp.watch([paths.scss, paths.scripts, paths.html], ['scss', 'scripts', 'html']);
-  //gulp.watch(paths.scss, ['scss']);
-  //gulp.watch(paths.scripts, ['scripts']);
-  //gulp.watch(paths.html, ['html']);
-  //livereload.listen();
-  /*browserSync.init({
-        server: "./target/resources",
-        port: 4232
-    });*/
-  /*browserSync.init({
-    proxy: {
-      target: 'http://localhost:4231'
-    },
-    port: 4232
-  });*/
   gulp.watch(paths.all, ['scss', 'scripts', 'html']);
   gulp.watch(paths2.src.resources2, ['resources2']);
 });

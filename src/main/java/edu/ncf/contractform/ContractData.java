@@ -1,7 +1,5 @@
 package edu.ncf.contractform;
 
-import java.util.Calendar;
-import java.util.Optional;
 import java.util.Set;
 
 import com.google.common.collect.ImmutableSet;
@@ -21,28 +19,6 @@ public class ContractData {
 	public ClassData[] classes;
 	public String advisorName;
 	public String studyLocation;
-	
-	public static ContractData getDefault(String firstName, String lastName) {
-		ContractData defaultContract = new ContractData();
-		defaultContract.firstName = Optional.ofNullable(firstName).orElse("");
-		defaultContract.lastName = Optional.ofNullable(lastName).orElse("");
-		
-		defaultContract.studyLocation = "On Campus";
-		
-		Calendar now = Calendar.getInstance();
-		int month = now.get(Calendar.MONTH);
-		if (month == Calendar.AUGUST || month == Calendar.SEPTEMBER) {
-			defaultContract.semester = Semester.FALL.fieldName;
-		} else if (month == Calendar.JANUARY || month == Calendar.FEBRUARY) {
-			defaultContract.semester = Semester.SPRING.fieldName;
-		}
-		defaultContract.contractYear = String.valueOf(now.get(Calendar.YEAR));
-		
-		ClassData defaultClass = new ClassData("", "", false, "", "");
-		defaultContract.classes = new ClassData[]{defaultClass, defaultClass, defaultClass, defaultClass};
-		
-		return defaultContract;
-	}
 	
 	public String toJson() {
 		return new Gson().toJson(this);

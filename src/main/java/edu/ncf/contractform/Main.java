@@ -6,21 +6,10 @@ import java.io.StringWriter;
 
 import com.google.gson.Gson;
 
-import joptsimple.OptionParser;
 import spark.*;
 
 public class Main {
-	/**
-	 * The below if/else if statements don't actually do anything. Since we aren't running from command line, nothing
-	 * changes in the options parser. The only part that's needed is runSparkServer();
-	 *
-	 * @param args
-	 */
 	public static void main(String[] args) {
-		OptionParser parser = new OptionParser();
-
-		parser.accepts("generate");
-
 		runSparkServer();
 	}
 
@@ -38,26 +27,24 @@ public class Main {
 		// Development is easier if we show exceptions in the browser.
 		Spark.exception(Exception.class, new ExceptionPrinter());
 		
-		Spark.get("/renderContract", new RenderContractPDF());
+		Spark.get("/renderContract", Main::renderContractPDF);
 	}
+	
+	private static Object renderContractPDF(Request req, Response res) {
+		long start = System.currentTimeMillis();
+		GooglePayload.fromRequest(req);
 
-	private static class RenderContractPDF implements Route {
-		public Object handle(Request req, Response res) {
-			long start = System.currentTimeMillis();
-			GooglePayload.fromRequest(req);
+		ContractData contractData = new Gson().fromJson(req.queryParams("contractData"), ContractData.class);
 
-			ContractData contractData = new Gson().fromJson(req.queryParams("contractData"), ContractData.class);
-
-			res.raw().setContentType("application/pdf");
-			try {
-				PDFCreator.buildPDF(res.raw().getOutputStream(), contractData);
-			} catch (IOException e) {
-				throw new RuntimeException(e);
-			}
-			System.out.println("Time to construct PDF: " + (System.currentTimeMillis() - start));
-
-			return null;
+		res.raw().setContentType("application/pdf");
+		try {
+			PDFCreator.buildPDF(res.raw().getOutputStream(), contractData);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
 		}
+		System.out.println("Time to construct PDF: " + (System.currentTimeMillis() - start));
+
+		return null;
 	}
 
 	private static final int INTERNAL_SERVER_ERROR = 500;

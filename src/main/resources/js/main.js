@@ -37,14 +37,7 @@ var FullPage = React.createClass({
 				} else {
 					console.log('dataset opened');
 					y.setState({contractDataset: dataset});
-					//console.log('state set');
-					//dataset.remove('a', () => {y.loadContractsFromServer();});
-					//dataset.remove('', (err, record) => {console.log(err); console.log(record); y.initContractMap();});
 					y.initContractMap();
-					//y.cognitoSync();
-					//y.handleContractFormUpdate({contractId: 'a', dataStuff: 'hello', thing: 'world'});
-					//y.loadContractsFromServer();
-					//return dataset;
 				}
    		});
 		});
@@ -90,12 +83,9 @@ var FullPage = React.createClass({
 		}
 	},
 	setContract: function(contract) {
-		//console.log('updating key '+contract.contractId+' to value:');
-		//console.log(contract);
 		if (!this.state.contractDataset) {
 			alert('oops! dataset doesn\'t exist yet');
 		} else {
-			//TODO: we should error if key does not yet exist, maybe?
 			const contractString = JSON.stringify(contract);
 			this.state.contractDataset.put(contract.contractId, contractString,
 				() => {this.initContractMap();}
@@ -412,38 +402,6 @@ var ContractForm = React.createClass({
 	}
 });
 
-/*
-	<SemesterYearSelector yearMagic={this.magic('contractYear')} semesterMagic={this.magic('semester')} />
-var SemesterYearSelector = React.createClass({
-	handleYearChange: function(event) {
-		this.props.yearMagic.handleUpdate(event.target.value);
-	},
-	handleSemesterChange: function(event) {
-		this.props.semesterMagic.handleUpdate(event.target.value);
-	},
-	render: function() {
-		return (
-			<div class="row">
-			  <div class="col-lg-6">
-			    <div class="input-group">
-			      <div class="input-group-btn">
-			        <button type="button" class="btn btn-default dropdown-toggle"
-							data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Action
-							<span class="caret"></span></button>
-			        <ul class="dropdown-menu">
-			          <li><a href="#">Fall</a></li>
-			          <li><a href="#">Spring</a></li>
-			          <li><a href="#">Something else here</a></li>
-			        </ul>
-			      </div>
-			      <input type="text" class="form-control" aria-label="..." />
-			    </div>
-			  </div>
-			</div>
-		);
-	}
-});*/
-
 var ClassesTable = React.createClass({
 	updateHandlerGenerator: function(index) {
 		return ((value) => {
@@ -650,143 +608,3 @@ ReactDOM.render(
 	<FullPage />,
 	document.getElementById('content')
 );
-
-
-/*var copyOfFormData = function(data) {
-	var newData = {};
-	console.log("About to pull class data");
-	console.log(data);
-	return new ClassData(data.courseCode, data.courseName, data.isInternship,
-				data.instuctorName, data.sessionName);
-}*/
-/*getContractMap: function(cb) {
-	if (!this.state.contractDataset) {
-		cb({});
-	} else {
-		this.state.contractDataset.getAll((err, map) => {
-			if (err) {
-				console.log('error getting contracts');
-				cb({});
-			} else {
-				const returnMap = {};
-				for(var x of map) {
-					returnMap[x[0]] = x[JSON.parse(x[1])];
-				}
-				cb(returnMap);
-				//cb(map); // TODO: turn strings into JSON objects
-			}
-		});
-	}
-},*/
-/*magic: function(identifier) {
-	return {value: this.props.magic.value[identifier],
-				handleUpdate: this.updateHandlerGenerator(identifier)};
-},*/
-
-/*getInitialState: function() {
-	return {
-		semester: '', studyLocation: '', contractYear: '',
-		firstName: '', lastName: '', nNumber: '', expectedGradYear: '', boxNumber: '',
-		classes: []
-	};
-},*/
-/*updateHandlerGenerator: function(identifier) {
-	return ((value) => {
-		var newState = {};
-		newState[identifier] = value;
-		this.setState(newState);
-		setTimeout(this.updateTrigger, 10);
-	});
-},*/
-/*updateTrigger: function() {
-	//console.log(this.state);
-	//console.log(JSON.stringify(this.state));
-	$.post(apiRoot+'/api/contracts/'+this.props.contractId+'/save',
-		{data: JSON.stringify(this.state)},
-		(data) => {
-			//console.log("Saved to server");
-			this.updatePDF();
-		}
-	);
-},*/
-/*updatePDF: function() {
-	const url = apiRoot+'/contracts/'+this.props.contractId+'/pdf';
-	const internalHTML = "<a href="+url+">Click here to see PDF</a>";
-	const pdfHTML = "<iframe src='"+url+"' width='100%' height='830px'>"+internalHTML+"</object>";
-	//$("#display-pdf").html(pdfHTML);
-	/*var options = {
-		 width: "100%",
-		 height: "830px"
-	};
-	PDFObject.embed('/contracts/'+this.props.contractId+'/pdf', $("#display-pdf"), options);*/
-//},
-/*loadContractFromServer: function() {
-	//console.log(apiRoot+'/api/contracts/'+this.props.contractId);
-	$.getJSON(apiRoot+'/api/contracts/'+this.props.contractId,
-		{},
-		(data) => {
-			//console.log("Recieved contract entry from server");
-			this.setState(data.contract.contractData);
-			this.updatePDF();
-			setTimeout(() => {console.log(this.state);}, 10);
-		}
-	);
-},*/
-/*componentDidMount: function() {
-	//this.setState({firstName: "Jane"});
-	//this.loadContractFromServer();
-	//setInterval(this.loadContractFromServer, this.props.pollInterval);
-},
-
-	/*getInitialState: function() {
-		return {
-			contracts: []
-		};
-	},*/
-	/*loadContractsFromServer: function() {
-		$.getJSON(apiRoot+"/api/contracts",
-			{},
-			(data) => {
-				//console.log(data);
-				data.contracts.sort((a, b) => b.dateLastModified - a.dateLastModified);
-				console.log(data);
-				for (var x of data.contracts) {
-					console.log(JSON.stringify(x));
-
-				}
-				//this.setState({contracts: data.contracts});
-				//this.props.onUpdate(data.contracts);
-			}
-		);
-	},*/
-
-	/*loadContractsFromServer: function() {
-		$.getJSON(apiRoot+"/api/contracts",
-			{},
-			(data) => {
-				console.log(this.state.contractDataset);
-				//console.log(data);
-				data.contracts.sort((a, b) => b.dateLastModified - a.dateLastModified);
-				console.log(data);
-				for (var x of data.contracts) {
-					x.contractId = x.contractId.substring(0, x.contractId.length - 1);
-					console.log(JSON.stringify(x));
-					this.handleContractFormUpdate(x);
-				}
-				//this.setState({contracts: data.contracts});
-				//this.props.onUpdate(data.contracts);
-			}
-		);
-	},*/
-
-	/*console.log(newState.length);
-	for (var i = newState.length-1; i >= 0; i--) {
-		var x = newState[i];
-		console.log(x);
-		var hasData = (x.courseCode !== '' || x.courseName !== ''
-			|| x.isInternship == true || x.instructorName !== '');
-		if (hasData) {
-			break;
-		}
-	}
-	var newLength = i + 2;*/

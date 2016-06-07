@@ -1,15 +1,13 @@
 package edu.ncf.contractform;
 
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.HashMap;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
-
-import spark.*;
+import spark.ExceptionHandler;
+import spark.Request;
+import spark.Response;
+import spark.Spark;
 
 public class Main {
 	private static final boolean REQUIRE_GOOGLE = false;

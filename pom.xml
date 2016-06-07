@@ -133,8 +133,11 @@
 				<version>2.0.11</version>
 				<configuration>
 					<options>
-						<option>-keep public class
+						<!-- <option>-keep public class
 							com.github.raptortech_js.aws.testing.jersey6.Hello {
+							*; }</option> -->
+						<option>-keep public class
+							edu.ncf.contractform.LambdaHandler {
 							*; }</option>
 						<!-- <option>-keep public class
 							com.github.raptortech_js.aws.tests.aws_lambda_hello_world.Hello {
@@ -157,7 +160,7 @@
 					</libs>
 				</configuration>
 
-				<executions>
+				<!--<executions>
 					<execution>
 						<id>execution2</id>
 						<phase>package</phase>
@@ -167,7 +170,7 @@
 							<goal>proguard</goal>
 						</goals>
 					</execution>
-				</executions>
+				</executions>-->
 			</plugin>
 		</plugins>
 	</build>

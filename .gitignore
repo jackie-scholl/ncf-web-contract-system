@@ -10,3 +10,5 @@ nbactions.xml
 ContractsNCF.db
 JSONContractsNCF.db
 node_modules
+
+dependency-reduced-pom.xml

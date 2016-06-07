@@ -48,20 +48,20 @@ public class PDFCreator {
 
 	private static void buildPDF(OutputStream outputStream, InputStream formTemplateStream, ContractData contractData,
 			Map<String, Object> options) throws IOException {
-		// long startTime = System.nanoTime();
+		long startTime = System.nanoTime();
 
 		PDDocument pdfDocument = PDDocument.load(formTemplateStream);
 
-		// System.out.printf("pdf loaded; %f milliseconds%n", (System.nanoTime() - startTime) / 1.0e6);
+		System.out.printf("pdf loaded; %f milliseconds%n", (System.nanoTime() - startTime) / 1.0e6);
 
-		// get the document catalog
+		//get the document catalog
 		PDAcroForm acroForm = pdfDocument.getDocumentCatalog().getAcroForm();
 
 		if (acroForm == null) {
 			throw new IllegalArgumentException("Input PDF has no form to fill");
 		}
 
-		// System.out.printf("Ready to build form; %f milliseconds%n", (System.nanoTime() - startTime) / 1.0e6);
+		System.out.printf("Ready to build form; %f milliseconds%n", (System.nanoTime() - startTime) / 1.0e6);
 
 		PDFCreator creator = new PDFCreator(acroForm);
 		creator.fill(contractData);
@@ -75,7 +75,7 @@ public class PDFCreator {
 			acroForm.flatten(fieldsToKeep, true);
 		}
 
-		// System.out.printf("Form created; %f milliseconds%n", (System.nanoTime() - startTime) / 1.0e6);
+		System.out.printf("Form created; %f milliseconds%n", (System.nanoTime() - startTime) / 1.0e6);
 
 		try {
 			pdfDocument.save(outputStream);
@@ -83,9 +83,9 @@ public class PDFCreator {
 
 		pdfDocument.close();
 
-		// System.out.printf("Form saved; %f milliseconds%n", (System.nanoTime() - startTime) / 1.0e6);
+		System.out.printf("Form saved; %f milliseconds%n", (System.nanoTime() - startTime) / 1.0e6);
 
-		// System.out.println("Done!");
+		System.out.println("Done!");
 	}
 
 	private static void buildPDF(OutputStream outputStream, InputStream formTemplateStream, ContractData contractData)

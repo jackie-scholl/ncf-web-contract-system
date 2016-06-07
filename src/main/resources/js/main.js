@@ -344,7 +344,7 @@ var LivePreview = React.createClass({
 			}
 		}
 		const requestJson = JSON.stringify(renderContractRequest);
-		const contractPdfUrl = "/renderContract?renderContractRequest="+requestJson;
+		const contractPdfUrl = "/render-contract?renderContractRequest="+requestJson;
 		return (
 			<iframe src={contractPdfUrl} width="100%" height="1000px">
 				<a href={contractPdfUrl}>

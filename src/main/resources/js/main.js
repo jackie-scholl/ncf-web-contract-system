@@ -1,7 +1,7 @@
 //var $ = require('jquery');
 var React = require('react');
 var ReactDOM = require('react-dom');
-var base64 = require('base64-js')
+var base64 = require('base64-js');
 
 //const apiRoot = '';
 

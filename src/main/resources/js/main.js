@@ -369,6 +369,7 @@ var ContractForm = React.createClass({
 			handleUpdate: this.updateHandlerGenerator(identifier)};
 	},
 	render: function() {
+		// What the f*ck does this line do? do we use it?
 		var contractYearNodes = Array.apply(null, Array(5)).map((_, i) => (i));
 		return (
 			<div className="contractForm">

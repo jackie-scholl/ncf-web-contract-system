@@ -505,13 +505,6 @@ var Class = React.createClass({
 
 var GenericInput = React.createClass({
 	render: function() {
-		console.log('rendering GenericInput');
-		console.log('displayName: '+this.props.displayName);
-		console.log('hasOwnDisplayName: '+this.props.hasOwnProperty('displayName'));
-		console.log('props: ');
-		console.log(this.props);
-		console.log('truthiness: '+(this.props.displayName? true : false));
-
 		// We want to hide the label when displayName is empty
 		const style = this.props.hasOwnProperty('displayName') &&
 			(this.props.displayName && this.props.displayName.length !== 0)? {} : {display: 'none'};

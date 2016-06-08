@@ -48,6 +48,7 @@ var FullPage = React.createClass({
 			console.log('dataset is null! oh noes!');
 		} else {
 			//alert('oh, no no no! we\'re not paying for real sync yet');
+			console.log("Warning! We're running a sync operation, which costs money");
 			this.state.contractDataset.synchronize({
 				onFailure: (err) => {console.log(err);},
 				onSuccess: (success) => {console.log(success);}
@@ -67,9 +68,9 @@ var FullPage = React.createClass({
 					for (var x in map) {
 						if (map.hasOwnProperty(x) && map[x]) {
 							if (x == "") {
+								console.log("uh oh, very bad value");
 								console.log(x);
 								console.log(map[x]);
-								console.log("uh oh, very bad value");
 							} else {
 								objectMap.set(x, JSON.parse(map[x]));
 							}
@@ -124,7 +125,7 @@ var FullPage = React.createClass({
 		var array = new Uint8Array(15);
 		window.crypto.getRandomValues(array);
 		const contractId = base64.fromByteArray(array).replace(/\+/, '_').replace(/\//, '-');
-		console.log(contractId);
+		console.log('new contract ID:' + contractId);
 		//const contractId = 5;
 		const baseContractData = {
 			semester: '', studyLocation: '', contractYear: '',

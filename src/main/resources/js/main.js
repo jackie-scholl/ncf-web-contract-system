@@ -487,8 +487,8 @@ var Class = React.createClass({
 		var row = this.props.number;
 		return (
 			<tr>
-				<td><TextInput2 placeHolder="12345" magic={this.magic("courseCode")}/></td>
-				<td><TextInput2 placeHolder="Basket-weaving 101"
+				<td><TextInput placeHolder="12345" magic={this.magic("courseCode")}/></td>
+				<td><TextInput placeHolder="Basket-weaving 101"
 						magic={this.magic("courseName")}/> </td>
 				<td><CheckBox2 magic={this.magic("isInternship")}/></td>
 				<td><SelectInput displayName="" magic={this.magic("sessionName")}>
@@ -498,7 +498,7 @@ var Class = React.createClass({
 					<SelectOption value='M2' display='Module 2' />
 					<SelectOption value='1MC' display='Full Term For Module Credit' />
 				</SelectInput></td>
-				<td><TextInput2 placeHolder="President #trublu"
+				<td><TextInput placeHolder="President #trublu"
 						magic={this.magic("instructorName")}/></td>
 			</tr>
 		);
@@ -582,22 +582,6 @@ var TextArea = React.createClass({
 				className='form-control'
 			/>
 			</GenericInput>
-		);
-	}
-});
-
-var TextInput2 = React.createClass({
-	render: function() {
-		return (
-			<span>
-				<input
-					type="text"
-					value={this.props.magic.value}
-					onChange={(e) => {this.props.magic.handleUpdate(e.target.value);}}
-					placeholder={this.props.placeHolder}
-					className="form-control"
-				/>
-			</span>
 		);
 	}
 });

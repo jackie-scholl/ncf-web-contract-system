@@ -367,7 +367,8 @@ var ContractForm = React.createClass({
 
 	magic: function(identifier) {
 		return {value: this.props.value[identifier],
-			handleUpdate: this.updateHandlerGenerator(identifier)};
+			handleUpdate: this.updateHandlerGenerator(identifier),
+			id: 'ContractForm.'+this.props.contractId+'.'+identifier};
 	},
 	render: function() {
 		// What the f*ck does this line do? do we use it?
@@ -428,7 +429,9 @@ var ClassesTable = React.createClass({
 		});
 	},
 	magic: function(index) {
-		return {value: this.props.magic.value[index], handleUpdate: this.updateHandlerGenerator(index)};
+		return {value: this.props.magic.value[index],
+			handleUpdate: this.updateHandlerGenerator(index),
+			id: this.props.magic.id+'.'+index};
 	},
 	handleChange: function(event) {
 		this.props.magic.handleUpdate(event.target.value);
@@ -477,7 +480,8 @@ var Class = React.createClass({
 	},
 	magic: function(identifier) {
 		return {value: this.props.magic.value[identifier],
-					handleUpdate: this.updateHandlerGenerator(identifier)};
+			handleUpdate: this.updateHandlerGenerator(identifier),
+			id: this.props.magic.id+'.'+identifier};
 	},
 	render: function() {
 		var row = this.props.number;

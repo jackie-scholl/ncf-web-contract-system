@@ -490,7 +490,7 @@ var Class = React.createClass({
 				<td><TextInput placeHolder="12345" magic={this.magic("courseCode")}/></td>
 				<td><TextInput placeHolder="Basket-weaving 101"
 						magic={this.magic("courseName")}/> </td>
-				<td><CheckBox2 magic={this.magic("isInternship")}/></td>
+				<td><CheckBox magic={this.magic("isInternship")}/></td>
 				<td><SelectInput displayName="" magic={this.magic("sessionName")}>
 					<SelectOption value='' display='Select One' />
 					<SelectOption value='A' display='Full Term' />
@@ -586,7 +586,7 @@ var TextArea = React.createClass({
 	}
 });
 
-var CheckBox2 = React.createClass({
+var CheckBox = React.createClass({
 	render: function() {
 		/*return (
 			<span>

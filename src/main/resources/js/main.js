@@ -322,7 +322,6 @@ var ContractBox = React.createClass({
 		console.log(this.props.contractEntry);
 		return (
 			<div className="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-				<h1 className="page-header">Contract Form</h1>
 				<ContractForm pollInterval={this.props.pollInterval}
 					contractId={this.props.contractEntry.contractId}
 					value={this.props.contractEntry.contractData}
@@ -373,6 +372,7 @@ var ContractForm = React.createClass({
 		var contractYearNodes = Array.apply(null, Array(5)).map((_, i) => (i));
 		return (
 			<div className="contractForm">
+			<h1 className="page-header">Contract Form</h1>
 			<form id="contractForm" class="blank-form">
 				<SelectInput displayName="Semester" magic={this.magic('semester')}>
 					<SelectOption value="" display="Select One" />

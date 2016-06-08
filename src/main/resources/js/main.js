@@ -535,9 +535,6 @@ var GenericInput = React.createClass({
 });
 
 var TextInput = React.createClass({
-	handleChange: function(event) {
-		this.props.magic.handleUpdate(event.target.value);
-	},
 	render: function() {
 		// We want to hide the label when displayName is empty
 		//const displayStyle = this.props.hasOwnProperty('displayName') &&
@@ -551,7 +548,7 @@ var TextInput = React.createClass({
 				<input
 					type="text"
 					value={this.props.magic.value}
-					onChange={this.handleChange}
+					onChange={(e) => {this.props.magic.handleUpdate(e.target.value);}}
 					placeholder={this.props.placeHolder}
 					id={htmlId}
 					className='form-control'
@@ -562,9 +559,6 @@ var TextInput = React.createClass({
 });
 
 var TextArea = React.createClass({
-	handleChange: function(event) {
-		this.props.magic.handleUpdate(event.target.value);
-	},
 	render: function() {
 		/*// We want to hide the label when displayName is empty
 		const hasDisplayName = (this.props.displayName || this.props.displayName.length !== 0);
@@ -582,7 +576,7 @@ var TextArea = React.createClass({
 			<GenericInput displayName={this.props.displayName} htmlId={htmlId}>
 			<textarea
 				value={this.props.magic.value}
-				onChange={this.handleChange}
+				onChange={(e) => {this.props.magic.handleUpdate(e.target.value);}}
 				placeholder={this.props.placeHolder}
 				id={htmlId}
 				className='form-control'
@@ -593,16 +587,13 @@ var TextArea = React.createClass({
 });
 
 var TextInput2 = React.createClass({
-	handleChange: function(event) {
-		this.props.magic.handleUpdate(event.target.value);
-	},
 	render: function() {
 		return (
 			<span>
 				<input
 					type="text"
 					value={this.props.magic.value}
-					onChange={this.handleChange}
+					onChange={(e) => {this.props.magic.handleUpdate(e.target.value);}}
 					placeholder={this.props.placeHolder}
 					className="form-control"
 				/>
@@ -612,9 +603,6 @@ var TextInput2 = React.createClass({
 });
 
 var CheckBox2 = React.createClass({
-	handleChange: function(event) {
-		this.props.magic.handleUpdate(event.target.checked);
-	},
 	render: function() {
 		/*return (
 			<span>
@@ -633,7 +621,7 @@ var CheckBox2 = React.createClass({
 			<input
 				type="checkbox"
 				checked={this.props.magic.value}
-				onChange={this.handleChange}
+				onChange={(e) => {this.props.magic.handleUpdate(e.target.checked);}}
 				id={htmlId}
 				className='form-control'
 			/>
@@ -643,9 +631,6 @@ var CheckBox2 = React.createClass({
 });
 
 var SelectInput = React.createClass({
-	handleChange: function(event) {
-		this.props.magic.handleUpdate(event.target.value);
-	},
 	render: function() {
 		/*// We want to hide the label when displayName is empty
 		const hasDisplayName = (this.props.displayName || this.props.displayName.length !== 0);
@@ -671,7 +656,7 @@ var SelectInput = React.createClass({
 				<select
 					type="checkbox"
 					value={this.props.magic.value}
-					onChange={this.handleChange}
+					onChange={(e) => {this.props.magic.handleUpdate(e.target.value);}}
 					id={htmlId}
 					className='form-control'
 				>

@@ -66,7 +66,7 @@ var FullPage = React.createClass({
 					const objectMap = new Map();
 					for (var x in map) {
 						if (map.hasOwnProperty(x) && map[x]) {
-							if (map[x] == {"firstName": "SuperLongnameh"} || x == "") {
+							if (x == "") {
 								console.log(x);
 								console.log(map[x]);
 								console.log("uh oh, very bad value");

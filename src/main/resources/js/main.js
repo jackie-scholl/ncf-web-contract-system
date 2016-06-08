@@ -268,11 +268,11 @@ var resizeArray = function(array, minSize, maxSize, testerCallback, spaceFillerC
 		var x = array[i];
 		var hasData = testerCallback(x);
 		if (hasData) {
-			console.log(x);
+			//console.log(x);
 			break;
 		}
 	}
-	console.log("index of last class with data: " + i);
+	//console.log("index of last class with data: " + i);
 	var newLength = i + 2; // there should be exactly one empty element at the end of the array
 	if (newLength > maxSize) {
 		newLength = maxSize;
@@ -469,10 +469,10 @@ var Class = React.createClass({
 	updateHandlerGenerator: function(identifier) {
 		return ((value) => {
 			var newState = classDataFrom(this.props.magic.value);
-			console.log("identifier: " + identifier+"; value: "+value);
+			//console.log("identifier: " + identifier+"; value: "+value);
 			newState[identifier] = value;
-			console.log("new class state: ");
-			console.log(newState);
+			//console.log("new class state: ");
+			//console.log(newState);
 			this.props.magic.handleUpdate(newState);
 		});
 	},

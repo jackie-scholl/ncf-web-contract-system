@@ -504,9 +504,14 @@ var TextInput = React.createClass({
 		this.props.magic.handleUpdate(event.target.value);
 	},
 	render: function() {
+		// We want to hide the label when displayName is empty
+		const hasDisplayName = (this.props.displayName || this.props.displayName.length !== 0);
+		const displayStyle = hasDisplayName? 'inherit' : 'none';
 		return (
 			<div class="form-group">
-				<label>{this.props.displayName}</label>
+				<label htmlFor={this.props.displayName} style={{display: displayStyle}}>
+					{this.props.displayName}
+				</label>
 				<input
 					type="text"
 					value={this.props.magic.value}
@@ -524,14 +529,20 @@ var TextArea = React.createClass({
 		this.props.magic.handleUpdate(event.target.value);
 	},
 	render: function() {
+		// We want to hide the label when displayName is empty
+		const hasDisplayName = (this.props.displayName || this.props.displayName.length !== 0);
+		const displayStyle = hasDisplayName? 'inherit' : 'none';
 		return (
 			<div>
-				{this.props.displayName}:
+				<label htmlFor={this.props.displayName} style={{display: displayStyle}}>
+					{this.props.displayName}
+				</label>
 				<textarea
 					value={this.props.magic.value}
 					onChange={this.handleChange}
 					placeholder={this.props.placeHolder}
 					className='form-control'
+					id={this.props.displayName}
 				/>
 			</div>
 		);
@@ -581,9 +592,14 @@ var SelectInput = React.createClass({
 		this.props.magic.handleUpdate(event.target.value);
 	},
 	render: function() {
+		// We want to hide the label when displayName is empty
+		const hasDisplayName = (this.props.displayName || this.props.displayName.length !== 0);
+		const displayStyle = hasDisplayName? 'inherit' : 'none';
 		return (
 			<span>
-			  <label htmlFor={this.props.displayName}>{this.props.displayName}</label>
+				<label htmlFor={this.props.displayName} style={{display: displayStyle}}>
+					{this.props.displayName}
+				</label>
 				<select
 					value={this.props.magic.value}
 					onChange={this.handleChange}

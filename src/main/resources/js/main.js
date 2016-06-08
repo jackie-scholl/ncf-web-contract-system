@@ -439,11 +439,9 @@ var ClassesTable = React.createClass({
 	},
 	render: function() {
 		var magic_x = this.magic
-		var classNodes = this.props.magic.value.map(function(clazz, i) {
-			return (
-				<Class number={i} magic={magic_x(i)} key={i}/>
-			);
-		});
+		var classNodes = this.props.magic.value.map(
+			((_, i) => (<Class number={i} magic={this.magic(i)} key={i}/>)).bind(this)
+		);
 		return (
 			<div className="table-responsive">
 			<table className="table table-striped">

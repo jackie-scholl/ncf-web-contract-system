@@ -256,8 +256,8 @@ var emptyClassData = function() {
 }
 
 var classDataFrom = function(data) {
-	console.log("About to pull class data");
-	console.log(data);
+	//console.log("About to pull class data");
+	//console.log(data);
 	return new ClassData(data.courseCode, data.courseName, data.isInternship,
 				data.instuctorName, data.sessionName);
 }

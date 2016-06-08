@@ -77,8 +77,6 @@ var FullPage = React.createClass({
             }
 
 					}
-					//console.log('object map:');
-					//console.log(objectMap);
 					this.setState({contractMap: objectMap});
 				}
 			});
@@ -514,15 +512,9 @@ var GenericInput = React.createClass({
 		console.log(this.props);
 		console.log('truthiness: '+(this.props.displayName? true : false));
 
-		//const displayStyle = this.props.hasOwnProperty('displayName') &&
-		//	(this.props.displayName && this.props.displayName.length !== 0)? 'inherit' : 'none';
 		// We want to hide the label when displayName is empty
 		const style = this.props.hasOwnProperty('displayName') &&
 			(this.props.displayName && this.props.displayName.length !== 0)? {} : {display: 'none'};
-//<span style={{display: displayStyle}}>
-		//var array = new Uint8Array(15);
-		//window.crypto.getRandomValues(array);
-		//const UUID = base64.fromByteArray(array).replace(/\+/, '_').replace(/\//, '-');
 		return (
 			<span>
 				<label htmlFor={this.props.htmlId} style={style}>
@@ -536,12 +528,6 @@ var GenericInput = React.createClass({
 
 var TextInput = React.createClass({
 	render: function() {
-		// We want to hide the label when displayName is empty
-		//const displayStyle = this.props.hasOwnProperty('displayName') &&
-		//	(this.props.displayName || this.props.displayName.length !== 0)? 'inherit' : 'none';
-			//
-			//htmlFor={this.props.displayName}
-			//
 		const htmlId = this.props.magic.id;
 		return (
 			<GenericInput displayName={this.props.displayName} htmlId={htmlId}>
@@ -560,17 +546,6 @@ var TextInput = React.createClass({
 
 var TextArea = React.createClass({
 	render: function() {
-		/*// We want to hide the label when displayName is empty
-		const hasDisplayName = (this.props.displayName || this.props.displayName.length !== 0);
-		const displayStyle = hasDisplayName? 'inherit' : 'none';
-		return (
-			<div>
-				<label htmlFor={this.props.displayName} style={{display: displayStyle}}>
-					{this.props.displayName}
-				</label>
-
-			</div>
-		);*/
 		const htmlId = this.props.magic.id;
 		return (
 			<GenericInput displayName={this.props.displayName} htmlId={htmlId}>
@@ -588,17 +563,6 @@ var TextArea = React.createClass({
 
 var CheckBox = React.createClass({
 	render: function() {
-		/*return (
-			<span>
-				<input
-					type="checkbox"
-					checked={this.props.magic.value}
-					onChange={this.handleChange}
-					placeholder={this.props.placeHolder}
-					className="form-control"
-				/>
-			</span>
-		);*/
 		const htmlId = this.props.magic.id;
 		return (
 			<GenericInput displayName={this.props.displayName} htmlId={htmlId}>
@@ -616,24 +580,6 @@ var CheckBox = React.createClass({
 
 var SelectInput = React.createClass({
 	render: function() {
-		/*// We want to hide the label when displayName is empty
-		const hasDisplayName = (this.props.displayName || this.props.displayName.length !== 0);
-		const displayStyle = hasDisplayName? 'inherit' : 'none';
-		return (
-			<span>
-				<label htmlFor={this.props.displayName} style={{display: displayStyle}}>
-					{this.props.displayName}
-				</label>
-				<select
-					value={this.props.magic.value}
-					onChange={this.handleChange}
-					className="form-control"
-					id={this.props.displayName}
-				>
-				{this.props.children}
-				</select>
-			</span>
-		);*/
 		const htmlId = this.props.magic.id;
 		return (
 			<GenericInput displayName={this.props.displayName} htmlId={htmlId}>

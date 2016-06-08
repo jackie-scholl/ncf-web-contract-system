@@ -35,13 +35,12 @@ const paths2 = {
   }
 };
 
-// Not all tasks need to use streams
-// A gulpfile is just another node program and you can use any package available on npm
-gulp.task('clean', function() {
-  return del([paths2.target.scss, paths2.target.scripts, paths2.target.html]);
+
+gulp.task('clean-scss', function() {
+  return del(paths2.target.scss);
 });
 
-gulp.task('scss', ['clean'], function() {
+gulp.task('scss', ['clean-scss'], function() {
   return gulp
     .src(paths.scss)
     .pipe(sourcemaps.init())
@@ -51,7 +50,11 @@ gulp.task('scss', ['clean'], function() {
     ;//.pipe(browserSync.stream());
 });
 
-gulp.task('scripts', ['clean'], function() {
+gulp.task('clean-scripts', function() {
+  return del(paths2.target.scripts);
+});
+
+gulp.task('scripts', ['clean-scripts'], function() {
   // Minify and copy all JavaScript (except vendor scripts)
   // with sourcemaps all the way down
   return gulp.src(paths.scripts)
@@ -64,7 +67,11 @@ gulp.task('scripts', ['clean'], function() {
     .pipe(gulp.dest(target+'js'));
 });
 
-gulp.task('html', ['clean'], function() {
+gulp.task('clean-html', function() {
+  return del(paths2.target.html);
+});
+
+gulp.task('html', ['clean-html'], function() {
   return gulp.src(paths.html)
     .pipe(gulp.dest(target))
 });

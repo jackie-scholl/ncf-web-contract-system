@@ -39,6 +39,7 @@ var FullPage = React.createClass({
 					console.log('dataset opened');
 					y.setState({contractDataset: dataset});
 					y.initContractMap();
+					y.cognitoSync();
 				}
    		});
 		});
@@ -161,6 +162,9 @@ var FullPage = React.createClass({
 						pollInterval={2000}
 					/>
 					{optionalContract}
+					<div className="col-md-5 col-md-offset-2">
+						<button className="btn btn-default" type="button" onClick={this.cognitoSync}>Sync</button>
+					</div>
 				</div>
 			</div>
 		);

@@ -127,9 +127,9 @@ var FullPage = React.createClass({
 		console.log('new contract ID:' + contractId);
 		//const contractId = 5;
 		const baseContractData = {
-			semester: '', studyLocation: '', contractYear: '',
+			semester: '', studyLocation: 'On Campus', contractYear: '',
 			firstName: '', lastName: '', nNumber: '', expectedGradYear: '', boxNumber: '',
-			classes: [{courseCode: '', courseName: '', isInternship: '', instructorName: '',
+			classes: [{courseCode: '', courseName: '', isInternship: false, instructorName: '',
 						sessionName: ''}]
 		};
 		const contractEntry = {contractId: contractId, googleId: 'nah',

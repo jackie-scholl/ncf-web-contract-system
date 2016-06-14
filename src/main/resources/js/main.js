@@ -321,6 +321,7 @@ var ContractBox = React.createClass({
 		//console.log(updatedContract);
 		this.props.handleUpdate(updatedContractEntry);
 	},
+
 	render: function() {
 		console.log(this.props.contractEntry);
 		return (
@@ -479,13 +480,14 @@ var ContractForm = React.createClass({
 				<TextArea displayName="Goals" placeHolder="live the good life"
 						magic={this.magic('goals')} />
 				<TextArea displayName="Certification Criteria"
-							placeHolder="Three out of four credits."
-							magic={this.magic('certificationCriteria')} />
+						placeHolder="Three out of four credits."
+						magic={this.magic('certificationCriteria')} />
 				<TextArea displayName="Description and Other Activities"
-							placeHolder="skydive"
-							magic={this.magic('descriptionsOtherActivities')} />
+						placeHolder="skydive"
+						magic={this.magic('descriptionsOtherActivities')} />
+
 				<TextInput displayName="Advisor Name" placeHolder="Prezzy O'shea"
-							magic={this.magic('advisorName')} />
+						magic={this.magic('advisorName')} />
 			</form>
 			<div id="display-pdf" />
 			</div>

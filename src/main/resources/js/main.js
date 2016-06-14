@@ -373,73 +373,7 @@ var ContractForm = React.createClass({
 			handleUpdate: this.updateHandlerGenerator(identifier),
 			id: 'ContractForm.'+this.props.contractId+'.'+identifier};
 	},
-	/*
-	<TextInput displayName="First Name" placeHolder="Jane"
-			magic={this.magic('firstName')} />
-	<TextInput displayName="Last Name" placeHolder="Doe"
-			magic={this.magic('lastName')} />
-	<TextInput displayName="N Number" placeHolder="123456789"
-			magic={this.magic('nNumber')} />
-	<TextInput displayName="Box Number" placeHolder="123"
-			magic={this.magic('boxNumber')} />
-			div className="row" style={{marginBottom: '2em'}}>
-			<div className="col-sm-3"><TextInput displayName="First Name" placeHolder="Jane"
-					magic={this.magic('firstName')} /></div>
-			<div className="col-sm-3"><TextInput displayName="Last Name" placeHolder="Doe"
-					magic={this.magic('lastName')} /></div>
-			<div className="col-sm-3"><TextInput displayName="N Number" placeHolder="123456789"
-					magic={this.magic('nNumber')} /></div>
-			<div className="col-sm-4 col-md-3"><TextInput displayName="Box Number" placeHolder="123"
-					magic={this.magic('boxNumber')} /></div>
-			</div>
 
-			<div className="row" style={{marginBottom: '2em'}}>
-			<div className="col-sm-3">
-			<SelectInput displayName="Semester" magic={this.magic('semester')}>
-				<SelectOption value="" display="Select One" />
-				<SelectOption value="Spring" display="Spring" />
-				<SelectOption value="Fall" display="Fall" />
-			</SelectInput></div>
-			<div className="col-sm-3"><TextInput displayName="Contract Year" magic={this.magic('contractYear')} /></div>
-			<div className="col-sm-3">
-			<SelectInput displayName="Study Location" magic={this.magic('studyLocation')}>
-				<SelectOption value="" display="Select One" />
-				<SelectOption value="On Campus" display="On Campus" />
-				<SelectOption value="Off Campus" display="Off Campus" />
-			</SelectInput></div>
-
-			<div className="col-sm-3"><TextInput displayName="Expected Year of Graduation" placeHolder="never"
-					magic={this.magic('expectedGradYear')} /></div>
-			</div>
-
-
-			<div className="row" style={{marginBottom: '2em'}}>
-			<div className="col-sm-3"><TextInput displayName="First Name" placeHolder="Jane"
-					magic={this.magic('firstName')} /></div>
-			<div className="col-sm-3"><TextInput displayName="Last Name" placeHolder="Doe"
-					magic={this.magic('lastName')} /></div>
-			<div className="col-sm-3"><TextInput displayName="N Number" placeHolder="123456789"
-					magic={this.magic('nNumber')} /></div>
-			<div className="col-sm-3 col-md-3"><TextInput displayName="Box Number" placeHolder="123"
-					magic={this.magic('boxNumber')} /></div>
-
-			<div className="col-sm-3">
-			<SelectInput displayName="Semester" magic={this.magic('semester')}>
-				<SelectOption value="" display="Select One" />
-				<SelectOption value="Spring" display="Spring" />
-				<SelectOption value="Fall" display="Fall" />
-			</SelectInput></div>
-			<div className="col-sm-3"><TextInput displayName="Contract Year" magic={this.magic('contractYear')} /></div>
-			<div className="col-sm-3">
-			<SelectInput displayName="Study Location" magic={this.magic('studyLocation')}>
-				<SelectOption value="" display="Select One" />
-				<SelectOption value="On Campus" display="On Campus" />
-				<SelectOption value="Off Campus" display="Off Campus" />
-			</SelectInput></div>
-			<div className="col-sm-3"><TextInput displayName="Expected Year of Graduation" placeHolder="never"
-					magic={this.magic('expectedGradYear')} /></div>
-			</div>
-	*/
 	render: function() {
 		// What the f*ck does this line do? do we use it?
 		var contractYearNodes = Array.apply(null, Array(5)).map((_, i) => (i));

@@ -1,3 +1,4 @@
+//Copyright 2016 Jackie Scholl
 //var $ = require('jquery');
 var React = require('react');
 var ReactDOM = require('react-dom');

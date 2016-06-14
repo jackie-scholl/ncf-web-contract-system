@@ -120,7 +120,10 @@ gulp.task('watchJava', () => {
 });
 
 gulp.task('watch', function() {
-  gulp.watch(paths.all, ['scss', 'scripts', 'html']);
+  gulp.watch(paths2.src.scss, ['scss']);
+  gulp.watch(paths2.src.scripts, ['scripts']);
+  gulp.watch(paths2.src.html, ['html']);
+
   gulp.watch(paths2.src.resources2, ['resources2']);
 });
 

@@ -6,7 +6,7 @@ var base64 = require('base64-js');
 
 //const apiRoot = '';
 
-const googleLogin = false;
+const googleLogin = true;
 
 var FullPage = React.createClass({
 	getInitialState: function() {
@@ -19,6 +19,7 @@ var FullPage = React.createClass({
 	},
 	cognitoSetup: function() {
 		const logins = gIdToken ? {'accounts.google.com': gIdToken} : {};
+		console.log(logins);
 		this.setState({logins: logins});
 		//console.log(logins);
 		const y = this;
@@ -26,10 +27,8 @@ var FullPage = React.createClass({
 		// Initialize the Amazon Cognito credentials provider
 		AWS.config.region = 'us-east-1'; // Region
 		AWS.config.credentials = new AWS.CognitoIdentityCredentials({
-    	IdentityPoolId: 'us-east-1:a09f9758-c1f2-44c1-a3c8-185219e42c99', logins
-			/*Logins: { // optional tokens, used for authenticated login
-		    'accounts.google.com': gIdToken
-		  }*/
+    	IdentityPoolId: 'us-east-1:a09f9758-c1f2-44c1-a3c8-185219e42c99',
+			Logins: logins
 		});
 		AWS.config.credentials.get(function(){
    		var syncClient = new AWS.CognitoSyncManager();

@@ -7,6 +7,8 @@ const babel = require('gulp-babel');
 const gulpBrowser = require('gulp-browser');
 const child_process = require('child_process');
 //const browserSync = require('browser-sync').create();
+const uglify = require('gulp-uglify');
+const buffer = require('vinyl-buffer');
 
 const resources = 'src/main/resources/';
 const paths = {
@@ -63,6 +65,11 @@ gulp.task('scripts', ['clean-scripts'], function() {
             presets: ['react']
         }))
       .pipe(gulpBrowser.browserify())
+      /*
+      .pipe(buffer())
+      .pipe(uglify().on('error', function(e){
+          console.log(e);
+      }))*/
     .pipe(sourcemaps.write())
     .pipe(gulp.dest(target+'js'));
 });

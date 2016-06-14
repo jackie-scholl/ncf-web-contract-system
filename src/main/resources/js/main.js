@@ -51,8 +51,8 @@ var FullPage = React.createClass({
 			//alert('oh, no no no! we\'re not paying for real sync yet');
 			console.log("Warning! We're running a sync operation, which costs money");
 			this.state.contractDataset.synchronize({
-				onFailure: (err) => {console.log(err);},
-				onSuccess: (success) => {console.log(success);}
+				onFailure: (err) => {console.log('err!'); console.log(err);},
+				onSuccess: (success) => {console.log('success!'); console.log(success);}
 			});
 		}
 	},

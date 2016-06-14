@@ -12,3 +12,5 @@ JSONContractsNCF.db
 node_modules
 
 dependency-reduced-pom.xml
+
+npm-debug.log

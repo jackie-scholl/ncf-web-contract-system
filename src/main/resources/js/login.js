@@ -86,8 +86,7 @@ const GoogleLoginArea = React.createClass({
     this.props.onUpdate(stateResult);
   },
   getInitialState: function() {
-    const loginState = getLoginState(null);
-    return loginState;
+    return getLoginState(null);
   },
   signOut: function() {
     console.log('Signing out ' + this.state.googleUser.getBasicProfile().getName());

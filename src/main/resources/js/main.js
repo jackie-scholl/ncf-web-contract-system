@@ -12,7 +12,6 @@ var FullPage = React.createClass({
   getInitialState: function() {
     console.log("window.location.hash: "+window.location.hash);
     const h = window.location.hash;
-    //console.log(h);
     const contractId = h? h.slice(1) : null;
     const contractDataset = null;
     return {contractId: contractId, contractDataset: null, contractMap: new Map(), logins: {}};
@@ -20,9 +19,7 @@ var FullPage = React.createClass({
   cognitoSetup: function(logins) {
     console.log(logins);
     this.setState({logins: logins});
-    //console.log(logins);
     const y = this;
-    //console.log('gid: '+gIdToken);
     // Initialize the Amazon Cognito credentials provider
     AWS.config.region = 'us-east-1'; // Region
     AWS.config.credentials = new AWS.CognitoIdentityCredentials({
@@ -38,7 +35,6 @@ var FullPage = React.createClass({
           console.log('dataset opened');
           y.setState({contractDataset: dataset});
           y.initContractMap();
-          //y.cognitoSync();
         }
        });
     });
@@ -320,12 +316,9 @@ function arraysEqual(a1,a2) {
 
 var ContractBox = React.createClass({
   handleUpdate: function(newData) {
-    //console.log("handling contract box update. newData: ");
-    //console.log(newData);
     var updatedContractEntry = Object.assign({}, this.props.contractEntry);
     updatedContractEntry.contractData = newData;
     updatedContractEntry.dateLastModified = new Date().getTime();
-    //console.log(updatedContract);
     this.props.handleUpdate(updatedContractEntry);
   },
 
@@ -489,10 +482,7 @@ var Class = React.createClass({
   updateHandlerGenerator: function(identifier) {
     return ((value) => {
       var newState = classDataFrom(this.props.magic.value);
-      //console.log("identifier: " + identifier+"; value: "+value);
       newState[identifier] = value;
-      //console.log("new class state: ");
-      //console.log(newState);
       this.props.magic.handleUpdate(newState);
     });
   },

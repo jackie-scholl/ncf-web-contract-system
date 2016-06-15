@@ -108,6 +108,7 @@ const GoogleLoginArea = React.createClass({
     console.log(JSON.stringify({message: "fail", value: error}));
   },
   renderLoginButton: function() {
+    console.assert(!!$('#my-signin2').length);
     console.log('rendering login button');
     gapi.signin2.render('my-signin2', {
       'scope': 'profile email',

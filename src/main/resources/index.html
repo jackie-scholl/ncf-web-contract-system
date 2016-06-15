@@ -59,7 +59,6 @@
     <meta name="google-signin-client_id" content="784978983695-km7e0k6q09qmrmgk3r2aortu0oqdk2tk.apps.googleusercontent.com">
     <meta name="google-signin-hosted_domain" content="ncf.edu">
     <!--<script src="https://apis.google.com/js/platform.js" async defer></script>-->
-    <script src="/resources2/js/platform.js" async defer></script>
 
   </head>
   <body>
@@ -68,9 +67,12 @@
         <div class="navbar-header">
           <div id="login-area" class="login-area navbar-brand">
       		    <div id="login" class="logged-out">
+                <!--
                 <div class="g-signin2" id="my-signin" data-onsuccess="onSignIn" data-onfailure="onSignInFailure"
       				      data-width="240" data-longtitle="true" data-theme="dark">
                 </div>
+                -->
+                <div id="my-signin2"></div>
               </div>
       		    <div id="logout" class="logged-in" style="display:none">
       			    <span>
@@ -165,11 +167,25 @@
         var errorString = "Sorry, something went wrong with the Google sign-in; please let us know about the issue";
         console.log(JSON.stringify({message: "fail", value: error}));
       }
+
+      function renderButton() {
+        console.log('rendering');
+        gapi.signin2.render('my-signin2', {
+          'scope': 'profile email',
+          'width': 220,
+          'height': 30,
+          'longtitle': true,
+          'theme': 'dark',
+          'onsuccess': onSignIn,
+          'onfailure': onSignInFailure
+        });
+      }
     <!--<script src="/js/googleStuff.js"></script>
     <script src="/js/main.js"></script>-->
     <script src="/js/build.js"></script>
     </script>
 
+    <script src="https://apis.google.com/js/platform.js?onload=renderButton" async defer></script>
 
   </body>
 </html>

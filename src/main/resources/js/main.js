@@ -39,7 +39,7 @@ var FullPage = React.createClass({
           console.log('dataset opened');
           y.setState({contractDataset: dataset});
           y.initContractMap();
-          y.cognitoSync();
+          //y.cognitoSync();
         }
        });
     });

@@ -166,20 +166,7 @@ LoginHandler.prototype.addListener = function(callback) {
 
 
 const renderLoginBar = function() {
-  var loginHandler = {
-    listeners: [],
-    trigger: (function(x) {
-      console.log(this);
-      this.listeners.forEach((e) => {e(x);});
-    }),
-    addListener: function(listener) {
-      this.listeners.push(listener);
-    },
-    value: getLoginState(null)
-  };
-  loginHandler.addListener((x) => {console.log('test listener recieved event: '); console.log(x);});
-  loginHandler.addListener((x) => {loginHandler.value = x;});
-
+  const loginHandler = new LoginHandler();
   const onUpdateListener = loginHandler.trigger.bind(loginHandler);
   const element = ReactDOM.render(
     <LoginBar onUpdate={onUpdateListener} />,

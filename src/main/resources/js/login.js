@@ -153,21 +153,22 @@ const LoginHandler = function() {
   this.value = getLoginState(null);
   this.addListener((x) => {this.value = x;}); // callback that updates the value
   return this;
-}
+};
 
 LoginHandler.prototype.trigger = function(state) {
   this.listeners.forEach((callback) => {callback(state);});
-}
+};
 
 LoginHandler.prototype.addListener = function(callback) {
   this.listeners.push(callback);
-}
+};
 
 
 
 const renderLoginBar = function() {
   const loginHandler = new LoginHandler();
   const onUpdateListener = loginHandler.trigger.bind(loginHandler);
+
   const element = ReactDOM.render(
     <LoginBar onUpdate={onUpdateListener} />,
     document.getElementById('login-bar')

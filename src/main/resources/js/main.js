@@ -42,6 +42,11 @@ var FullPage = React.createClass({
       }.bind(this));
     }.bind(this));
   },
+  cognitoTearDown: function() {
+    AWS.config.credentials = null;
+    this.setState({logins: null, contractDataset: null});
+    this.contractMapTearDown();
+  },
   cognitoSync: function() {
     if (!this.state.contractDataset) {
       console.log('dataset is null! oh noes!');
@@ -55,6 +60,7 @@ var FullPage = React.createClass({
     }
   },
   initContractMap: function() {
+    console.assert(this.state.contractDataset);
     if (!this.state.contractDataset) {
       alert('something went wrong; initContractMap called but dataset does not exist');
     } else {
@@ -81,6 +87,9 @@ var FullPage = React.createClass({
       });
     }
   },
+  contractMapTearDown: function() {
+    this.setState({contractMap: new Map()});
+  },
   setContractEntry: function(contractEntry) {
     if (!this.state.contractDataset) {
       alert('oops! dataset doesn\'t exist yet');
@@ -98,7 +107,15 @@ var FullPage = React.createClass({
         this.cognitoSetup(loginHandler.value.logins);
       } else {
         console.log('adding listener');
-        loginHandler.addListener((x) => {console.log('recieved event, running cognito setup'); this.cognitoSetup(x.logins);});
+        loginHandler.addListener((x) => {
+          console.log('recieved event, running cognito setup');
+          if (x.loggedIn) {
+            this.cognitoSetup(x.logins);
+          } else {
+            console.log('user not logged in; running tear-down');
+            this.cognitoTearDown();
+          }
+        });
       }
       /*if (gIdToken) {
         console.log('token already exists!');

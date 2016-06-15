@@ -4,6 +4,7 @@ var React = require('react');
 var ReactDOM = require('react-dom');
 var base64 = require('base64-js');
 var loginHandler = require('./login.js').render();
+var resolveConflict = require('./resolve-conflict.js');
 //const apiRoot = '';
 
 const googleLogin = true;
@@ -38,6 +39,7 @@ var FullPage = React.createClass({
           console.log('dataset opened');
           this.setState({contractDataset: dataset});
           this.initContractMap();
+          this.cognitoSync();
         }
       }.bind(this));
     }.bind(this));
@@ -54,8 +56,72 @@ var FullPage = React.createClass({
       //alert('oh, no no no! we\'re not paying for real sync yet');
       console.log("Warning! We're running a sync operation, which costs money");
       this.state.contractDataset.synchronize({
-        onFailure: (err) => {console.log('err!'); console.log(err);},
-        onSuccess: (success) => {console.log('success!'); console.log(success);}
+        onFailure: (err) => {
+          console.log('err!'); console.log(err);
+        },
+        onSuccess: (dataset, newRecords) => {
+          console.log('success!');
+          console.log(dataset);
+          console.log(newRecords);
+          console.log('this: ');
+          console.log(this);
+          this.initContractMap();
+        },
+        onConflict: (dataset, conflicts, callback) => {
+          const resolved = [];
+          let continueMerge = true;
+
+          for (let i=0; i<conflicts.length; i++) {
+            // Take remote version.
+            //resolved.push(conflicts[i].resolveWithRemoteRecord());
+
+            // Or... take local version.
+            // resolved.push(conflicts[i].resolveWithLocalRecord());
+
+            // Or... use custom logic.
+            // var newValue = conflicts[i].getRemoteRecord().getValue() + conflicts[i].getLocalRecord().getValue();
+            // resolved.push(conflicts[i].resolveWithValue(newValue);
+            try {
+              resolved.push(resolveConflict.resolve(conflicts[i]));
+            } catch (exception) {
+              if (exception === resolveConflict.CANNOT_RESOLVE) {
+                continueMerge = false;
+                  console.log('CANNOT_MERGE thrown; merge canceled');
+              } else {
+                throw exception;
+              }
+            }
+          }
+
+          if (continueMerge) {
+            alert('error: allowed to merge');
+            /*dataset.resolve(resolved, function() {
+              return callback(true);
+            });*/
+          } else {
+            // callback false to stop the synchronization process.
+            return callback(false);
+          }
+
+        },
+
+        onDatasetDeleted: function(dataset, datasetName, callback) {
+          console.log('oh no! remote dataset deleted!');
+          console.log('dataset named '+datasetName);
+          console.log(dataset);
+          // Return true to delete the local copy of the dataset.
+          // Return false to handle deleted datasets outsid ethe synchronization callback.
+          //return callback(true);
+          return callback(false);
+        },
+
+        onDatasetMerged: function(dataset, datasetNames, callback) {
+          console.log('oh no! dataset merged!');
+          // Return true to continue the synchronization process.
+          // Return false to handle dataset merges outside the synchroniziation callback.
+          return callback(false);
+          //return callback(true);
+        }
       });
     }
   },

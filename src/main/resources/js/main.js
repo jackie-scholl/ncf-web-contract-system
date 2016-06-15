@@ -20,6 +20,7 @@ var FullPage = React.createClass({
     console.log(logins);
     this.setState({logins: logins});
     // Initialize the Amazon Cognito credentials provider
+    AWS.config.logger = console;
     AWS.config.region = 'us-east-1'; // Region
     AWS.config.credentials = new AWS.CognitoIdentityCredentials({
       IdentityPoolId: 'us-east-1:a09f9758-c1f2-44c1-a3c8-185219e42c99',

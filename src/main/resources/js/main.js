@@ -25,9 +25,12 @@ var FullPage = React.createClass({
       IdentityPoolId: 'us-east-1:a09f9758-c1f2-44c1-a3c8-185219e42c99',
       Logins: logins
     });
+    console.log('AWS config set');
     AWS.config.credentials.get(function(){
+      console.log('thing opened');
       var syncClient = new AWS.CognitoSyncManager();
       syncClient.openOrCreateDataset('contracts', function(err, dataset) {
+        console.log('dataset opened');
         if (err) {
           console.log('could not open or create dataset; err '+err);
         } else {

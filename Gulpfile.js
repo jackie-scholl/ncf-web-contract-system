@@ -3,12 +3,16 @@ const sass = require('gulp-sass');
 const sourcemaps = require('gulp-sourcemaps');
 const del = require('del');
 const react = require('gulp-react');
-const babel = require('gulp-babel');
+//const babel = require('gulp-babel');
+const babelify = require('babelify');
 const gulpBrowser = require('gulp-browser');
+const browserify = require('browserify');
 const child_process = require('child_process');
 //const browserSync = require('browser-sync').create();
 const uglify = require('gulp-uglify');
 const buffer = require('vinyl-buffer');
+const watchify = require('watchify');
+const source = require('vinyl-source-stream');
 
 const resources = 'src/main/resources/';
 const paths = {
@@ -32,6 +36,7 @@ const paths2 = {
   target: {
     scss: target+'scss/**/*.scss',
     scripts: target+'js/**/*.js',
+    scripts2: target+'js',
     html: target+'index.html',
     resources2: target+'resources2/'
   }
@@ -56,7 +61,7 @@ gulp.task('clean-scripts', function() {
   return del(paths2.target.scripts);
 });
 
-gulp.task('scripts', ['clean-scripts'], function() {
+/*gulp.task('scripts', ['clean-scripts'], function() {
   // Minify and copy all JavaScript (except vendor scripts)
   // with sourcemaps all the way down
   return gulp.src(paths.scripts)
@@ -69,10 +74,47 @@ gulp.task('scripts', ['clean-scripts'], function() {
       .pipe(buffer())
       .pipe(uglify().on('error', function(e){
           console.log(e);
-      }))*/
+      }))
     .pipe(sourcemaps.write())
     .pipe(gulp.dest(target+'js'));
-});
+});*/
+
+// Based on https://gist.github.com/danharper/3ca2273125f500429945
+function compile(watch) {
+  //const js_src = resources+'js/main.js';
+  //var bundler = watchify(browserify(resources+'js/main.js', { debug: true }).transform(babel({presets: ['react']})));
+  //var bundler = watchify(browserify(src1, { debug: true }).transform(babel({presets: ['react']})));
+  var bundler = watchify(browserify(resources+'js/main.js', { debug: true })
+      .transform("babelify", {presets: ["es2015", "react"]}));
+
+  function rebundle() {
+    bundler.bundle()
+      .on('error', function(err) { console.error(err); this.emit('end'); })
+      .pipe(source('build.js'))
+      .pipe(buffer())
+      .pipe(sourcemaps.init({ loadMaps: true }))
+      .pipe(sourcemaps.write('./'))
+      //.pipe(gulp.dest('./build'));
+
+      .pipe(gulp.dest(paths2.target.scripts2));
+  }
+
+  if (watch) {
+    bundler.on('update', function() {
+      console.log('-> bundling...');
+      rebundle();
+    });
+  }
+
+  rebundle();
+}
+
+function watch() {
+  return compile(true);
+};
+
+gulp.task('scripts', ['clean-scripts'], function() { return compile(); });
+gulp.task('watch-scripts', function() { return watch(); });
 
 gulp.task('clean-html', function() {
   return del(paths2.target.html);

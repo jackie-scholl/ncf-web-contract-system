@@ -27,8 +27,8 @@ var FullPage = React.createClass({
       Logins: logins
     });
     AWS.config.credentials.get(function(){
-       var syncClient = new AWS.CognitoSyncManager();
-       syncClient.openOrCreateDataset('contracts', function(err, dataset) {
+      var syncClient = new AWS.CognitoSyncManager();
+      syncClient.openOrCreateDataset('contracts', function(err, dataset) {
         if (err) {
           console.log('could not open or create dataset; err '+err);
         } else {
@@ -36,8 +36,8 @@ var FullPage = React.createClass({
           y.setState({contractDataset: dataset});
           y.initContractMap();
         }
-       });
     });
+      });
   },
   cognitoSync: function() {
     if (!this.state.contractDataset) {

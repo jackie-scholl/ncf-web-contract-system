@@ -87,7 +87,6 @@ const GoogleLoginArea = React.createClass({
   },
   getInitialState: function() {
     const loginState = getLoginState(null);
-    //this.sendLoginUpdate(loginState);
     return loginState;
   },
   signOut: function() {

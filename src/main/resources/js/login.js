@@ -100,8 +100,8 @@ const GoogleLoginArea = React.createClass({
     auth2.disconnect();
     auth2.signOut().then(function() {
       console.log('User signed out.');
+      this.updateLogin(null);
     });
-    this.updateLogin(null);
   },
   onSignIn: function(googleUser) {
     console.log(JSON.stringify({message: "success1", value: googleUser}));

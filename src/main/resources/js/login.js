@@ -150,8 +150,8 @@ const GoogleLoginArea = React.createClass({
 
 const LoginHandler = function() {
   this.listeners = [];
-  this.value = getLoginSate(null);
-  this.addListener((x) => {loginHandler.value = x;}); // callback that updates the value
+  this.value = getLoginState(null);
+  this.addListener((x) => {this.value = x;}); // callback that updates the value
   return this;
 }
 
@@ -180,7 +180,7 @@ const renderLoginBar = function() {
   loginHandler.addListener((x) => {console.log('test listener recieved event: '); console.log(x);});
   loginHandler.addListener((x) => {loginHandler.value = x;});
 
-  const onUpdateListener = loginHandler.trigger;
+  const onUpdateListener = loginHandler.trigger.bind(loginHandler);
   const element = ReactDOM.render(
     <LoginBar onUpdate={onUpdateListener} />,
     document.getElementById('login-bar')

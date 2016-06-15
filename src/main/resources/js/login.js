@@ -134,7 +134,7 @@ const GoogleLoginArea = React.createClass({
         <div id="login-area" className="login-area navbar-brand">
           <span>
             Welcome {fullName}!
-            <a href="#" onclick={this.signOut} id="logout-link">Sign out</a>
+            <a href="#" onClick={this.signOut} id="logout-link">Sign out</a>
           </span>
         </div>
       );

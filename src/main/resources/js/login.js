@@ -177,16 +177,27 @@ const renderLoginBar = function() {
   return loginHandler;
 }
 
-/*const loginBar = ReactDOM.render(
-  <LoginBar />,
-  document.getElementById('login-bar')
-);*/
-
 module.exports = {
   render: renderLoginBar
 }
 
+/*
 
+
+
+
+
+
+
+
+  console.log('LoginHandler trigger called; this=');
+  console.log(this);
+
+  //console.log('LoginHandler addListener called');
+/*const loginBar = ReactDOM.render(
+  <LoginBar />,
+  document.getElementById('login-bar')
+);*/
 //this.setState(this.getStateResult(googleUser));
 //gIdToken = googleUser.getAuthResponse().id_token;
 //Cookies.set('id_token3', googleUser.getAuthResponse().id_token, {expires: 7});
@@ -332,3 +343,28 @@ function onSignInFailure(error) {
         };
     }
   },*/
+  /*this.addListener((x) => {
+    console.log('test listener recieved event: ');
+    console.log(x);
+    console.log('current value: ');
+    console.log(this.value);
+  }); // test listener*/
+
+
+  /*LoginHandler.prototype.sayX = function() {
+    console.log('Hello, x= ' + this.x);
+  };*/
+
+    /*var loginHandler = {
+      listeners: [],
+      trigger: (function(x) {
+        console.log(this);
+        this.listeners.forEach((e) => {e(x);});
+      }),
+      addListener: function(listener) {
+        this.listeners.push(listener);
+      },
+      value: getLoginState(null)
+    };
+    loginHandler.addListener((x) => {console.log('test listener recieved event: '); console.log(x);});
+    loginHandler.addListener((x) => {loginHandler.value = x;});*/

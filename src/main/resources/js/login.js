@@ -83,11 +83,7 @@ const GoogleLoginArea = React.createClass({
   updateLogin: function(googleUser) {
     const stateResult = getLoginState(googleUser);
     this.setState(stateResult);
-    this.sendLoginUpdate(stateResult);
-  },
-  sendLoginUpdate: function(state) {
-    //$(document).trigger("login-update", stateResult);
-    this.props.onUpdate(state);
+    this.props.onUpdate(stateResult);
   },
   getInitialState: function() {
     const loginState = getLoginState(null);

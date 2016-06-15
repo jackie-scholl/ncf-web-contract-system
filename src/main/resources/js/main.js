@@ -19,7 +19,6 @@ var FullPage = React.createClass({
   cognitoSetup: function(logins) {
     console.log(logins);
     this.setState({logins: logins});
-    const y = this;
     // Initialize the Amazon Cognito credentials provider
     AWS.config.region = 'us-east-1'; // Region
     AWS.config.credentials = new AWS.CognitoIdentityCredentials({
@@ -33,11 +32,11 @@ var FullPage = React.createClass({
           console.log('could not open or create dataset; err '+err);
         } else {
           console.log('dataset opened');
-          y.setState({contractDataset: dataset});
-          y.initContractMap();
+          this.setState({contractDataset: dataset});
+          this.initContractMap();
         }
-    });
-      });
+      }.bind(this));
+    }.bind(this));
   },
   cognitoSync: function() {
     if (!this.state.contractDataset) {

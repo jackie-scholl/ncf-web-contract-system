@@ -8,6 +8,7 @@
   },
   "author": "Jackie Scholl",
   "license": "copyright 2016 Jackie Scholl",
+  "private": "true",
   "homepage": "https://bitbucket.org/tmir-chan/contract-form#readme",
   "devDependencies": {
     "babel-core": "^6.8.0",

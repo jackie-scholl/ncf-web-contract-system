@@ -105,6 +105,7 @@ var FullPage = React.createClass({
         });
       }
     } else {
+      console.log("google login not required, skipping to setup");
       this.cognitoSetup();
     }
   },

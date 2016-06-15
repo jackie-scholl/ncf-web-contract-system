@@ -62,16 +62,15 @@
 
   </head>
   <body>
+    <!--
     <nav class="navbar navbar-inverse navbar-fixed-top">
       <div class="container-fluid">
         <div class="navbar-header">
           <div id="login-area" class="login-area navbar-brand">
       		    <div id="login" class="logged-out">
-                <!--
                 <div class="g-signin2" id="my-signin" data-onsuccess="onSignIn" data-onfailure="onSignInFailure"
       				      data-width="240" data-longtitle="true" data-theme="dark">
                 </div>
-                -->
                 <div id="my-signin2"></div>
               </div>
       		    <div id="logout" class="logged-in" style="display:none">
@@ -84,6 +83,8 @@
         </div>
       </div>
     </nav>
+    -->
+    <div id="login-bar"></div>
 
     <div id="content"></div>
 
@@ -180,12 +181,20 @@
           'onfailure': onSignInFailure
         });
       }
+    </script>
+
     <!--<script src="/js/googleStuff.js"></script>
     <script src="/js/main.js"></script>-->
     <script src="/js/build.js"></script>
+
+
+    <script>
+      function googleLoginLoadTrigger() {
+        gapi.load('auth2', () => {$(document).trigger("googleLogin2");});
+      }
     </script>
 
-    <script src="https://apis.google.com/js/platform.js?onload=renderButton" async defer></script>
+    <script src="https://apis.google.com/js/platform.js?onload=googleLoginLoadTrigger" async defer></script>
 
   </body>
 </html>

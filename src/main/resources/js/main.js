@@ -3,7 +3,7 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
 var base64 = require('base64-js');
-
+var loginHandler = require('./login.js').render();
 //const apiRoot = '';
 
 const googleLogin = true;
@@ -17,8 +17,7 @@ var FullPage = React.createClass({
     const contractDataset = null;
     return {contractId: contractId, contractDataset: null, contractMap: new Map(), logins: {}};
   },
-  cognitoSetup: function() {
-    const logins = gIdToken ? {'accounts.google.com': gIdToken} : {};
+  cognitoSetup: function(logins) {
     console.log(logins);
     this.setState({logins: logins});
     //console.log(logins);
@@ -95,7 +94,14 @@ var FullPage = React.createClass({
   },
   componentDidMount: function() {
     if (googleLogin) {
-      if (gIdToken) {
+      if (loginHandler.value.loggedIn) {
+        console.log('token already exists!');
+        this.cognitoSetup(loginHandler.value.logins);
+      } else {
+        console.log('adding listener');
+        loginHandler.addListener((x) => {console.log('recieved event, running cognito setup'); this.cognitoSetup(x.logins);});
+      }
+      /*if (gIdToken) {
         console.log('token already exists!');
         this.cognitoSetup();
       } else {
@@ -103,7 +109,7 @@ var FullPage = React.createClass({
         $(document).on("googleLogin", function(e){
           y.cognitoSetup();
         });
-      }
+      }*/
     } else {
       console.log("google login not required, skipping to setup");
       this.cognitoSetup();

@@ -72,15 +72,6 @@ var FullPage = React.createClass({
           let continueMerge = true;
 
           for (let i=0; i<conflicts.length; i++) {
-            // Take remote version.
-            //resolved.push(conflicts[i].resolveWithRemoteRecord());
-
-            // Or... take local version.
-            // resolved.push(conflicts[i].resolveWithLocalRecord());
-
-            // Or... use custom logic.
-            // var newValue = conflicts[i].getRemoteRecord().getValue() + conflicts[i].getLocalRecord().getValue();
-            // resolved.push(conflicts[i].resolveWithValue(newValue);
             try {
               resolved.push(resolveConflict.resolve(conflicts[i]));
             } catch (exception) {

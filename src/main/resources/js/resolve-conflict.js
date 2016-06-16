@@ -2,6 +2,16 @@
 const CANNOT_RESOLVE2 = "CANNOT_RESOLVE";
 
 const resolveConflict = (conflict) => {
+  // Take remote version.
+  //resolved.push(conflicts[i].resolveWithRemoteRecord());
+
+  // Or... take local version.
+  // resolved.push(conflicts[i].resolveWithLocalRecord());
+
+  // Or... use custom logic.
+  // var newValue = conflicts[i].getRemoteRecord().getValue() + conflicts[i].getLocalRecord().getValue();
+  // resolved.push(conflicts[i].resolveWithValue(newValue);
+  
   const remote = conflict.getRemoteRecord().getValue();
   const local = conflict.getLocalRecord().getValue();
   console.log('remote : local');

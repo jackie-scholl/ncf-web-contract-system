@@ -3,18 +3,6 @@ const React = require('react');
 const ReactDOM = require('react-dom');
 
 const LoginBar = React.createClass({
-  /*speak: function() {
-    console.log('login bar speaking');
-  },*/
-  /*getInitialState: function() {
-    return {loginListener: null};
-  },
-  registerListener: function(loginListener) {
-    this.setState({loginListener: loginListener});
-  },
-  getLoginListener: function() {
-    return this.state.loginListener;
-  },*/
   render: function() {
     return (
       <nav className="navbar navbar-inverse navbar-fixed-top">

@@ -156,3 +156,5 @@ rules:
     - error
   no-useless-rename:
     - error
+  no-var:
+    - error

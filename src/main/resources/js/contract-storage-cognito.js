@@ -1,8 +1,8 @@
 //Copyright 2016 Jackie Scholl
 'use strict';
 /*global AWS*/
-var base64 = require('base64-js');
-var resolveConflict = require('./resolve-conflict.js');
+const base64 = require('base64-js');
+const resolveConflict = require('./resolve-conflict.js');
 
 function CognitoStorage(logins, allowAnonymous, onUpdateCallback) {
   this._debug_logins = logins;
@@ -135,7 +135,7 @@ CognitoStorage.prototype.updateContractMap = function() {
         throw new Error('error getting contracts');
       } else {
         const objectMap = new Map();
-        for (var x in map) {
+        for (const x in map) {
           if (map.hasOwnProperty(x) && map[x]) {
             if (x === '') {
               console.log('uh oh, very bad value');
@@ -180,7 +180,7 @@ CognitoStorage.prototype.getDefaultContractId = function() {
 };
 
 const getCognitoCompatibleRandomId = function() {
-  var array = new Uint8Array(15);
+  const array = new Uint8Array(15);
   window.crypto.getRandomValues(array);
   // We replace plusses with underscores and slashes with dashes for
   // compatibility with AWS Cognito Sync

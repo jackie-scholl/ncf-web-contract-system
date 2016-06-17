@@ -1,11 +1,11 @@
 //Copyright 2016 Jackie Scholl
 'use strict';
-var React = require('react');
-var ReactDOM = require('react-dom');
-var loginHandler = require('./login.js').render();
-var contractStorageCognito = require('./contract-storage-cognito');
+const React = require('react');
+const ReactDOM = require('react-dom');
+const loginHandler = require('./login.js').render();
+const contractStorageCognito = require('./contract-storage-cognito');
 
-var FullPage = React.createClass({
+const FullPage = React.createClass({
   getInitialState: function() {
     console.log('window.location.hash: '+window.location.hash);
     const h = window.location.hash;
@@ -31,7 +31,7 @@ var FullPage = React.createClass({
     this.setState({contractStorageHandler: contractStorageHandler});
   },
   render: function() {
-    var optionalContract = null;
+    let optionalContract = null;
     if (this.state.contractId != null &&
         this.state.contractMap.has(this.state.contractId)) {
       optionalContract =
@@ -68,13 +68,13 @@ var FullPage = React.createClass({
   }
 });
 
-var ContractList = React.createClass({
+const ContractList = React.createClass({
   createContract: function(e) {
     e.preventDefault();
     this.props.createContract();
   },
   render: function() {
-    var contractEntries = [...this.props.contractMap.values()]
+    const contractEntries = [...this.props.contractMap.values()]
         .sort((a, b) => b.dateLastModified - a.dateLastModified)
         .map((x) =>
           (<ContractElement value={x} key={x.contractId}
@@ -98,8 +98,8 @@ var ContractList = React.createClass({
 });
 
 function timeSince(date) {
-  var seconds = Math.floor((new Date() - date) / 1000);
-  var interval = Math.floor(seconds / 31536000);
+  const seconds = Math.floor((new Date() - date) / 1000);
+  let interval = Math.floor(seconds / 31536000);
   if (interval > 1) {
     return interval + ' years';
   }
@@ -123,13 +123,13 @@ function timeSince(date) {
   //return Math.floor(seconds) + ' seconds';
 }
 
-var ContractElement = React.createClass({
+const ContractElement = React.createClass({
   handleClick: function(e) {
     e.preventDefault();
     this.props.changeContractId(this.props.value.contractId);
   },
   render: function() {
-    var classesString = '';
+    let classesString = '';
     const classes = this.props.value.contractData.classes.map((x) =>
           (x.courseName)).filter((x) => (x !== ''));
     if (classes.length > 0) {
@@ -158,28 +158,28 @@ function ClassData(courseCode, courseName, isInternship, instructorName,
       isInternship, instructorName: instructorName, sessionName: sessionName};
 }
 
-var emptyClassData = function() {
+const emptyClassData = function() {
   return new ClassData('', '', false, '', '');
 };
 
-var classDataFrom = function(data) {
+const classDataFrom = function(data) {
   return new ClassData(data.courseCode, data.courseName, data.isInternship,
         data.instuctorName, data.sessionName);
 };
 
-var resizeArray = function(array, minSize, maxSize, testerCallback,
+const resizeArray = function(array, minSize, maxSize, testerCallback,
     spaceFillerCallback) {
   let i=0;
   for (i = array.length-1; i >= 0; i--) {
-    var x = array[i];
-    var hasData = testerCallback(x);
+    const x = array[i];
+    const hasData = testerCallback(x);
     if (hasData) {
       break;
     }
   }
   //console.log('index of last class with data: ' + i);
   // there should be exactly one empty element at the end of the array
-  var newLength = i + 2;
+  let newLength = i + 2;
   if (newLength > maxSize) {
     newLength = maxSize;
   }
@@ -205,9 +205,9 @@ function arraysEqual(a1,a2) {
   return JSON.stringify(a1) === JSON.stringify(a2);
 }
 
-var testResizeArray = function() {
-  var zeroTester = (x) => (x !== 0);
-  var zeroFiller = () => (0);
+const testResizeArray = function() {
+  const zeroTester = (x) => (x !== 0);
+  const zeroFiller = () => (0);
   console.assert(arraysEqual(resizeArray([0, 0, 1, 0, 0, 0], 0, 100, zeroTester,
         zeroFiller), [0, 0, 1, 0]));
   console.assert(arraysEqual(resizeArray([1, 0, 0, 6], 0, 100, zeroTester,
@@ -217,9 +217,9 @@ var testResizeArray = function() {
 testResizeArray();
 
 
-var ContractBox = React.createClass({
+const ContractBox = React.createClass({
   handleUpdate: function(newData) {
-    var updatedContractEntry = Object.assign({}, this.props.contractEntry);
+    const updatedContractEntry = Object.assign({}, this.props.contractEntry);
     updatedContractEntry.contractData = newData;
     updatedContractEntry.dateLastModified = new Date().getTime();
     this.props.handleUpdate(updatedContractEntry);
@@ -241,7 +241,7 @@ var ContractBox = React.createClass({
   }
 });
 
-var LivePreview = React.createClass({
+const LivePreview = React.createClass({
   render: function() {
     const renderContractRequest = {
       contractData: this.props.value.contractData,
@@ -264,10 +264,10 @@ var LivePreview = React.createClass({
 });
 
 
-var ContractForm = React.createClass({
+const ContractForm = React.createClass({
   updateHandlerGenerator: function(identifier) {
     return ((value) => {
-      var newState = Object.assign({}, this.props.value);
+      const newState = Object.assign({}, this.props.value);
       newState[identifier] = value;
       this.props.handleUpdate(newState);
     });
@@ -336,12 +336,12 @@ var ContractForm = React.createClass({
   }
 });
 
-var ClassesTable = React.createClass({
+const ClassesTable = React.createClass({
   updateHandlerGenerator: function(index) {
     return ((value) => {
-      var newState = this.props.magic.value.slice();
+      let newState = this.props.magic.value.slice();
       newState[index] = value;
-      var testerCallback = (x) => (x.courseCode || x.courseName
+      const testerCallback = (x) => (x.courseCode || x.courseName
         || x.isInternship || x.instructorName );
       newState = resizeArray(newState, 4, 9, testerCallback, emptyClassData);
       this.props.magic.handleUpdate(newState);
@@ -359,7 +359,7 @@ var ClassesTable = React.createClass({
     this.props.magic.handleUpdate(newValue);
   },
   render: function() {
-    var classNodes = this.props.magic.value.map(
+    const classNodes = this.props.magic.value.map(
       ((_, i) => (<Class number={i} magic={this.magic(i)} key={i}/>))
     );
     return (
@@ -383,10 +383,10 @@ var ClassesTable = React.createClass({
   }
 });
 
-var Class = React.createClass({
+const Class = React.createClass({
   updateHandlerGenerator: function(identifier) {
     return ((value) => {
-      var newState = classDataFrom(this.props.magic.value);
+      const newState = classDataFrom(this.props.magic.value);
       newState[identifier] = value;
       this.props.magic.handleUpdate(newState);
     });
@@ -419,7 +419,7 @@ var Class = React.createClass({
   }
 });
 
-var GenericInput = React.createClass({
+const GenericInput = React.createClass({
   render: function() {
     // We want to hide the label when displayName is empty
     const style = this.props.hasOwnProperty('displayName') &&
@@ -436,7 +436,7 @@ var GenericInput = React.createClass({
   }
 });
 
-var TextInput = React.createClass({
+const TextInput = React.createClass({
   render: function() {
     const htmlId = this.props.magic.id;
     return (
@@ -454,7 +454,7 @@ var TextInput = React.createClass({
   }
 });
 
-var TextArea = React.createClass({
+const TextArea = React.createClass({
   render: function() {
     const htmlId = this.props.magic.id;
     return (
@@ -471,7 +471,7 @@ var TextArea = React.createClass({
   }
 });
 
-var CheckBox = React.createClass({
+const CheckBox = React.createClass({
   render: function() {
     const htmlId = this.props.magic.id;
     return (
@@ -488,7 +488,7 @@ var CheckBox = React.createClass({
   }
 });
 
-var SelectInput = React.createClass({
+const SelectInput = React.createClass({
   render: function() {
     const htmlId = this.props.magic.id;
     return (
@@ -507,7 +507,7 @@ var SelectInput = React.createClass({
   }
 });
 
-var SelectOption = React.createClass({
+const SelectOption = React.createClass({
   render: function() {
     return (
       <option value={this.props.value} selected={this.props.selected}>
@@ -517,7 +517,7 @@ var SelectOption = React.createClass({
   }
 });
 
-var BasicComponent = React.createClass({
+const BasicComponent = React.createClass({
   render: function() {
     return (
       null

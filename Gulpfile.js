@@ -79,7 +79,7 @@ gulp.task('lint-scripts', function () {
 
 // Based on https://gist.github.com/danharper/3ca2273125f500429945
 function compile(shouldWatch) {
-  var bundler = watchify(browserify(resources+'js/main.js', { debug: true })
+  const bundler = watchify(browserify(resources+'js/main.js', { debug: true })
       .transform('babelify', {presets: ['es2015', 'react']}));
 
   /** @this idk?? */
@@ -130,7 +130,7 @@ gulp.task('resources2', ['clean2'], function() {
 });
 
 
-var currentMaven2TaskChild = null;
+let currentMaven2TaskChild = null;
 
 gulp.task('maven2', (callback) => {
   if (currentMaven2TaskChild !== null) {

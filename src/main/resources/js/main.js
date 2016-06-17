@@ -253,8 +253,9 @@ var resizeArray = function(array, minSize, maxSize, testerCallback, spaceFillerC
     while (array.length < newLength) {
       tempArray = tempArray.concat(spaceFillerCallback());
     }
+    return tempArray;
   }
-  return newArray;
+  throw new Error('unreachable');
 };
 
 var testResizeArray = function() {

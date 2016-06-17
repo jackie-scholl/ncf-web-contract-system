@@ -85,7 +85,7 @@ function compile(watch) {
   //var bundler = watchify(browserify(resources+'js/main.js', { debug: true }).transform(babel({presets: ['react']})));
   //var bundler = watchify(browserify(src1, { debug: true }).transform(babel({presets: ['react']})));
   var bundler = watchify(browserify(resources+'js/main.js', { debug: true })
-      .transform("babelify", {presets: ["es2015", "react"]}));
+      .transform('babelify', {presets: ['es2015', 'react']}));
 
   function rebundle() {
     bundler.bundle()

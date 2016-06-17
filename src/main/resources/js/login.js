@@ -5,9 +5,9 @@ const ReactDOM = require('react-dom');
 const LoginBar = React.createClass({
   render: function() {
     return (
-      <nav className="navbar navbar-inverse navbar-fixed-top">
-        <div className="container-fluid">
-          <div className="navbar-header">
+      <nav className='navbar navbar-inverse navbar-fixed-top'>
+        <div className='container-fluid'>
+          <div className='navbar-header'>
             <LoginLoadThing onUpdate={this.props.onUpdate} />
           </div>
         </div>
@@ -23,7 +23,7 @@ const LoginLoadThing = React.createClass({
     return {scriptHasLoaded: false};
   },
   componentDidMount: function() {
-    $(document).on("googleLogin2", ((e) => {
+    $(document).on('googleLogin2', ((e) => {
       console.log('captured google login script load; gapi defined? '+(typeof gapi != 'undefined'));
       //console.log(gapi || 'empty');
       this.setState({scriptHasLoaded: true});
@@ -87,13 +87,13 @@ const GoogleLoginArea = React.createClass({
     }.bind(this));
   },
   onSignIn: function(googleUser) {
-    console.log(JSON.stringify({message: "success1", value: googleUser}));
+    console.log(JSON.stringify({message: 'success1', value: googleUser}));
     this.updateLogin(googleUser);
   },
   onSignInFailure: function(error) {
-    console.log("oops");
-    const errorString = "Sorry, something went wrong with the Google sign-in; please let us know about the issue";
-    console.log(JSON.stringify({message: "fail", value: error}));
+    console.log('oops');
+    const errorString = 'Sorry, something went wrong with the Google sign-in; please let us know about the issue';
+    console.log(JSON.stringify({message: 'fail', value: error}));
   },
   renderLoginButton: function() {
     console.assert(!!$('#my-signin2').length);
@@ -115,17 +115,17 @@ const GoogleLoginArea = React.createClass({
     const fullName = this.state.personalInfo.fullName || 'ANON';
     if (this.state.loggedIn) {
       return (
-        <div id="login-area" className="login-area navbar-brand">
+        <div id='login-area' className='login-area navbar-brand'>
           <span>
             Welcome {fullName}!
-            <a href="#" onClick={this.signOut} id="logout-link">Sign out</a>
+            <a href='#' onClick={this.signOut} id='logout-link'>Sign out</a>
           </span>
         </div>
       );
     } else {
       return (
-        <div id="login-area" className="login-area navbar-brand">
-          <div id="my-signin2"></div>
+        <div id='login-area' className='login-area navbar-brand'>
+          <div id='my-signin2'></div>
         </div>
       );
     }

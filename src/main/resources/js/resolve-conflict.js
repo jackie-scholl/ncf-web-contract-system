@@ -1,5 +1,5 @@
 //Copyright 2016 Jackie Scholl
-const CANNOT_RESOLVE2 = "CANNOT_RESOLVE";
+const CANNOT_RESOLVE2 = 'CANNOT_RESOLVE';
 
 const resolveConflict = (conflict) => {
   // Take remote version.

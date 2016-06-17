@@ -6,11 +6,11 @@ var loginHandler = require('./login.js').render();
 //const apiRoot = '';
 var contractStorageCognito = require('./contract-storage-cognito');
 
-const googleLogin = true;
+//const googleLogin = true;
 
 var FullPage = React.createClass({
   getInitialState: function() {
-    console.log("window.location.hash: "+window.location.hash);
+    console.log('window.location.hash: '+window.location.hash);
     const h = window.location.hash;
     const contractId = h? h.slice(1) : null;
     /* const contractDataset = null;
@@ -53,7 +53,7 @@ var FullPage = React.createClass({
         });
       }
     } else {
-      console.log("google login not required, skipping to setup");
+      console.log('google login not required, skipping to setup');
       this.cognitoSetup();
     }
   },
@@ -108,8 +108,8 @@ var FullPage = React.createClass({
     }
     //console.log('current id: '+this.state.contractId);
     return (
-      <div className="container-fluid">
-        <div className="row">
+      <div className='container-fluid'>
+        <div className='row'>
           <ContractList changeContractId={this.changeContractId}
             onUpdate={this.handleContractListUpdate}
             createContract={this.createContract}
@@ -119,8 +119,8 @@ var FullPage = React.createClass({
             pollInterval={2000}
           />
           {optionalContract}
-          <div className="col-md-5 col-md-offset-2">
-            <button className="btn btn-default" type="button" onClick={this.cognitoSync}>Sync</button>
+          <div className='col-md-5 col-md-offset-2'>
+            <button className='btn btn-default' type='button' onClick={this.cognitoSync}>Sync</button>
           </div>
         </div>
       </div>
@@ -141,12 +141,12 @@ var ContractList = React.createClass({
               changeContractId={this.props.changeContractId}
               isCurrent={x.contractId === this.props.currentContractId}/>));
     return (
-      <div className="col-sm-3 col-md-2 sidebar">
-        <ul className="nav nav-sidebar">
+      <div className='col-sm-3 col-md-2 sidebar'>
+        <ul className='nav nav-sidebar'>
           <li>Contract List</li>
-          <li><a href="" onClick={this.createContract} id="new-contract-link" className="logged-in">New Contract</a></li>
+          <li><a href='' onClick={this.createContract} id='new-contract-link' className='logged-in'>New Contract</a></li>
         </ul>
-        <ul className="nav nav-sidebar">
+        <ul className='nav nav-sidebar'>
           {contractEntries}
         </ul>
       </div>
@@ -160,19 +160,19 @@ var ContractElement = React.createClass({
     this.props.changeContractId(this.props.value.contractId);
   },
   render: function() {
-    var classesString = "";
+    var classesString = '';
     const classes = this.props.value.contractData.classes.map((x, _1, _2) =>
-          (x.courseName)).filter((x, _1, _2) => (x !== ""));
+          (x.courseName)).filter((x, _1, _2) => (x !== ''));
     if (classes.length > 0) {
-      classesString = "[" + classes.join().substring(0, 15) + "]; ";
+      classesString = '[' + classes.join().substring(0, 15) + ']; ';
     }
-    const wholeString = this.props.value.contractData.semester + " " +
-        this.props.value.contractData.contractYear + "; " +
+    const wholeString = this.props.value.contractData.semester + ' ' +
+        this.props.value.contractData.contractYear + '; ' +
         classesString + '' +
         timeSince(new Date(this.props.value.dateLastModified)) + ' ago';
     return (
       <li id={this.props.value.contractId} className={this.props.isCurrent?'active':''}>
-        <a href={"#" + this.props.value.contractId} onClick={this.handleClick}>
+        <a href={'#' + this.props.value.contractId} onClick={this.handleClick}>
           {wholeString}
         </a>
       </li>
@@ -184,30 +184,30 @@ function timeSince(date) {
   var seconds = Math.floor((new Date() - date) / 1000);
   var interval = Math.floor(seconds / 31536000);
   if (interval > 1) {
-    return interval + " years";
+    return interval + ' years';
   }
   interval = Math.floor(seconds / 2592000);
   if (interval > 1) {
-    return interval + " months";
+    return interval + ' months';
   }
   interval = Math.floor(seconds / 86400);
   if (interval > 1) {
-    return interval + " days";
+    return interval + ' days';
   }
   interval = Math.floor(seconds / 3600);
   if (interval > 1) {
-    return interval + " hours";
+    return interval + ' hours';
   }
   interval = Math.floor(seconds / 60);
   if (interval > 1) {
-    return interval + " minutes";
+    return interval + ' minutes';
   }
-  return "just now";
-  //return Math.floor(seconds) + " seconds";
+  return 'just now';
+  //return Math.floor(seconds) + ' seconds';
 }
 
 function ClassData(courseCode, courseName, isInternship, instructorName, sessionName) {
-  console.assert(isInternship === true || isInternship === false, "bad value: " + isInternship);
+  console.assert(isInternship === true || isInternship === false, 'bad value: ' + isInternship);
   return {courseCode: courseCode, courseName: courseName, isInternship: isInternship,
       instructorName: instructorName, sessionName: sessionName};
 }
@@ -217,14 +217,14 @@ var emptyClassData = function() {
 }
 
 var classDataFrom = function(data) {
-  //console.log("About to pull class data");
+  //console.log('About to pull class data');
   //console.log(data);
   return new ClassData(data.courseCode, data.courseName, data.isInternship,
         data.instuctorName, data.sessionName);
 }
 
 var resizeArray = function(array, minSize, maxSize, testerCallback, spaceFillerCallback) {
-  //console.log("existing array length: "+array.length);
+  //console.log('existing array length: '+array.length);
   for (var i = array.length-1; i >= 0; i--) {
     var x = array[i];
     var hasData = testerCallback(x);
@@ -233,7 +233,7 @@ var resizeArray = function(array, minSize, maxSize, testerCallback, spaceFillerC
       break;
     }
   }
-  //console.log("index of last class with data: " + i);
+  //console.log('index of last class with data: ' + i);
   var newLength = i + 2; // there should be exactly one empty element at the end of the array
   if (newLength > maxSize) {
     newLength = maxSize;
@@ -279,7 +279,7 @@ var ContractBox = React.createClass({
   render: function() {
     console.log(this.props.contractEntry);
     return (
-      <div className="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+      <div className='col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main'>
         <ContractForm pollInterval={this.props.pollInterval}
           contractId={this.props.contractEntry.contractId}
           value={this.props.contractEntry.contractData}
@@ -301,9 +301,9 @@ var LivePreview = React.createClass({
       }
     }
     const requestJson = JSON.stringify(renderContractRequest);
-    const contractPdfUrl = "/render-contract?renderContractRequest="+requestJson;
+    const contractPdfUrl = '/render-contract?renderContractRequest='+requestJson;
     return (
-      <iframe src={contractPdfUrl} width="100%" height="1000px">
+      <iframe src={contractPdfUrl} width='100%' height='1000px'>
         <a href={contractPdfUrl}>
           Click here to see PDF
         </a>
@@ -332,52 +332,52 @@ var ContractForm = React.createClass({
     // What the f*ck does this line do? do we use it?
     var contractYearNodes = Array.apply(null, Array(5)).map((_, i) => (i));
     return (
-      <div className="contractForm">
-      <h1 className="page-header">Contract Form</h1>
-      <form id="contractForm" className="blank-form">
-      <div className="row" style={{marginBottom: '2em'}}>
-      <div className="col-sm-3"><TextInput displayName="First Name" placeHolder="Jane"
+      <div className='contractForm'>
+      <h1 className='page-header'>Contract Form</h1>
+      <form id='contractForm' className='blank-form'>
+      <div className='row' style={{marginBottom: '2em'}}>
+      <div className='col-sm-3'><TextInput displayName='First Name' placeHolder='Jane'
           magic={this.magic('firstName')} /></div>
-      <div className="col-sm-3"><TextInput displayName="Last Name" placeHolder="Doe"
+      <div className='col-sm-3'><TextInput displayName='Last Name' placeHolder='Doe'
           magic={this.magic('lastName')} /></div>
-      <div className="col-sm-3"><TextInput displayName="N Number" placeHolder="123456789"
+      <div className='col-sm-3'><TextInput displayName='N Number' placeHolder='123456789'
           magic={this.magic('nNumber')} /></div>
-      <div className="col-sm-3 col-md-3"><TextInput displayName="Box Number" placeHolder="123"
+      <div className='col-sm-3 col-md-3'><TextInput displayName='Box Number' placeHolder='123'
           magic={this.magic('boxNumber')} /></div>
 
-      <div className="col-sm-3">
-      <SelectInput displayName="Semester" magic={this.magic('semester')}>
-        <SelectOption value="" display="Select One" />
-        <SelectOption value="Spring" display="Spring" />
-        <SelectOption value="Fall" display="Fall" />
+      <div className='col-sm-3'>
+      <SelectInput displayName='Semester' magic={this.magic('semester')}>
+        <SelectOption value='' display='Select One' />
+        <SelectOption value='Spring' display='Spring' />
+        <SelectOption value='Fall' display='Fall' />
       </SelectInput></div>
-      <div className="col-sm-3"><TextInput displayName="Contract Year" magic={this.magic('contractYear')} /></div>
-      <div className="col-sm-3">
-      <SelectInput displayName="Study Location" magic={this.magic('studyLocation')}>
-        <SelectOption value="" display="Select One" />
-        <SelectOption value="On Campus" display="On Campus" />
-        <SelectOption value="Off Campus" display="Off Campus" />
+      <div className='col-sm-3'><TextInput displayName='Contract Year' magic={this.magic('contractYear')} /></div>
+      <div className='col-sm-3'>
+      <SelectInput displayName='Study Location' magic={this.magic('studyLocation')}>
+        <SelectOption value='' display='Select One' />
+        <SelectOption value='On Campus' display='On Campus' />
+        <SelectOption value='Off Campus' display='Off Campus' />
       </SelectInput></div>
-      <div className="col-sm-3"><TextInput displayName="Expected Year of Graduation" placeHolder="never"
+      <div className='col-sm-3'><TextInput displayName='Expected Year of Graduation' placeHolder='never'
           magic={this.magic('expectedGradYear')} /></div>
       </div>
 
 
         <ClassesTable magic={this.magic('classes')}/>
 
-        <TextArea displayName="Goals" placeHolder="live the good life"
+        <TextArea displayName='Goals' placeHolder='live the good life'
             magic={this.magic('goals')} />
-        <TextArea displayName="Certification Criteria"
-            placeHolder="Three out of four credits."
+        <TextArea displayName='Certification Criteria'
+            placeHolder='Three out of four credits.'
             magic={this.magic('certificationCriteria')} />
-        <TextArea displayName="Description and Other Activities"
-            placeHolder="skydive"
+        <TextArea displayName='Description and Other Activities'
+            placeHolder='skydive'
             magic={this.magic('descriptionsOtherActivities')} />
 
-        <TextInput displayName="Advisor Name" placeHolder="Prezzy O'shea"
+        <TextInput displayName='Advisor Name' placeHolder='Prezzy Oshea'
             magic={this.magic('advisorName')} />
       </form>
-      <div id="display-pdf" />
+      <div id='display-pdf' />
       </div>
     );
   }
@@ -390,7 +390,7 @@ var ClassesTable = React.createClass({
       newState[index] = value;
       var testerCallback = (x) => (x.courseCode || x.courseName
         || x.isInternship || x.instructorName );
-      var testerCallback2 = (x) => (x.courseName !== "");
+      var testerCallback2 = (x) => (x.courseName !== '');
       newState = resizeArray(newState, 4, 9, testerCallback, emptyClassData);
       this.props.magic.handleUpdate(newState);
     });
@@ -412,8 +412,8 @@ var ClassesTable = React.createClass({
       ((_, i) => (<Class number={i} magic={this.magic(i)} key={i}/>)).bind(this)
     );
     return (
-      <div className="table-responsive">
-      <table className="table table-striped">
+      <div className='table-responsive'>
+      <table className='table table-striped'>
         <thead>
           <tr>
             <th>Course #</th>
@@ -449,19 +449,19 @@ var Class = React.createClass({
     var row = this.props.number;
     return (
       <tr>
-        <td><TextInput placeHolder="12345" magic={this.magic("courseCode")}/></td>
-        <td><TextInput placeHolder="Basket-weaving 101"
-            magic={this.magic("courseName")}/> </td>
-        <td><CheckBox magic={this.magic("isInternship")}/></td>
-        <td><SelectInput displayName="" magic={this.magic("sessionName")}>
+        <td><TextInput placeHolder='12345' magic={this.magic('courseCode')}/></td>
+        <td><TextInput placeHolder='Basket-weaving 101'
+            magic={this.magic('courseName')}/> </td>
+        <td><CheckBox magic={this.magic('isInternship')}/></td>
+        <td><SelectInput displayName='' magic={this.magic('sessionName')}>
           <SelectOption value='' display='Select One' />
           <SelectOption value='A' display='Full Term' />
           <SelectOption value='M1' display='Module 1' />
           <SelectOption value='M2' display='Module 2' />
           <SelectOption value='1MC' display='Full Term For Module Credit' />
         </SelectInput></td>
-        <td><TextInput placeHolder="President #trublu"
-            magic={this.magic("instructorName")}/></td>
+        <td><TextInput placeHolder='President #trublu'
+            magic={this.magic('instructorName')}/></td>
       </tr>
     );
   }
@@ -491,7 +491,6 @@ var TextInput = React.createClass({
     return (
       <GenericInput displayName={this.props.displayName} htmlId={htmlId}>
         <input
-          type="text"
           value={this.props.magic.value}
           onChange={(e) => {this.props.magic.handleUpdate(e.target.value);}}
           placeholder={this.props.placeHolder}
@@ -526,7 +525,6 @@ var CheckBox = React.createClass({
     return (
       <GenericInput displayName={this.props.displayName} htmlId={htmlId}>
       <input
-        type="checkbox"
         checked={this.props.magic.value}
         onChange={(e) => {this.props.magic.handleUpdate(e.target.checked);}}
         id={htmlId}
@@ -543,7 +541,6 @@ var SelectInput = React.createClass({
     return (
       <GenericInput displayName={this.props.displayName} htmlId={htmlId}>
         <select
-          type="checkbox"
           value={this.props.magic.value}
           onChange={(e) => {this.props.magic.handleUpdate(e.target.value);}}
           id={htmlId}

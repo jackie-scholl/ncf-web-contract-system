@@ -109,12 +109,8 @@ function compile(shouldWatch) {
   rebundle();
 }
 
-function watch() {
-  return compile(true);
-}
-
-gulp.task('scripts', ['clean-scripts', 'lint-scripts'], function() { return compile(); });
-gulp.task('watch-scripts', function() { return watch(); });
+gulp.task('scripts', ['clean-scripts', 'lint-scripts'], function() { return compile(false); });
+gulp.task('watch-scripts', function() { return compile(true); });
 
 gulp.task('clean-html', function() {
   return del(paths2.target.html);

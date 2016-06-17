@@ -82,11 +82,11 @@ const GoogleLoginArea = React.createClass({
         this.state.googleUser.getBasicProfile().getName());
     const auth2 = gapi.auth2.getAuthInstance();
     //auth2.disconnect();
-    auth2.signOut().then(function() {
+    auth2.signOut().then(() => {
       console.log('User signed out.');
       this.updateLogin(null);
       this.renderLoginButton();
-    }.bind(this));
+    });
   },
   onSignIn: function(googleUser) {
     console.log(JSON.stringify({message: 'success1', value: googleUser}));

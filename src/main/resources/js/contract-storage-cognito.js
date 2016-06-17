@@ -35,10 +35,10 @@ CognitoStorage.prototype.setup = function(logins, callback) {
     Logins: logins
   });
   console.log('AWS config set');
-  AWS.config.credentials.get(function(){
+  AWS.config.credentials.get(() => {
     console.log('thing opened');
     const syncClient = new AWS.CognitoSyncManager();
-    syncClient.openOrCreateDataset('contracts', function(err, dataset) {
+    syncClient.openOrCreateDataset('contracts', (err, dataset) => {
       console.log('dataset opened');
       if (err) {
         console.log('could not open or create dataset; err '+err);
@@ -49,8 +49,8 @@ CognitoStorage.prototype.setup = function(logins, callback) {
         this.updateContractMap();
         return callback();
       }
-    }.bind(this));
-  }.bind(this));
+    });
+  });
 };
 
 CognitoStorage.prototype.sync = function() {
@@ -92,9 +92,7 @@ CognitoStorage.prototype.sync = function() {
         }
 
         if (continueMerge) {
-          dataset.resolve(resolved, function() {
-            return callback(true);
-          });
+          dataset.resolve(resolved, () => callback(true));
         } else {
           // callback false to stop the synchronization process.
           return callback(false);

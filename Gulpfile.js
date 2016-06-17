@@ -42,30 +42,28 @@ const paths2 = {
 };
 
 
-gulp.task('clean-scss', function() {
-  return del(paths2.target.scss);
-});
+gulp.task('clean-scss', () => del(paths2.target.scss));
 
-gulp.task('scss', ['clean-scss'], function() {
-  return gulp
+gulp.task('scss', ['clean-scss'], () =>
+  gulp
     .src(paths.scss)
     .pipe(sourcemaps.init())
     .pipe(sass().on('error', sass.logError))
     .pipe(sourcemaps.write('./stylesheets/maps'))
     .pipe(gulp.dest(target+'css/'))
-    ;//.pipe(browserSync.stream());
-});
+    //.pipe(browserSync.stream());
+);
 
-gulp.task('clean-scripts', function() {
-  return del(paths2.target.scripts);
-});
+gulp.task('clean-scripts', () =>
+  del(paths2.target.scripts)
+);
 
-gulp.task('lint-scripts', function () {
+gulp.task('lint-scripts', () =>
   // ESLint ignores files with 'node_modules' paths.
   // So, it's best to have gulp ignore the directory as well.
   // Also, Be sure to return the stream from the task;
   // Otherwise, the task may end before the stream has finished.
-  return gulp.src([paths2.src.scripts, 'Gulpfile.js'])
+  gulp.src([paths2.src.scripts, 'Gulpfile.js'])
     // eslint() attaches the lint output to the 'eslint' property
     // of the file object so it can be used by other modules.
     .pipe(eslint())
@@ -74,8 +72,8 @@ gulp.task('lint-scripts', function () {
     .pipe(eslint.format())
     // To have the process exit with an error code (1) on
     // lint error, return the stream and pipe to failAfterError last.
-    .pipe(eslint.failAfterError());
-});
+    .pipe(eslint.failAfterError())
+);
 
 // Based on https://gist.github.com/danharper/3ca2273125f500429945
 function compile(shouldWatch) {
@@ -99,7 +97,7 @@ function compile(shouldWatch) {
   }
 
   if (shouldWatch) {
-    bundler.on('update', function() {
+    bundler.on('update', () => {
       console.log('-> bundling...');
       rebundle();
     });
@@ -109,25 +107,25 @@ function compile(shouldWatch) {
 }
 
 gulp.task('scripts', ['clean-scripts', 'lint-scripts'], () => (compile(false)));
-gulp.task('watch-scripts', function() { return compile(true); });
+gulp.task('watch-scripts', () => compile(true));
 
-gulp.task('clean-html', function() {
-  return del(paths2.target.html);
-});
+gulp.task('clean-html', () =>
+  del(paths2.target.html)
+);
 
-gulp.task('html', ['clean-html'], function() {
-  return gulp.src(paths.html)
-    .pipe(gulp.dest(target));
-});
+gulp.task('html', ['clean-html'], () =>
+  gulp.src(paths.html)
+    .pipe(gulp.dest(target))
+);
 
-gulp.task('clean2', function() {
-  return del([paths2.target.resources2]);
-});
+gulp.task('clean2', () =>
+  del([paths2.target.resources2])
+);
 
-gulp.task('resources2', ['clean2'], function() {
-  return gulp.src(paths2.src.resources2)
-    .pipe(gulp.dest(paths2.target.resources2));
-});
+gulp.task('resources2', ['clean2'], () =>
+  gulp.src(paths2.src.resources2)
+    .pipe(gulp.dest(paths2.target.resources2))
+);
 
 
 let currentMaven2TaskChild = null;
@@ -163,7 +161,7 @@ gulp.task('watchJava', () => {
   gulp.watch(paths.java, ['maven2']);
 });
 
-gulp.task('watch', function() {
+gulp.task('watch', () => {
   gulp.watch(paths2.src.scss, ['scss']);
   gulp.watch(paths2.src.scripts, ['scripts']);
   gulp.watch(paths2.src.html, ['html']);

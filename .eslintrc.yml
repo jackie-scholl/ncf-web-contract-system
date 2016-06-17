@@ -158,3 +158,5 @@ rules:
     - error
   no-var:
     - error
+  prefer-arrow-callback:
+    - warn

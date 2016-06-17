@@ -1,6 +1,8 @@
 //Copyright 2016 Jackie Scholl
+/*global gapi*/
 const React = require('react');
 const ReactDOM = require('react-dom');
+const $ = require('jquery');
 
 const LoginBar = React.createClass({
   render: function() {

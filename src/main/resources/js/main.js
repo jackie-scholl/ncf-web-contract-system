@@ -491,6 +491,7 @@ var TextInput = React.createClass({
     return (
       <GenericInput displayName={this.props.displayName} htmlId={htmlId}>
         <input
+          type='text'
           value={this.props.magic.value}
           onChange={(e) => {this.props.magic.handleUpdate(e.target.value);}}
           placeholder={this.props.placeHolder}
@@ -525,6 +526,7 @@ var CheckBox = React.createClass({
     return (
       <GenericInput displayName={this.props.displayName} htmlId={htmlId}>
       <input
+        type='checkbox'
         checked={this.props.magic.value}
         onChange={(e) => {this.props.magic.handleUpdate(e.target.checked);}}
         id={htmlId}
@@ -541,6 +543,7 @@ var SelectInput = React.createClass({
     return (
       <GenericInput displayName={this.props.displayName} htmlId={htmlId}>
         <select
+          type='checkbox'
           value={this.props.magic.value}
           onChange={(e) => {this.props.magic.handleUpdate(e.target.value);}}
           id={htmlId}

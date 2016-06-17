@@ -225,7 +225,8 @@ var classDataFrom = function(data) {
 
 var resizeArray = function(array, minSize, maxSize, testerCallback, spaceFillerCallback) {
   //console.log('existing array length: '+array.length);
-  for (var i = array.length-1; i >= 0; i--) {
+  let i=0;
+  for (i = array.length-1; i >= 0; i--) {
     var x = array[i];
     var hasData = testerCallback(x);
     if (hasData) {

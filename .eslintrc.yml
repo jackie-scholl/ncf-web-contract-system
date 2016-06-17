@@ -24,7 +24,7 @@ rules:
     - error
     - always
   no-eval:
-    - warn
+    - error
   curly:
     - warn
     - all
@@ -49,3 +49,7 @@ rules:
         |CheckBox|SelectInput|SelectOption|BasicComponent|
         |LoginBar|LoginLoadThing|GoogleLoginArea|
         )$
+  no-undef-init:
+    - error
+  block-scoped-var:
+    - error

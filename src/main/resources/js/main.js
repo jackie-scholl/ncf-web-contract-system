@@ -155,32 +155,6 @@ var ContractList = React.createClass({
   }
 });
 
-var ContractElement = React.createClass({
-  handleClick: function(e) {
-    e.preventDefault();
-    this.props.changeContractId(this.props.value.contractId);
-  },
-  render: function() {
-    var classesString = '';
-    const classes = this.props.value.contractData.classes.map((x) =>
-          (x.courseName)).filter((x) => (x !== ''));
-    if (classes.length > 0) {
-      classesString = '[' + classes.join().substring(0, 15) + ']; ';
-    }
-    const wholeString = this.props.value.contractData.semester + ' ' +
-        this.props.value.contractData.contractYear + '; ' +
-        classesString + '' +
-        timeSince(new Date(this.props.value.dateLastModified)) + ' ago';
-    return (
-      <li id={this.props.value.contractId} className={this.props.isCurrent?'active':''}>
-        <a href={'#' + this.props.value.contractId} onClick={this.handleClick}>
-          {wholeString}
-        </a>
-      </li>
-    );
-  }
-});
-
 function timeSince(date) {
   var seconds = Math.floor((new Date() - date) / 1000);
   var interval = Math.floor(seconds / 31536000);
@@ -206,6 +180,32 @@ function timeSince(date) {
   return 'just now';
   //return Math.floor(seconds) + ' seconds';
 }
+
+var ContractElement = React.createClass({
+  handleClick: function(e) {
+    e.preventDefault();
+    this.props.changeContractId(this.props.value.contractId);
+  },
+  render: function() {
+    var classesString = '';
+    const classes = this.props.value.contractData.classes.map((x) =>
+          (x.courseName)).filter((x) => (x !== ''));
+    if (classes.length > 0) {
+      classesString = '[' + classes.join().substring(0, 15) + ']; ';
+    }
+    const wholeString = this.props.value.contractData.semester + ' ' +
+        this.props.value.contractData.contractYear + '; ' +
+        classesString + '' +
+        timeSince(new Date(this.props.value.dateLastModified)) + ' ago';
+    return (
+      <li id={this.props.value.contractId} className={this.props.isCurrent?'active':''}>
+        <a href={'#' + this.props.value.contractId} onClick={this.handleClick}>
+          {wholeString}
+        </a>
+      </li>
+    );
+  }
+});
 
 function ClassData(courseCode, courseName, isInternship, instructorName, sessionName) {
   console.assert(isInternship === true || isInternship === false, 'bad value: ' + isInternship);
@@ -258,6 +258,10 @@ var resizeArray = function(array, minSize, maxSize, testerCallback, spaceFillerC
   throw new Error('unreachable');
 };
 
+function arraysEqual(a1,a2) {
+  return JSON.stringify(a1) === JSON.stringify(a2);
+}
+
 var testResizeArray = function() {
   var zeroTester = (x) => (x !== 0);
   var zeroFiller = () => (0);
@@ -269,9 +273,6 @@ var testResizeArray = function() {
 
 testResizeArray();
 
-function arraysEqual(a1,a2) {
-  return JSON.stringify(a1) === JSON.stringify(a2);
-}
 
 var ContractBox = React.createClass({
   handleUpdate: function(newData) {

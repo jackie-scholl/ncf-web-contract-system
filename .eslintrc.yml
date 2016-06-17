@@ -111,3 +111,5 @@ rules:
     - global
   no-shadow:
     - error
+  no-use-before-define:
+    - error

@@ -265,7 +265,7 @@ var testResizeArray = function() {
 testResizeArray();
 
 function arraysEqual(a1,a2) {
-    return JSON.stringify(a1)==JSON.stringify(a2);
+  return JSON.stringify(a1)==JSON.stringify(a2);
 }
 
 var ContractBox = React.createClass({

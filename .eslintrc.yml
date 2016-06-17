@@ -127,4 +127,9 @@ rules:
     - error
   max-len:
     - warn
-    
+  max-lines: # TODO come back to this, maybe set at 500?
+    - off
+  new-cap:
+    - error
+  new-parens:
+    - error

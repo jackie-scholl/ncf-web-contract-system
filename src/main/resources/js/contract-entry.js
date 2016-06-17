@@ -21,7 +21,7 @@ const ContractData = () => ({
 
 const ContractEntry = (contractId) => ({
   contractId: contractId,
-  contractData: new ContractData,
+  contractData: new ContractData(),
   dateLastModified: new Date().getTime()
 });
 

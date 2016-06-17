@@ -44,11 +44,11 @@ public class RenderContractRequest {
 
 	public static void renderContractPDF(String renderRequestJSON, OutputStream outputStream, boolean requireGoogle)
 			throws IOException {
-		System.out.println("renderRequestJSON: " + renderRequestJSON);
+		//System.out.println("renderRequestJSON: " + renderRequestJSON);
 		RenderContractRequest renderRequest = RenderContractRequest.fromJson(renderRequestJSON).normalize()
 				.checkAuthentication(requireGoogle);
-		System.out.println("renderRequestJSON2: " + renderRequest.toJson());
 		
+		//System.out.println("renderRequestJSON2: " + renderRequest.toJson());
 		renderContractPDFBase(renderRequest, outputStream);
 	}
 

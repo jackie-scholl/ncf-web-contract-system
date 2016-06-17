@@ -38,7 +38,7 @@ public class Main {
 
 		res.raw().setContentType("application/pdf");
 		try {
-			System.out.println(req.queryString());
+			//System.out.println(req.queryString());
 			//System.out.println(req.raw().);
 			RenderContractRequest.renderContractPDF(req.queryParams("renderContractRequest"),
 					res.raw().getOutputStream(), REQUIRE_GOOGLE);

@@ -133,3 +133,26 @@ rules:
     - error
   new-parens:
     - error
+  no-lonely-if:
+    - error
+  no-unneeded-ternary:
+    - warn
+  no-trailing-spaces:
+    - error
+  no-whitespace-before-property:
+    - error
+  one-var:
+    - error
+    - never
+  require-jsdoc: # TODO come back to this, we should be using JSDoc everywhere
+    - off
+  semi-spacing:
+    - error
+
+  arrow-body-style:
+    - warn
+    - as-needed
+  no-useless-computed-key:
+    - error
+  no-useless-rename:
+    - error

@@ -58,24 +58,6 @@ gulp.task('clean-scripts', function() {
   return del(paths2.target.scripts);
 });
 
-/*gulp.task('scripts', ['clean-scripts'], function() {
-  // Minify and copy all JavaScript (except vendor scripts)
-  // with sourcemaps all the way down
-  return gulp.src(paths.scripts)
-    .pipe(sourcemaps.init())
-      .pipe(babel({
-            presets: ['react']
-        }))
-      .pipe(gulpBrowser.browserify())
-      /*
-      .pipe(buffer())
-      .pipe(uglify().on('error', function(e){
-          console.log(e);
-      }))
-    .pipe(sourcemaps.write())
-    .pipe(gulp.dest(target+'js'));
-});*/
-
 gulp.task('lint-scripts', function () {
   // ESLint ignores files with 'node_modules' paths.
   // So, it's best to have gulp ignore the directory as well.
@@ -95,9 +77,6 @@ gulp.task('lint-scripts', function () {
 
 // Based on https://gist.github.com/danharper/3ca2273125f500429945
 function compile(watch) {
-  //const js_src = resources+'js/main.js';
-  //var bundler = watchify(browserify(resources+'js/main.js', { debug: true }).transform(babel({presets: ['react']})));
-  //var bundler = watchify(browserify(src1, { debug: true }).transform(babel({presets: ['react']})));
   var bundler = watchify(browserify(resources+'js/main.js', { debug: true })
       .transform('babelify', {presets: ['es2015', 'react']}));
 
@@ -108,8 +87,6 @@ function compile(watch) {
       .pipe(buffer())
       .pipe(sourcemaps.init({ loadMaps: true }))
       .pipe(sourcemaps.write('./'))
-      //.pipe(gulp.dest('./build'));
-
       .pipe(gulp.dest(paths2.target.scripts2));
   }
 
@@ -145,8 +122,7 @@ gulp.task('clean2', function() {
 
 gulp.task('resources2', ['clean2'], function() {
   return gulp.src(paths2.src.resources2)
-    .pipe(gulp.dest(paths2.target.resources2))
-    ;//.pipe(browserSync.stream());
+    .pipe(gulp.dest(paths2.target.resources2));
 });
 
 

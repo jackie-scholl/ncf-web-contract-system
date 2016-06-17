@@ -20,13 +20,11 @@ const LoginBar = React.createClass({
 const LoginLoadThing = React.createClass({
   getInitialState: function() {
     console.log('initializing LoginLoadThing; gapi defined? '+(typeof gapi != 'undefined'));
-    //console.log(typeof yourvar != 'undefined');
     return {scriptHasLoaded: false};
   },
   componentDidMount: function() {
     $(document).on('googleLogin2', (() => {
       console.log('captured google login script load; gapi defined? '+(typeof gapi != 'undefined'));
-      //console.log(gapi || 'empty');
       this.setState({scriptHasLoaded: true});
     }).bind(this));
   },

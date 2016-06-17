@@ -21,19 +21,10 @@ function CognitoStorage(logins, allowAnonymous, onUpdateCallback) {
   }
 }
 
-/*const getInitialState = function() {
-  console.log('window.location.hash: '+window.location.hash);
-  const h = window.location.hash;
-  const contractId = h? h.slice(1) : null;
-  const contractDataset = null;
-  return {contractId: contractId, contractDataset: null, contractMap: new Map(), logins: {}};
-};*/
-
 CognitoStorage.prototype.setup = function(logins, callback) {
   callback = callback || (()=>{});
   console.log('running Cognito setup; logins:');
   console.log(logins);
-  //this.setState({logins: logins});
   // Initialize the Amazon Cognito credentials provider
   AWS.config.logger = console;
   AWS.config.region = 'us-east-1'; // Region
@@ -51,7 +42,6 @@ CognitoStorage.prototype.setup = function(logins, callback) {
         console.log('could not open or create dataset; err '+err);
       } else {
         console.log('dataset opened');
-        //this.setState({contractDataset: dataset});
         console.assert(dataset);
         this.dataset = dataset;
         this.updateContractMap();
@@ -69,7 +59,6 @@ CognitoStorage.prototype.sync = function() {
   if (!this.dataset) {
     console.log('dataset is null! oh noes!');
   } else {
-    //alert('oh, no no no! we\'re not paying for real sync yet');
     console.log('Warning! We\'re running a sync operation, which costs money');
     this.dataset.synchronize({
       onFailure: (err) => {
@@ -155,7 +144,6 @@ CognitoStorage.prototype.updateContractMap = function() {
             }
           }
         }
-        //this.setState({contractMap: objectMap});
         this.contractMap = objectMap;
         this.onUpdateCallback(objectMap);
       }
@@ -175,17 +163,6 @@ CognitoStorage.prototype.setContractEntry = function(contractEntry) {
   }
 };
 
-/*const changeContractId = function(contractId) {
-  window.location.hash = '#' + contractId;
-  this.setState({contractId: contractId});
-};*/
-
-/*const handleContractListUpdate = function(contracts) {
-  if (this.state.contractId === null && contracts.length > 0) {
-    this.changeContractId(contracts[0].contractId);
-  }
-};*/
-
 CognitoStorage.prototype.getDefaultContractId = function() {
   console.assert(false); // test that assert works
   console.assert(this.contractMap);
@@ -199,10 +176,6 @@ CognitoStorage.prototype.getDefaultContractId = function() {
     return null;
   }
 };
-
-/*const handleContractBoxUpdate = function(newContractEntry) {
-  this.setContractEntry(newContractEntry);
-};*/
 
 const getCognitoCompatibleRandomId = function() {
   var array = new Uint8Array(15);
@@ -253,36 +226,3 @@ module.exports = {
   ContractStorage: CognitoStorage,
   ContractStorageHandler: CognitoStorageHandler
 };
-
-//CognitoStorageHandler.prototype.getContractMap = () => (this.contractStorage.c)
-
-
-/*
-if (loginHandler.value.loggedIn) {
-  console.log('token already exists!');
-  this.cognitoSetup(loginHandler.value.logins);
-}
-loginHandler.addListener((x) => {
-  console.log('recieved event, running cognito setup');
-  if (x.loggedIn) {
-    //this.cognitoSetup(x.logins);
-    this.contractStorage = new CognitoStorage(x.logins, false);
-  } else {
-    console.log('user not logged in; running tear-down');
-    //this.cognitoTearDown();
-    this.contractStorage = null;
-  }
-});
-
-if (loginHandler.value.loggedIn) {
-  console.log('token already exists!');
-  this.cognitoSetup(loginHandler.value.logins);
-} else {
-  console.log('adding listener');
-}
-*/
-  /*if (loginHandler) {
-  } else {
-    console.log('google login not required, skipping to setup');
-    this.cognitoSetup();
-  }*/

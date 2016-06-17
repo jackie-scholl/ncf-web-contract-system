@@ -1,12 +1,12 @@
-const ClassData = () => {
+const ClassData = () => ({
     courseCode: '',
     courseName: '',
     isInternship: false,
     instructorName: '',
     sessionName: ''
-};
+});
 
-const ContractData = () => {
+const ContractData = () => ({
     semester: '',
     studyLocation: 'On Campus',
     contractYear: '',
@@ -14,21 +14,21 @@ const ContractData = () => {
     lastName: '',
     nNumber: '',
     expectedGradYear: '',
-    boxNumber: ''
-    classes: [new ClassData()];
-}
+    boxNumber: '',
+    classes: [new ClassData()]
+});
 
-const ContractEntry = (contractId) => {
+const ContractEntry = (contractId) => ({
   contractId: contractId,
   contractData: new ContractData,
-  dateLastModified: new Date().getTime();
-}
+  dateLastModified: new Date().getTime()
+});
 
 module.exports = {
   ClassData: ClassData,
   ContractData: ContractData,
   ContractEntry: ContractEntry
-}
+};
 
 /*const createNewContract = function() {
   const contractId = getCognitoCompatibleRandomId();

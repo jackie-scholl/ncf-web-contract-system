@@ -21,7 +21,7 @@ rules:
     - error
     - single
   semi:
-    - off # TODO change back to error!
+    - warn # TODO change back to error!
     - always # possibly different arg
   no-eval:
     - warn
@@ -34,3 +34,18 @@ rules:
     - warn
   no-unused-vars:
     - warn
+    # This is the Regex pattern for variables to ignore. Because ESLint seems to
+    # have trouble recognizing that we DO use the React elements we build with
+    # JSX, we end up having to explicitly whitelist every single React element
+    # we use.
+    # When using multi-line strings in YAML as we're doing it, the line breaks
+    # turn into spaces. To combat this, we put a Regex or operator (|) at the
+    # beginning and ending of every line, so the Regex ends up basically saying
+    # "or space" a whole bunch, which is fine.
+    - varsIgnorePattern: |-
+        ^(
+        |FullPage|ContractList|ContractElement|LivePreview|ContractBox|
+        |ContractForm|ClassesTable|Class|GenericInput|TextInput|TextArea|
+        |CheckBox|SelectInput|SelectOption|BasicComponent|
+        |LoginBar|LoginLoadThing|GoogleLoginArea|
+        )$

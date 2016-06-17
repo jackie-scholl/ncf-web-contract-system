@@ -21,8 +21,8 @@ rules:
     - error
     - single
   semi:
-    - warn # TODO change back to error!
-    - always # possibly different arg
+    - error
+    - always
   no-eval:
     - warn
   curly:

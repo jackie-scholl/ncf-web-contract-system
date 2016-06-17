@@ -45,9 +45,9 @@ const resolveConflict = (conflict) => {
   throw CANNOT_RESOLVE2;
   // or, continue with some value
   //return conflict.resolveWithValue('tuba');
-}
+};
 
 module.exports = {
   CANNOT_RESOLVE: CANNOT_RESOLVE2,
   resolve: resolveConflict
-}
+};

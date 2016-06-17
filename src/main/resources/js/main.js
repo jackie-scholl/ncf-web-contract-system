@@ -104,7 +104,7 @@ var FullPage = React.createClass({
                           this.state.contractStorageHandler.setContractEntry}
             logins={this.state.logins}
             pollInterval={2000}
-          />
+          />;
     }
     //console.log('current id: '+this.state.contractId);
     return (
@@ -214,14 +214,14 @@ function ClassData(courseCode, courseName, isInternship, instructorName, session
 
 var emptyClassData = function() {
   return new ClassData('', '', false, '', '');
-}
+};
 
 var classDataFrom = function(data) {
   //console.log('About to pull class data');
   //console.log(data);
   return new ClassData(data.courseCode, data.courseName, data.isInternship,
         data.instuctorName, data.sessionName);
-}
+};
 
 var resizeArray = function(array, minSize, maxSize, testerCallback, spaceFillerCallback) {
   //console.log('existing array length: '+array.length);
@@ -251,7 +251,7 @@ var resizeArray = function(array, minSize, maxSize, testerCallback, spaceFillerC
     }
   }
   return array;
-}
+};
 
 var testResizeArray = function() {
   var zeroTester = (x) => (x != 0);
@@ -260,7 +260,7 @@ var testResizeArray = function() {
         zeroFiller), [0, 0, 1, 0]));
   console.assert(arraysEqual(resizeArray([1, 0, 0, 6], 0, 100, zeroTester,
         zeroFiller), [1, 0, 0, 6, 0]));
-}
+};
 
 testResizeArray();
 
@@ -299,7 +299,7 @@ var LivePreview = React.createClass({
       options: {
         flatten_pdf: true
       }
-    }
+    };
     const requestJson = JSON.stringify(renderContractRequest);
     const contractPdfUrl = '/render-contract?renderContractRequest='+requestJson;
     return (

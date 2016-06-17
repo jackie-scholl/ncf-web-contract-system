@@ -53,5 +53,8 @@ rules:
     - error
   block-scoped-var:
     - error
+  eqeqeq:
+    - error
+    - smart
   no-extra-bind:
     - warn

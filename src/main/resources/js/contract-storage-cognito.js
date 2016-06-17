@@ -136,7 +136,7 @@ CognitoStorage.prototype.updateContractMap = function() {
         const objectMap = new Map();
         for (var x in map) {
           if (map.hasOwnProperty(x) && map[x]) {
-            if (x == '') {
+            if (x === '') {
               console.log('uh oh, very bad value');
               console.log(x);
               console.log(map[x]);

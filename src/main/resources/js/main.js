@@ -243,7 +243,7 @@ var resizeArray = function(array, minSize, maxSize, testerCallback, spaceFillerC
   if (newLength < minSize) {
     newLength = minSize;
   }
-  if (array.length == newLength) {
+  if (array.length === newLength) {
     // we're good!
   } else if (array.length > newLength) {
     array = array.slice(0, newLength);
@@ -256,7 +256,7 @@ var resizeArray = function(array, minSize, maxSize, testerCallback, spaceFillerC
 };
 
 var testResizeArray = function() {
-  var zeroTester = (x) => (x != 0);
+  var zeroTester = (x) => (x !== 0);
   var zeroFiller = () => (0);
   console.assert(arraysEqual(resizeArray([0, 0, 1, 0, 0, 0], 0, 100, zeroTester,
         zeroFiller), [0, 0, 1, 0]));
@@ -267,7 +267,7 @@ var testResizeArray = function() {
 testResizeArray();
 
 function arraysEqual(a1,a2) {
-  return JSON.stringify(a1)==JSON.stringify(a2);
+  return JSON.stringify(a1) === JSON.stringify(a2);
 }
 
 var ContractBox = React.createClass({

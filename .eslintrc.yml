@@ -53,3 +53,5 @@ rules:
     - error
   block-scoped-var:
     - error
+  no-extra-bind:
+    - warn

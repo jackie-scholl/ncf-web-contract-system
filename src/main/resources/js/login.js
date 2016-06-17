@@ -24,10 +24,10 @@ const LoginLoadThing = React.createClass({
     return {scriptHasLoaded: false};
   },
   componentDidMount: function() {
-    $(document).on('googleLogin2', (() => {
+    $(document).on('googleLogin2', () => {
       console.log('captured google login script load; gapi defined? '+(typeof gapi != 'undefined'));
       this.setState({scriptHasLoaded: true});
-    }).bind(this));
+    });
   },
   render: function() {
     if (this.state.scriptHasLoaded) {

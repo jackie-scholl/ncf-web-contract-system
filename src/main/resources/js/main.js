@@ -407,7 +407,7 @@ var ClassesTable = React.createClass({
   },
   render: function() {
     var classNodes = this.props.magic.value.map(
-      ((_, i) => (<Class number={i} magic={this.magic(i)} key={i}/>)).bind(this)
+      ((_, i) => (<Class number={i} magic={this.magic(i)} key={i}/>))
     );
     return (
       <div className='table-responsive'>

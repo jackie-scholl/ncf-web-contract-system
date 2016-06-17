@@ -74,3 +74,23 @@ rules:
     - error
   no-lone-blocks:
     - error
+  no-loop-func:
+    - error
+  no-magic-numbers:
+    - off # TODO this eventually should be at least 'warn'
+  no-multi-str:
+    - error
+  no-native-reassign:
+    - error
+  no-new:
+    - error
+  no-new-func:
+    - error
+  no-new-wrappers:
+    - error
+  no-proto:
+    - error
+  no-script-url:
+    - error
+  no-throw-literal:
+    - error

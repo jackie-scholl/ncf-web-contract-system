@@ -121,3 +121,7 @@ rules:
     - error
   handle-callback-err:
     - error
+  no-new-require:
+    - error
+  no-process-exit:
+    - error

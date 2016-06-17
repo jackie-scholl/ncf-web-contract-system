@@ -68,7 +68,7 @@ rules:
     - error
   no-extra-bind:
     - warn
-  no-extra-label:
-    - warn
   no-invalid-this:
+    - error
+  no-labels:
     - error

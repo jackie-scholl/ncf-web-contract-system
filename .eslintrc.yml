@@ -26,7 +26,7 @@ rules:
   no-eval:
     - error
   curly:
-    - warn
+    - error
     - all
   no-console:
     - off
@@ -53,8 +53,20 @@ rules:
     - error
   block-scoped-var:
     - error
+  complexity:
+    - warn
+  default-case:
+    - error
+  dot-notation:
+    - error
   eqeqeq:
     - error
     - smart
+  no-caller:
+    - error
+  no-extend-native:
+    - error
   no-extra-bind:
+    - warn
+  no-extra-label:
     - warn

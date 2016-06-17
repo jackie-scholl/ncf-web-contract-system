@@ -82,9 +82,16 @@ function compile(watch) {
   var bundler = watchify(browserify(resources+'js/main.js', { debug: true })
       .transform('babelify', {presets: ['es2015', 'react']}));
 
+  /** @this idk?? */
+  function error(err) {
+    console.error(err);
+    this.emit('end');
+  }
+
   function rebundle() {
     bundler.bundle()
-      .on('error', function(err) { console.error(err); this.emit('end'); })
+      //.on('error', function(err) { console.error(err); this.emit('end'); })
+      .on('error', error)
       .pipe(source('build.js'))
       .pipe(buffer())
       .pipe(sourcemaps.init({ loadMaps: true }))

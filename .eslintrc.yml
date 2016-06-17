@@ -115,3 +115,7 @@ rules:
     - error
   callback-return:
     - warn
+  global-require:
+    - error
+  handle-callback-err:
+    - error

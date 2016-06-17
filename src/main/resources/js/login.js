@@ -55,16 +55,16 @@ const getLoginState = function(googleUser) {
     const gIdToken = googleUser.getAuthResponse().id_token;
     const profile = googleUser.getBasicProfile();
     return {
-        loggedIn: true,
-        googleUser: googleUser,
-        gIdToken: gIdToken,
-        logins: {'accounts.google.com': gIdToken},
-        personalInfo: {
-          fullName: profile.getName(),
-          firstName: profile.getGivenName(),
-          lastName: profile.getFamilyName()
-        }
-      };
+      loggedIn: true,
+      googleUser: googleUser,
+      gIdToken: gIdToken,
+      logins: {'accounts.google.com': gIdToken},
+      personalInfo: {
+        fullName: profile.getName(),
+        firstName: profile.getGivenName(),
+        lastName: profile.getFamilyName()
+      }
+    };
   }
 };
 

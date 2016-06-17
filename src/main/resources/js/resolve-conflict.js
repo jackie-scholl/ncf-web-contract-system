@@ -11,7 +11,7 @@ const resolveConflict = (conflict) => {
   // Or... use custom logic.
   // var newValue = conflicts[i].getRemoteRecord().getValue() + conflicts[i].getLocalRecord().getValue();
   // resolved.push(conflicts[i].resolveWithValue(newValue);
-  
+
   const remote = conflict.getRemoteRecord().getValue();
   const local = conflict.getLocalRecord().getValue();
   console.log('remote : local');

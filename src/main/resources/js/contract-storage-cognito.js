@@ -1,4 +1,5 @@
 //Copyright 2016 Jackie Scholl
+'use strict';
 /*global AWS*/
 var base64 = require('base64-js');
 var resolveConflict = require('./resolve-conflict.js');

@@ -1,4 +1,5 @@
 //Copyright 2016 Jackie Scholl
+'use strict';
 const CANNOT_RESOLVE2 = 'CANNOT_RESOLVE';
 
 const resolveConflict = (conflict) => {

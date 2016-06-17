@@ -1,4 +1,5 @@
 //Copyright 2016 Jackie Scholl
+'use strict';
 /*global $ gapi*/
 const React = require('react');
 const ReactDOM = require('react-dom');

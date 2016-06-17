@@ -212,7 +212,9 @@ CognitoStorageHandler.prototype.setupStorage = function(loginState) {
   }
 };
 
-CognitoStorageHandler.prototype.isEmpty = () => (!this.contractStorage);
+CognitoStorageHandler.prototype.isEmpty = function() {
+  return !this.contractStorage;
+};
 
 CognitoStorageHandler.prototype.setContractEntry = function(contractEntry) {
   if (this.contractStorage) {

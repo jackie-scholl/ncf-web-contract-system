@@ -130,12 +130,12 @@ const GoogleLoginArea = React.createClass({
   }
 });
 
-const LoginHandler = function() {
+function LoginHandler() {
   this.listeners = [];
   this.value = getLoginState(null);
   this.addListener((x) => {this.value = x;}); // callback that updates the value
   return this;
-};
+}
 
 LoginHandler.prototype.trigger = function(state) {
   this.listeners.forEach((callback) => {callback(state);});

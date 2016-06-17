@@ -70,3 +70,5 @@ rules:
     - warn
   no-extra-label:
     - warn
+  no-invalid-this:
+    - error

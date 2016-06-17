@@ -113,3 +113,5 @@ rules:
     - error
   no-use-before-define:
     - error
+  callback-return:
+    - warn

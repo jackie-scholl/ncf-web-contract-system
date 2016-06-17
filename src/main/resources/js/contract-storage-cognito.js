@@ -46,7 +46,7 @@ CognitoStorage.prototype.setup = function(logins, callback) {
         console.assert(dataset);
         this.dataset = dataset;
         this.updateContractMap();
-        callback();
+        return callback();
       }
     }.bind(this));
   }.bind(this));

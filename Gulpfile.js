@@ -78,7 +78,7 @@ gulp.task('lint-scripts', function () {
 });
 
 // Based on https://gist.github.com/danharper/3ca2273125f500429945
-function compile(watch) {
+function compile(shouldWatch) {
   var bundler = watchify(browserify(resources+'js/main.js', { debug: true })
       .transform('babelify', {presets: ['es2015', 'react']}));
 
@@ -99,7 +99,7 @@ function compile(watch) {
       .pipe(gulp.dest(paths2.target.scripts2));
   }
 
-  if (watch) {
+  if (shouldWatch) {
     bundler.on('update', function() {
       console.log('-> bundling...');
       rebundle();

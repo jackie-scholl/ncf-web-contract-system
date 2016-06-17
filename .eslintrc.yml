@@ -109,3 +109,5 @@ rules:
   strict:
     - error
     - global
+  no-shadow:
+    - error

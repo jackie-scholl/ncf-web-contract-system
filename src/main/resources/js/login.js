@@ -20,12 +20,14 @@ const LoginBar = React.createClass({
 
 const LoginLoadThing = React.createClass({
   getInitialState: function() {
-    console.log('initializing LoginLoadThing; gapi defined? '+(typeof gapi != 'undefined'));
+    console.log('initializing LoginLoadThing; gapi defined? ' +
+        (typeof gapi != 'undefined'));
     return {scriptHasLoaded: false};
   },
   componentDidMount: function() {
     $(document).on('googleLogin2', () => {
-      console.log('captured google login script load; gapi defined? '+(typeof gapi != 'undefined'));
+      console.log('captured google login script load; gapi defined? ' +
+          (typeof gapi != 'undefined'));
       this.setState({scriptHasLoaded: true});
     });
   },
@@ -76,7 +78,8 @@ const GoogleLoginArea = React.createClass({
     return getLoginState(null);
   },
   signOut: function() {
-    console.log('Signing out ' + this.state.googleUser.getBasicProfile().getName());
+    console.log('Signing out ' +
+        this.state.googleUser.getBasicProfile().getName());
     const auth2 = gapi.auth2.getAuthInstance();
     //auth2.disconnect();
     auth2.signOut().then(function() {
@@ -91,7 +94,8 @@ const GoogleLoginArea = React.createClass({
   },
   onSignInFailure: function(error) {
     console.log('oops');
-    const errorString = 'Sorry, something went wrong with the Google sign-in; please let us know about the issue';
+    const errorString = 'Sorry, something went wrong with the Google sign-in;' +
+        ' please let us know about the issue';
     console.log(JSON.stringify({message: errorString, value: error}));
   },
   renderLoginButton: function() {

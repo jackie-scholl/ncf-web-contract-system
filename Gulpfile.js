@@ -109,7 +109,7 @@ function compile(shouldWatch) {
   rebundle();
 }
 
-gulp.task('scripts', ['clean-scripts', 'lint-scripts'], function() { return compile(false); });
+gulp.task('scripts', ['clean-scripts', 'lint-scripts'], () => (compile(false)));
 gulp.task('watch-scripts', function() { return compile(true); });
 
 gulp.task('clean-html', function() {
@@ -137,7 +137,8 @@ gulp.task('maven2', (callback) => {
   if (currentMaven2TaskChild !== null) {
     currentMaven2TaskChild.kill();
   }
-  const child = child_process.spawn('mvn', ['test', 'exec:java', '-Dexec.mainClass=edu.ncf.contractform.Main']);
+  const child = child_process.spawn('mvn',
+      ['test', 'exec:java', '-Dexec.mainClass=edu.ncf.contractform.Main']);
   currentMaven2TaskChild = child;
   console.log('spawning new process');
 
@@ -174,4 +175,5 @@ gulp.task('watch', function() {
 
 gulp.task('single', ['scss', 'scripts', 'html', 'resources2']);
 
-gulp.task('default', ['watch', 'scss', 'scripts', 'html', 'watchJava', 'maven2', 'resources2']);
+gulp.task('default', ['watch', 'scss', 'scripts', 'html', 'watchJava', 'maven2',
+    'resources2']);

@@ -14,7 +14,8 @@ function CognitoStorage(logins, allowAnonymous, onUpdateCallback) {
     throw new Error('err! trying to set up but logins falsey; logins='+logins);
   } else {
     if (!allowAnonymous) {
-      console.assert(logins['accounts.google.com'] !== undefined, JSON.stringify(logins));
+      console.assert(logins['accounts.google.com'] !== undefined,
+          JSON.stringify(logins));
     } else {
       throw new Error('allowing anonymous');
     }
@@ -104,16 +105,16 @@ CognitoStorage.prototype.sync = function() {
         console.log('oh no! remote dataset deleted!');
         console.log('dataset named '+datasetName);
         console.log(dataset);
-        // Return true to delete the local copy of the dataset.
-        // Return false to handle deleted datasets outsid ethe synchronization callback.
+        // Return true to delete the local copy of the dataset. Return false to
+        //handle deleted datasets outside the synchronization callback.
         //return callback(true);
         return callback(false);
       },
 
       onDatasetMerged: function(dataset, datasetNames, callback) {
         console.log('oh no! dataset merged!');
-        // Return true to continue the synchronization process.
-        // Return false to handle dataset merges outside the synchroniziation callback.
+        // Return true to continue the synchronization process.Return false to
+        // handle dataset merges outside the synchroniziation callback.
         return callback(false);
         //return callback(true);
       }
@@ -126,7 +127,7 @@ CognitoStorage.prototype.updateContractMap = function() {
 
   console.assert(this.dataset);
   if (!this.dataset) {
-    alert('something went wrong; updateContractMap called but dataset does not exist');
+    alert('updateContractMap called but dataset does not exist');
   } else {
     this.dataset.getAll((err, map) => {
       if (err) {
@@ -173,7 +174,7 @@ CognitoStorage.prototype.getDefaultContractId = function() {
     console.log('returning default contract id: '+id);
     return id;
   } else {
-    console.log('default contract id has no contracts to draw from; returning null');
+    console.log('getDefaultContractId has no contracts to draw from');
     return null;
   }
 };

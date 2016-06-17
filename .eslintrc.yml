@@ -125,3 +125,6 @@ rules:
     - error
   no-process-exit:
     - error
+  max-len:
+    - warn
+    

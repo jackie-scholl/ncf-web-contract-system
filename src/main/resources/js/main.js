@@ -15,7 +15,8 @@ var FullPage = React.createClass({
     const h = window.location.hash;
     const contractId = h? h.slice(1) : null;
     /* const contractDataset = null;
-    return {contractId: contractId, contractDataset: null, contractMap: new Map(), logins: {}};*/
+    return {contractId: contractId, contractDataset: null,
+    contractMap: new Map(), logins: {}};*/
     return {
       contractId: contractId,
       contractMap: new Map(),
@@ -31,7 +32,8 @@ var FullPage = React.createClass({
   },
   componentWillMount: function() {
     loginHandler.addListener((x) => {this.setState({logins: x.logins});});
-    const contractStorageHandler = new contractStorageCognito.ContractStorageHandler(
+    const contractStorageHandler =
+        new contractStorageCognito.ContractStorageHandler(
         loginHandler, this.updateContractMap);
     this.setState({contractStorageHandler: contractStorageHandler});
   },
@@ -73,13 +75,16 @@ var FullPage = React.createClass({
   createContract: function() {
     var array = new Uint8Array(15);
     window.crypto.getRandomValues(array);
-    const contractId = base64.fromByteArray(array).replace(/\+/, '_').replace(/\//, '-');
+    const contractId = base64.fromByteArray(array).replace(/\+/, '_')
+        .replace(/\//, '-');
     console.log('new contract ID:' + contractId);
     //const contractId = 5;
     const baseContractData = {
       semester: '', studyLocation: 'On Campus', contractYear: '',
-      firstName: '', lastName: '', nNumber: '', expectedGradYear: '', boxNumber: '',
-      classes: [{courseCode: '', courseName: '', isInternship: false, instructorName: '',
+      firstName: '', lastName: '', nNumber: '', expectedGradYear: '',
+      boxNumber: '',
+      classes: [{courseCode: '', courseName: '', isInternship: false,
+      instructorName: '',
             sessionName: ''}]
     };
     const contractEntry = {contractId: contractId, googleId: 'nah',
@@ -95,7 +100,8 @@ var FullPage = React.createClass({
   },
   render: function() {
     var optionalContract = null;
-    if (this.state.contractId != null && this.state.contractMap.has(this.state.contractId)) {
+    if (this.state.contractId != null &&
+        this.state.contractMap.has(this.state.contractId)) {
       optionalContract =
           <ContractBox
             contractEntry={this.state.contractMap.get(this.state.contractId)}
@@ -121,7 +127,10 @@ var FullPage = React.createClass({
           />
           {optionalContract}
           <div className='col-md-5 col-md-offset-2'>
-            <button className='btn btn-default' type='button' onClick={this.cognitoSync}>Sync</button>
+            <button className='btn btn-default' type='button'
+                onClick={this.cognitoSync}>
+              Sync
+            </button>
           </div>
         </div>
       </div>
@@ -145,7 +154,10 @@ var ContractList = React.createClass({
       <div className='col-sm-3 col-md-2 sidebar'>
         <ul className='nav nav-sidebar'>
           <li>Contract List</li>
-          <li><a href='' onClick={this.createContract} id='new-contract-link' className='logged-in'>New Contract</a></li>
+          <li><a href='' onClick={this.createContract} id='new-contract-link'
+              className='logged-in'>
+            New Contract
+          </a></li>
         </ul>
         <ul className='nav nav-sidebar'>
           {contractEntries}
@@ -198,7 +210,8 @@ var ContractElement = React.createClass({
         classesString + '' +
         timeSince(new Date(this.props.value.dateLastModified)) + ' ago';
     return (
-      <li id={this.props.value.contractId} className={this.props.isCurrent?'active':''}>
+      <li id={this.props.value.contractId}
+          className={this.props.isCurrent? 'active' : ''} >
         <a href={'#' + this.props.value.contractId} onClick={this.handleClick}>
           {wholeString}
         </a>
@@ -207,10 +220,12 @@ var ContractElement = React.createClass({
   }
 });
 
-function ClassData(courseCode, courseName, isInternship, instructorName, sessionName) {
-  console.assert(isInternship === true || isInternship === false, 'bad value: ' + isInternship);
-  return {courseCode: courseCode, courseName: courseName, isInternship: isInternship,
-      instructorName: instructorName, sessionName: sessionName};
+function ClassData(courseCode, courseName, isInternship, instructorName,
+    sessionName) {
+  console.assert(isInternship === true || isInternship === false, 'bad value: '
+      + isInternship);
+  return {courseCode: courseCode, courseName: courseName, isInternship:
+      isInternship, instructorName: instructorName, sessionName: sessionName};
 }
 
 var emptyClassData = function() {
@@ -224,7 +239,8 @@ var classDataFrom = function(data) {
         data.instuctorName, data.sessionName);
 };
 
-var resizeArray = function(array, minSize, maxSize, testerCallback, spaceFillerCallback) {
+var resizeArray = function(array, minSize, maxSize, testerCallback,
+    spaceFillerCallback) {
   //console.log('existing array length: '+array.length);
   let i=0;
   for (i = array.length-1; i >= 0; i--) {
@@ -236,7 +252,8 @@ var resizeArray = function(array, minSize, maxSize, testerCallback, spaceFillerC
     }
   }
   //console.log('index of last class with data: ' + i);
-  var newLength = i + 2; // there should be exactly one empty element at the end of the array
+  // there should be exactly one empty element at the end of the array
+  var newLength = i + 2;
   if (newLength > maxSize) {
     newLength = maxSize;
   }
@@ -291,7 +308,8 @@ var ContractBox = React.createClass({
           value={this.props.contractEntry.contractData}
           handleUpdate={this.handleUpdate}
         />
-        <LivePreview value={this.props.contractEntry} logins={this.props.logins} />
+        <LivePreview value={this.props.contractEntry}
+            logins={this.props.logins} />
       </div>
     );
   }
@@ -307,7 +325,8 @@ var LivePreview = React.createClass({
       }
     };
     const requestJson = JSON.stringify(renderContractRequest);
-    const contractPdfUrl = '/render-contract?renderContractRequest='+requestJson;
+    const contractPdfUrl = '/render-contract?renderContractRequest='
+        + requestJson;
     return (
       <iframe src={contractPdfUrl} width='100%' height='1000px'>
         <a href={contractPdfUrl}>
@@ -340,14 +359,14 @@ var ContractForm = React.createClass({
       <h1 className='page-header'>Contract Form</h1>
       <form id='contractForm' className='blank-form'>
       <div className='row' style={{marginBottom: '2em'}}>
-      <div className='col-sm-3'><TextInput displayName='First Name' placeHolder='Jane'
-          magic={this.magic('firstName')} /></div>
-      <div className='col-sm-3'><TextInput displayName='Last Name' placeHolder='Doe'
-          magic={this.magic('lastName')} /></div>
-      <div className='col-sm-3'><TextInput displayName='N Number' placeHolder='123456789'
-          magic={this.magic('nNumber')} /></div>
-      <div className='col-sm-3 col-md-3'><TextInput displayName='Box Number' placeHolder='123'
-          magic={this.magic('boxNumber')} /></div>
+      <div className='col-sm-3'><TextInput displayName='First Name'
+          placeHolder='Jane' magic={this.magic('firstName')} /></div>
+      <div className='col-sm-3'><TextInput displayName='Last Name'
+          placeHolder='Doe' magic={this.magic('lastName')} /></div>
+      <div className='col-sm-3'><TextInput displayName='N Number'
+          placeHolder='123456789' magic={this.magic('nNumber')} /></div>
+      <div className='col-sm-3 col-md-3'><TextInput displayName='Box Number'
+          placeHolder='123' magic={this.magic('boxNumber')} /></div>
 
       <div className='col-sm-3'>
       <SelectInput displayName='Semester' magic={this.magic('semester')}>
@@ -355,15 +374,19 @@ var ContractForm = React.createClass({
         <SelectOption value='Spring' display='Spring' />
         <SelectOption value='Fall' display='Fall' />
       </SelectInput></div>
-      <div className='col-sm-3'><TextInput displayName='Contract Year' magic={this.magic('contractYear')} /></div>
+      <div className='col-sm-3'><TextInput displayName='Contract Year'
+          magic={this.magic('contractYear')} /></div>
       <div className='col-sm-3'>
-      <SelectInput displayName='Study Location' magic={this.magic('studyLocation')}>
+      <SelectInput displayName='Study Location'
+          magic={this.magic('studyLocation')}>
         <SelectOption value='' display='Select One' />
         <SelectOption value='On Campus' display='On Campus' />
         <SelectOption value='Off Campus' display='Off Campus' />
       </SelectInput></div>
-      <div className='col-sm-3'><TextInput displayName='Expected Year of Graduation' placeHolder='never'
-          magic={this.magic('expectedGradYear')} /></div>
+      <div className='col-sm-3'>
+        <TextInput displayName='Expected Year of Graduation' placeHolder='never'
+          magic={this.magic('expectedGradYear')} />
+      </div>
       </div>
 
 
@@ -450,7 +473,9 @@ var Class = React.createClass({
   render: function() {
     return (
       <tr>
-        <td><TextInput placeHolder='12345' magic={this.magic('courseCode')}/></td>
+        <td>
+          <TextInput placeHolder='12345' magic={this.magic('courseCode')}/>
+        </td>
         <td><TextInput placeHolder='Basket-weaving 101'
             magic={this.magic('courseName')}/> </td>
         <td><CheckBox magic={this.magic('isInternship')}/></td>
@@ -472,7 +497,8 @@ var GenericInput = React.createClass({
   render: function() {
     // We want to hide the label when displayName is empty
     const style = this.props.hasOwnProperty('displayName') &&
-      (this.props.displayName && this.props.displayName.length !== 0)? {} : {display: 'none'};
+      (this.props.displayName && this.props.displayName.length !== 0) ?
+      {} : {display: 'none'};
     return (
       <span>
         <label htmlFor={this.props.htmlId} style={style}>

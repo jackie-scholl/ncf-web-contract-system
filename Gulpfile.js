@@ -125,7 +125,7 @@ function compile(watch) {
 
 function watch() {
   return compile(true);
-};
+}
 
 gulp.task('scripts', ['clean-scripts', 'lint-scripts'], function() { return compile(); });
 gulp.task('watch-scripts', function() { return watch(); });
@@ -136,7 +136,7 @@ gulp.task('clean-html', function() {
 
 gulp.task('html', ['clean-html'], function() {
   return gulp.src(paths.html)
-    .pipe(gulp.dest(target))
+    .pipe(gulp.dest(target));
 });
 
 gulp.task('clean2', function() {

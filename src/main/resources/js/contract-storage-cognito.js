@@ -19,7 +19,7 @@ function CognitoStorage(logins, allowAnonymous, onUpdateCallback) {
     }
     this.setup(logins);
   }
-};
+}
 
 /*const getInitialState = function() {
   console.log('window.location.hash: '+window.location.hash);
@@ -161,7 +161,7 @@ CognitoStorage.prototype.updateContractMap = function() {
       }
     });
   }
-}
+};
 
 CognitoStorage.prototype.setContractEntry = function(contractEntry) {
   console.assert(this.dataset);
@@ -173,7 +173,7 @@ CognitoStorage.prototype.setContractEntry = function(contractEntry) {
       () => {this.updateContractMap();}
     );
   }
-}
+};
 
 /*const changeContractId = function(contractId) {
   window.location.hash = '#' + contractId;
@@ -210,7 +210,7 @@ const getCognitoCompatibleRandomId = function() {
   // We replace plusses with underscores and slashes with dashes for
   // compatibility with AWS Cognito Sync
   return base64.fromByteArray(array).replace(/\+/, '_').replace(/\//, '-');
-}
+};
 
 // do not allow anonymous
 function CognitoStorageHandler(loginHandler, callback) {
@@ -236,7 +236,7 @@ CognitoStorageHandler.prototype.setupStorage = function(loginState) {
     this.contractStorage = null;
     this.onUpdateCallback(new Map());
   }
-}
+};
 
 CognitoStorageHandler.prototype.isEmpty = () => (!this.contractStorage);
 
@@ -246,13 +246,13 @@ CognitoStorageHandler.prototype.setContractEntry = function(contractEntry) {
   } else {
     throw new Error('Tried to set a contract entry while storage was empty');
   }
-}
+};
 
 module.exports = {
   getNewId: getCognitoCompatibleRandomId,
   ContractStorage: CognitoStorage,
   ContractStorageHandler: CognitoStorageHandler
-}
+};
 
 //CognitoStorageHandler.prototype.getContractMap = () => (this.contractStorage.c)
 

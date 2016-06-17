@@ -39,7 +39,7 @@ const LoginLoadThing = React.createClass({
     } else {
       return (
         <div />
-      )
+      );
     }
   }
 });
@@ -160,8 +160,8 @@ const renderLoginBar = function() {
   );
 
   return loginHandler;
-}
+};
 
 module.exports = {
   render: renderLoginBar
-}
+};

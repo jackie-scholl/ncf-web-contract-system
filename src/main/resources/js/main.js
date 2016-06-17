@@ -2,10 +2,9 @@
 //var $ = require('jquery');
 var React = require('react');
 var ReactDOM = require('react-dom');
-var base64 = require('base64-js');
 var loginHandler = require('./login.js').render();
-var resolveConflict = require('./resolve-conflict.js');
 //const apiRoot = '';
+var contractStorageCognito = require('./contract-storage-cognito');
 
 const googleLogin = true;
 
@@ -14,150 +13,29 @@ var FullPage = React.createClass({
     console.log("window.location.hash: "+window.location.hash);
     const h = window.location.hash;
     const contractId = h? h.slice(1) : null;
-    const contractDataset = null;
-    return {contractId: contractId, contractDataset: null, contractMap: new Map(), logins: {}};
+    /* const contractDataset = null;
+    return {contractId: contractId, contractDataset: null, contractMap: new Map(), logins: {}};*/
+    return {
+      contractId: contractId,
+      contractMap: new Map(),
+      logins: null
+    };
   },
-  cognitoSetup: function(logins) {
-    console.log(logins);
-    this.setState({logins: logins});
-    // Initialize the Amazon Cognito credentials provider
-    AWS.config.logger = console;
-    AWS.config.region = 'us-east-1'; // Region
-    AWS.config.credentials = new AWS.CognitoIdentityCredentials({
-      IdentityPoolId: 'us-east-1:a09f9758-c1f2-44c1-a3c8-185219e42c99',
-      Logins: logins
-    });
-    console.log('AWS config set');
-    AWS.config.credentials.get(function(){
-      console.log('thing opened');
-      var syncClient = new AWS.CognitoSyncManager();
-      syncClient.openOrCreateDataset('contracts', function(err, dataset) {
-        console.log('dataset opened');
-        if (err) {
-          console.log('could not open or create dataset; err '+err);
-        } else {
-          console.log('dataset opened');
-          this.setState({contractDataset: dataset});
-          this.initContractMap();
-          this.cognitoSync();
-        }
-      }.bind(this));
-    }.bind(this));
+  updateContractMap: function(contractMap) {
+    this.setState({contractMap: contractMap});
   },
-  cognitoTearDown: function() {
-    AWS.config.credentials = null;
-    this.setState({logins: null, contractDataset: null});
-    this.contractMapTearDown();
+  changeContractId: function(contractId) {
+    window.location.hash = '#' + contractId;
+    this.setState({contractId: contractId});
   },
-  cognitoSync: function() {
-    if (!this.state.contractDataset) {
-      console.log('dataset is null! oh noes!');
-    } else {
-      //alert('oh, no no no! we\'re not paying for real sync yet');
-      console.log("Warning! We're running a sync operation, which costs money");
-      this.state.contractDataset.synchronize({
-        onFailure: (err) => {
-          console.log('err!'); console.log(err);
-        },
-        onSuccess: (dataset, newRecords) => {
-          console.log('success!');
-          console.log(dataset);
-          console.log(newRecords);
-          console.log('this: ');
-          console.log(this);
-          this.initContractMap();
-        },
-        onConflict: (dataset, conflicts, callback) => {
-          const resolved = [];
-          let continueMerge = true;
+  componentWillMount: function() {
+    loginHandler.addListener((x) => {this.setState({logins: x.logins});});
+    const contractStorageHandler = new contractStorageCognito.ContractStorageHandler(
+        loginHandler, this.updateContractMap);
+    this.setState({contractStorageHandler: contractStorageHandler});
+  },
 
-          for (let i=0; i<conflicts.length; i++) {
-            try {
-              resolved.push(resolveConflict.resolve(conflicts[i]));
-            } catch (exception) {
-              if (exception === resolveConflict.CANNOT_RESOLVE) {
-                continueMerge = false;
-                  console.log('CANNOT_MERGE thrown; merge canceled');
-              } else {
-                throw exception;
-              }
-            }
-          }
-
-          if (continueMerge) {
-            alert('error: allowed to merge');
-            /*dataset.resolve(resolved, function() {
-              return callback(true);
-            });*/
-          } else {
-            // callback false to stop the synchronization process.
-            return callback(false);
-          }
-
-        },
-
-        onDatasetDeleted: function(dataset, datasetName, callback) {
-          console.log('oh no! remote dataset deleted!');
-          console.log('dataset named '+datasetName);
-          console.log(dataset);
-          // Return true to delete the local copy of the dataset.
-          // Return false to handle deleted datasets outsid ethe synchronization callback.
-          //return callback(true);
-          return callback(false);
-        },
-
-        onDatasetMerged: function(dataset, datasetNames, callback) {
-          console.log('oh no! dataset merged!');
-          // Return true to continue the synchronization process.
-          // Return false to handle dataset merges outside the synchroniziation callback.
-          return callback(false);
-          //return callback(true);
-        }
-      });
-    }
-  },
-  initContractMap: function() {
-    console.assert(this.state.contractDataset);
-    if (!this.state.contractDataset) {
-      alert('something went wrong; initContractMap called but dataset does not exist');
-    } else {
-      this.state.contractDataset.getAll((err, map) => {
-        if (err) {
-          console.log('error getting contracts');
-          console.warn('error getting contracts');
-        } else {
-          const objectMap = new Map();
-          for (var x in map) {
-            if (map.hasOwnProperty(x) && map[x]) {
-              if (x == "") {
-                console.log("uh oh, very bad value");
-                console.log(x);
-                console.log(map[x]);
-              } else {
-                objectMap.set(x, JSON.parse(map[x]));
-              }
-            }
-
-          }
-          this.setState({contractMap: objectMap});
-        }
-      });
-    }
-  },
-  contractMapTearDown: function() {
-    this.setState({contractMap: new Map()});
-  },
-  setContractEntry: function(contractEntry) {
-    if (!this.state.contractDataset) {
-      alert('oops! dataset doesn\'t exist yet');
-    } else {
-      const contractString = JSON.stringify(contractEntry);
-      this.state.contractDataset.put(contractEntry.contractId, contractString,
-        () => {this.initContractMap();}
-      );
-    }
-  },
-  componentDidMount: function() {
+  /*componentDidMount: function() {
     if (googleLogin) {
       if (loginHandler.value.loggedIn) {
         console.log('token already exists!');
@@ -174,15 +52,6 @@ var FullPage = React.createClass({
           }
         });
       }
-      /*if (gIdToken) {
-        console.log('token already exists!');
-        this.cognitoSetup();
-      } else {
-        const y = this;
-        $(document).on("googleLogin", function(e){
-          y.cognitoSetup();
-        });
-      }*/
     } else {
       console.log("google login not required, skipping to setup");
       this.cognitoSetup();
@@ -217,6 +86,11 @@ var FullPage = React.createClass({
     console.log(contractEntry);
     this.setContractEntry(contractEntry);
     this.changeContractId(contractId);
+  },*/
+  test1: function(x) {
+    console.log('test1');
+    console.log(this.contractStorageHandler);
+    this.contractStorageHandler.setContractEntry(x);
   },
   render: function() {
     var optionalContract = null;
@@ -224,7 +98,10 @@ var FullPage = React.createClass({
       optionalContract =
           <ContractBox
             contractEntry={this.state.contractMap.get(this.state.contractId)}
-            handleUpdate={this.handleContractBoxUpdate}
+            handleUpdate={/*this.handleContractBoxUpdate*/
+                          /*this.contractStorageHandler.setContractEntry*/
+                          /*this.test1*/
+                          this.state.contractStorageHandler.setContractEntry}
             logins={this.state.logins}
             pollInterval={2000}
           />
@@ -609,6 +486,8 @@ var GenericInput = React.createClass({
 var TextInput = React.createClass({
   render: function() {
     const htmlId = this.props.magic.id;
+    //console.log('about to render textinput');
+    //console.log('value: '+this.props.magic.value);
     return (
       <GenericInput displayName={this.props.displayName} htmlId={htmlId}>
         <input

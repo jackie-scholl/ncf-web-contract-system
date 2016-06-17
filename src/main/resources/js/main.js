@@ -1,22 +1,15 @@
 //Copyright 2016 Jackie Scholl
 'use strict';
-//var $ = require('jquery');
 var React = require('react');
 var ReactDOM = require('react-dom');
 var loginHandler = require('./login.js').render();
-//const apiRoot = '';
 var contractStorageCognito = require('./contract-storage-cognito');
-
-//const googleLogin = true;
 
 var FullPage = React.createClass({
   getInitialState: function() {
     console.log('window.location.hash: '+window.location.hash);
     const h = window.location.hash;
     const contractId = h? h.slice(1) : null;
-    /* const contractDataset = null;
-    return {contractId: contractId, contractDataset: null,
-    contractMap: new Map(), logins: {}};*/
     return {
       contractId: contractId,
       contractMap: new Map(),
@@ -37,67 +30,6 @@ var FullPage = React.createClass({
         loginHandler, this.updateContractMap);
     this.setState({contractStorageHandler: contractStorageHandler});
   },
-
-  /*componentDidMount: function() {
-    if (googleLogin) {
-      if (loginHandler.value.loggedIn) {
-        console.log('token already exists!');
-        this.cognitoSetup(loginHandler.value.logins);
-      } else {
-        console.log('adding listener');
-        loginHandler.addListener((x) => {
-          console.log('recieved event, running cognito setup');
-          if (x.loggedIn) {
-            this.cognitoSetup(x.logins);
-          } else {
-            console.log('user not logged in; running tear-down');
-            this.cognitoTearDown();
-          }
-        });
-      }
-    } else {
-      console.log('google login not required, skipping to setup');
-      this.cognitoSetup();
-    }
-  },
-  changeContractId: function(contractId) {
-    window.location.hash = '#' + contractId;
-    this.setState({contractId: contractId});
-  },
-  handleContractListUpdate: function(contracts) {
-    if (this.state.contractId === null && contracts.length > 0) {
-      this.changeContractId(contracts[0].contractId);
-    }
-  },
-  handleContractBoxUpdate: function(newContractEntry) {
-    this.setContractEntry(newContractEntry);
-  },
-  createContract: function() {
-    var array = new Uint8Array(15);
-    window.crypto.getRandomValues(array);
-    const contractId = base64.fromByteArray(array).replace(/\+/, '_')
-        .replace(/\//, '-');
-    console.log('new contract ID:' + contractId);
-    //const contractId = 5;
-    const baseContractData = {
-      semester: '', studyLocation: 'On Campus', contractYear: '',
-      firstName: '', lastName: '', nNumber: '', expectedGradYear: '',
-      boxNumber: '',
-      classes: [{courseCode: '', courseName: '', isInternship: false,
-      instructorName: '',
-            sessionName: ''}]
-    };
-    const contractEntry = {contractId: contractId, googleId: 'nah',
-        contractData: baseContractData, dateLastModified: new Date().getTime()};
-    console.log(contractEntry);
-    this.setContractEntry(contractEntry);
-    this.changeContractId(contractId);
-  },*/
-  test1: function(x) {
-    console.log('test1');
-    console.log(this.contractStorageHandler);
-    this.contractStorageHandler.setContractEntry(x);
-  },
   render: function() {
     var optionalContract = null;
     if (this.state.contractId != null &&
@@ -106,14 +38,12 @@ var FullPage = React.createClass({
           <ContractBox
             contractEntry={this.state.contractMap.get(this.state.contractId)}
             handleUpdate={/*this.handleContractBoxUpdate*/
-                          /*this.contractStorageHandler.setContractEntry*/
-                          /*this.test1*/
                           this.state.contractStorageHandler.setContractEntry}
             logins={this.state.logins}
             pollInterval={2000}
           />;
     }
-    //console.log('current id: '+this.state.contractId);
+
     return (
       <div className='container-fluid'>
         <div className='row'>
@@ -233,21 +163,17 @@ var emptyClassData = function() {
 };
 
 var classDataFrom = function(data) {
-  //console.log('About to pull class data');
-  //console.log(data);
   return new ClassData(data.courseCode, data.courseName, data.isInternship,
         data.instuctorName, data.sessionName);
 };
 
 var resizeArray = function(array, minSize, maxSize, testerCallback,
     spaceFillerCallback) {
-  //console.log('existing array length: '+array.length);
   let i=0;
   for (i = array.length-1; i >= 0; i--) {
     var x = array[i];
     var hasData = testerCallback(x);
     if (hasData) {
-      //console.log(x);
       break;
     }
   }
@@ -513,8 +439,6 @@ var GenericInput = React.createClass({
 var TextInput = React.createClass({
   render: function() {
     const htmlId = this.props.magic.id;
-    //console.log('about to render textinput');
-    //console.log('value: '+this.props.magic.value);
     return (
       <GenericInput displayName={this.props.displayName} htmlId={htmlId}>
         <input

@@ -202,12 +202,10 @@ function CognitoStorageHandler(loginHandler, callback) {
 CognitoStorageHandler.prototype.setupStorage = function(loginState) {
   if (loginState.loggedIn) {
     console.log('user logged in; setting up storage');
-    //this.cognitoSetup(x.logins);
     this.contractStorage = new CognitoStorage(loginState.logins, false,
         this.onUpdateCallback);
   } else {
     console.log('user not logged in; clearing storage');
-    //this.cognitoTearDown();
     this.contractStorage = null;
     this.onUpdateCallback(new Map());
   }

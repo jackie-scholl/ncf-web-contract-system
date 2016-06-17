@@ -38,6 +38,10 @@ const resolveConflict = (conflict) => {
   console.log(remote2);
   console.log(local2);
 
+  if (remote2 === local2) {
+    return conflict.resolveWithLocalRecord();
+  }
+
   throw CANNOT_RESOLVE2;
   // or, continue with some value
   //return conflict.resolveWithValue('tuba');

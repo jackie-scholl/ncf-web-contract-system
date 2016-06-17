@@ -23,7 +23,7 @@ const LoginLoadThing = React.createClass({
     return {scriptHasLoaded: false};
   },
   componentDidMount: function() {
-    $(document).on('googleLogin2', ((e) => {
+    $(document).on('googleLogin2', (() => {
       console.log('captured google login script load; gapi defined? '+(typeof gapi != 'undefined'));
       //console.log(gapi || 'empty');
       this.setState({scriptHasLoaded: true});
@@ -51,7 +51,6 @@ const getLoginState = function(googleUser) {
   } else {
     console.log('returning full google state');
     const gIdToken = googleUser.getAuthResponse().id_token;
-    const logins = {'accounts.google.com': gIdToken};
     const profile = googleUser.getBasicProfile();
     return {
         loggedIn: true,
@@ -93,7 +92,7 @@ const GoogleLoginArea = React.createClass({
   onSignInFailure: function(error) {
     console.log('oops');
     const errorString = 'Sorry, something went wrong with the Google sign-in; please let us know about the issue';
-    console.log(JSON.stringify({message: 'fail', value: error}));
+    console.log(JSON.stringify({message: errorString, value: error}));
   },
   renderLoginButton: function() {
     console.assert(!!$('#my-signin2').length);
@@ -153,7 +152,7 @@ const renderLoginBar = function() {
   const loginHandler = new LoginHandler();
   const onUpdateListener = loginHandler.trigger.bind(loginHandler);
 
-  const element = ReactDOM.render(
+  ReactDOM.render(
     <LoginBar onUpdate={onUpdateListener} />,
     document.getElementById('login-bar')
   );

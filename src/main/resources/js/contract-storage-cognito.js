@@ -4,7 +4,7 @@ var resolveConflict = require('./resolve-conflict.js');
 
 function CognitoStorage(logins, allowAnonymous, onUpdateCallback) {
   this._debug_logins = logins;
-  this.onUpdateCallback = onUpdateCallback || ((_) => {});
+  this.onUpdateCallback = onUpdateCallback || (() => {});
   console.assert(logins);
   console.log('creating new CognitoStorage instance');
   if (!logins) {
@@ -58,12 +58,6 @@ CognitoStorage.prototype.setup = function(logins, callback) {
       }
     }.bind(this));
   }.bind(this));
-};
-
-const cognitoTearDown = function() {
-  AWS.config.credentials = null;
-  this.dataset = null;
-  this.contractMapTearDown();
 };
 
 CognitoStorage.prototype.sync = function() {
@@ -168,11 +162,6 @@ CognitoStorage.prototype.updateContractMap = function() {
   }
 }
 
-const contractMapTearDown = function() {
-  //this.setState({contractMap: new Map()});
-  this.contractMap = new Map();
-}
-
 CognitoStorage.prototype.setContractEntry = function(contractEntry) {
   console.assert(this.dataset);
   if (!this.dataset) {
@@ -184,38 +173,6 @@ CognitoStorage.prototype.setContractEntry = function(contractEntry) {
     );
   }
 }
-
-const componentDidMount = function() {
-  if (googleLogin) {
-    if (loginHandler.value.loggedIn) {
-      console.log('token already exists!');
-      this.cognitoSetup(loginHandler.value.logins);
-    } else {
-      console.log('adding listener');
-      loginHandler.addListener((x) => {
-        console.log('recieved event, running cognito setup');
-        if (x.loggedIn) {
-          this.cognitoSetup(x.logins);
-        } else {
-          console.log('user not logged in; running tear-down');
-          this.cognitoTearDown();
-        }
-      });
-    }
-    /*if (gIdToken) {
-      console.log('token already exists!');
-      this.cognitoSetup();
-    } else {
-      const y = this;
-      $(document).on('googleLogin', function(e){
-        y.cognitoSetup();
-      });
-    }*/
-  } else {
-    console.log('google login not required, skipping to setup');
-    this.cognitoSetup();
-  }
-};
 
 /*const changeContractId = function(contractId) {
   window.location.hash = '#' + contractId;

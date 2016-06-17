@@ -161,8 +161,8 @@ var ContractElement = React.createClass({
   },
   render: function() {
     var classesString = '';
-    const classes = this.props.value.contractData.classes.map((x, _1, _2) =>
-          (x.courseName)).filter((x, _1, _2) => (x !== ''));
+    const classes = this.props.value.contractData.classes.map((x) =>
+          (x.courseName)).filter((x) => (x !== ''));
     if (classes.length > 0) {
       classesString = '[' + classes.join().substring(0, 15) + ']; ';
     }
@@ -329,8 +329,6 @@ var ContractForm = React.createClass({
   },
 
   render: function() {
-    // What the f*ck does this line do? do we use it?
-    var contractYearNodes = Array.apply(null, Array(5)).map((_, i) => (i));
     return (
       <div className='contractForm'>
       <h1 className='page-header'>Contract Form</h1>
@@ -390,7 +388,6 @@ var ClassesTable = React.createClass({
       newState[index] = value;
       var testerCallback = (x) => (x.courseCode || x.courseName
         || x.isInternship || x.instructorName );
-      var testerCallback2 = (x) => (x.courseName !== '');
       newState = resizeArray(newState, 4, 9, testerCallback, emptyClassData);
       this.props.magic.handleUpdate(newState);
     });
@@ -407,7 +404,6 @@ var ClassesTable = React.createClass({
     this.props.magic.handleUpdate(newValue);
   },
   render: function() {
-    var magic_x = this.magic
     var classNodes = this.props.magic.value.map(
       ((_, i) => (<Class number={i} magic={this.magic(i)} key={i}/>)).bind(this)
     );
@@ -446,7 +442,6 @@ var Class = React.createClass({
       id: this.props.magic.id+'.'+identifier};
   },
   render: function() {
-    var row = this.props.number;
     return (
       <tr>
         <td><TextInput placeHolder='12345' magic={this.magic('courseCode')}/></td>

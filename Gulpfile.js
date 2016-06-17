@@ -1,3 +1,4 @@
+//Copyright 2016 Jackie Scholl
 'use strict';
 const gulp = require('gulp');
 const sass = require('gulp-sass');

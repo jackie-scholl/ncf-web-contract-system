@@ -245,14 +245,16 @@ var resizeArray = function(array, minSize, maxSize, testerCallback, spaceFillerC
   }
   if (array.length === newLength) {
     // we're good!
+    return array;
   } else if (array.length > newLength) {
-    array = array.slice(0, newLength);
+    return array.slice(0, newLength);
   } else if (array.length < newLength) {
+    let tempArray = array;
     while (array.length < newLength) {
-      array = array.concat(spaceFillerCallback());
+      tempArray = tempArray.concat(spaceFillerCallback());
     }
   }
-  return array;
+  return newArray;
 };
 
 var testResizeArray = function() {

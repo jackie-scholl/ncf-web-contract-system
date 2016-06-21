@@ -28,6 +28,8 @@ rules:
   curly:
     - error
     - all
+  no-unsafe-finally:
+    - error
   no-console:
     - off
   no-extra-semi:
@@ -160,3 +162,14 @@ rules:
     - error
   prefer-arrow-callback:
     - warn
+  prefer-const:
+    - error
+  prefer-reflect:
+    - warn
+  prefer-rest-params:
+    - error
+  prefer-spread:
+    - error
+  no-confusing-arrow:
+    - error
+    - allowParens: true

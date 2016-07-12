@@ -30,6 +30,9 @@ const FullPage = React.createClass({
         loginHandler, this.updateContractMap);
     this.setState({contractStorageHandler: contractStorageHandler});
   },
+  cognitoSync: function() {
+    this.state.contractStorageHandler.contractStorage.sync();
+  },
   render: function() {
     let optionalContract = null;
     if (this.state.contractId != null &&
@@ -193,7 +196,7 @@ const resizeArray = function(array, minSize, maxSize, testerCallback,
     return array.slice(0, newLength);
   } else if (array.length < newLength) {
     let tempArray = array;
-    while (array.length < newLength) {
+    while (tempArray.length < newLength) {
       tempArray = tempArray.concat(spaceFillerCallback());
     }
     return tempArray;

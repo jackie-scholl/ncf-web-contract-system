@@ -13,6 +13,7 @@ const watchify = require('watchify');
 const source = require('vinyl-source-stream');
 const eslint = require('gulp-eslint');
 const mocha = require('gulp-mocha');
+const babel = require('gulp-babel');
 
 const resources = 'src/main/resources/';
 const paths = {
@@ -38,7 +39,8 @@ const paths2 = {
     scripts: target+'js/**/*.js',
     scripts2: target+'js',
     html: target+'index.html',
-    resources2: target+'resources2/'
+    resources2: target+'resources2/',
+    test_sources: 'target/generated-js-sources/'
   }
 };
 
@@ -76,8 +78,18 @@ gulp.task('lint-scripts', () =>
     .pipe(eslint.failAfterError())
 );
 
-gulp.task('test-scripts', ['lint-scripts'], () =>
-  gulp.src('src/test/js/test-contract-entry.js', {read: false})
+gulp.task('clean-test-sources', () =>
+  del(paths2.target.test_sources)
+);
+
+gulp.task('build-test-sources', () =>
+  gulp.src('src/**/*.js')
+    .pipe(babel({presets: ['react']}))
+    .pipe(gulp.dest(paths2.target.test_sources))
+);
+
+gulp.task('test-scripts', ['lint-scripts', 'build-test-sources'], () =>
+  gulp.src(paths2.target.test_sources+'test/js/*', {read: false})
     // gulp-mocha needs filepaths so you can't have any plugins before it
     .pipe(mocha({reporter: 'spec'}))
 );

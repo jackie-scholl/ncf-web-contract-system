@@ -6,6 +6,12 @@
     "type": "git",
     "url": "git+https://jackie_scholl@bitbucket.org/tmir-chan/contract-form.git"
   },
+  "scripts": {
+    "test": "mocha src/test/js/*",
+    "coverage": "istanbul cover node_modules/.bin/_mocha -- -u exports -R spec src/test/js/*",
+    "build": "gulp single",
+    "run": "gulp default"
+  },
   "author": "Jackie Scholl",
   "license": "copyright 2016 Jackie Scholl",
   "private": "true",

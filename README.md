@@ -23,11 +23,7 @@ Note that this will start a local webserver running on port 4232, and also will 
 
 ## Testing
 
-Just run
-
-```
-mocha src/test/js/*
-```
+Right now, the testing's a bit messed up. To run javascript tests, just run `npm test`. To generate coverage reports, run `npm run-script coverage`.
 
 ## Background
 

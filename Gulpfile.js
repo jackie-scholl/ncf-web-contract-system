@@ -194,9 +194,12 @@ gulp.task('watchJava', () => {
   gulp.watch(paths.java, ['maven2']);
 });
 
+gulp.task('test', ['test-scripts']);
+
 gulp.task('watch', () => {
   gulp.watch(paths2.src.scss, ['scss']);
   gulp.watch(paths2.src.scripts, ['scripts']);
+  gulp.watch('src/test/*.js', ['test-scripts']);
   gulp.watch(paths2.src.html, ['html']);
   gulp.watch('.eslintrc.yml', ['lint-scripts']);
 

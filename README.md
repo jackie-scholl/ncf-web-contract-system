@@ -23,7 +23,7 @@ Note that this will start a local webserver running on port 4232, and also will 
 
 ## Testing
 
-Right now, the testing's a bit messed up. To run javascript tests, just run `npm test`. To generate coverage reports, run `npm run-script coverage`.
+To run javascript tests, run `npm test`. To run Java tests, you currently have to run the default gulp task and Maven will run the Java tests as part of that.
 
 ## Background
 

@@ -7,8 +7,7 @@
     "url": "git+https://jackie_scholl@bitbucket.org/tmir-chan/contract-form.git"
   },
   "scripts": {
-    "test": "mocha src/test/js/*",
-    "coverage": "istanbul cover node_modules/.bin/_mocha -- -u exports -R spec src/test/js/*",
+    "test": "gulp test",
     "build": "gulp single",
     "run": "gulp default"
   },
@@ -34,6 +33,8 @@
     "gulp-react": "^3.1.0",
     "gulp-sass": "^2.3.1",
     "gulp-sourcemaps": "^1.6.0",
+    "hapi": "^13.5.0",
+    "inert": "^4.0.1",
     "istanbul": "^0.4.4",
     "jquery": "^2.2.3",
     "js-cookie": "^2.1.1",

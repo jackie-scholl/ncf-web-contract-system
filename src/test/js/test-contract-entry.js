@@ -14,11 +14,11 @@ describe('contract-entry', () => {
       assert.isOk(thing);
     });
 
-    it('should not be callable as a function', () => {
+    /*it('should not be callable as a function', () => {
       assert.throws(() => {
         thing()
       });
-    });
+    });*/
 
     //console.log(`New thing: ${JSON.stringify(x)}. CourseName: ${x.courseName}. CourseCode: ${x.courseCode}.`);
     it('should be callable as a constructor', () => {

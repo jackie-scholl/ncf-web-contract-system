@@ -12,6 +12,9 @@ const buffer = require('vinyl-buffer');
 const watchify = require('watchify');
 const source = require('vinyl-source-stream');
 const eslint = require('gulp-eslint');
+const mocha = require('gulp-mocha');
+const babel = require('gulp-babel');
+const istanbul = require('gulp-istanbul');
 
 const resources = 'src/main/resources/';
 const paths = {
@@ -37,7 +40,8 @@ const paths2 = {
     scripts: target+'js/**/*.js',
     scripts2: target+'js',
     html: target+'index.html',
-    resources2: target+'resources2/'
+    resources2: target+'resources2/',
+    test_sources: 'target/generated-js-sources/'
   }
 };
 
@@ -75,6 +79,35 @@ gulp.task('lint-scripts', () =>
     .pipe(eslint.failAfterError())
 );
 
+gulp.task('clean-test-sources', () =>
+  del(paths2.target.test_sources)
+);
+
+gulp.task('build-test-sources', () =>
+  gulp.src('src/**/*.js')
+    .pipe(babel({presets: ['react']}))
+    .pipe(gulp.dest(paths2.target.test_sources))
+);
+
+gulp.task('pre-scripts-test', ['build-test-sources'], () =>
+  gulp.src([paths2.target.test_sources+'main/resources/js/*'])
+    // Covering files
+    .pipe(istanbul())
+    // Force `require` to return covered files
+    .pipe(istanbul.hookRequire())
+);
+
+gulp.task('test-scripts', ['lint-scripts', 'pre-scripts-test'], () =>
+  gulp.src(paths2.target.test_sources+'test/js/*', {read: false})
+    // gulp-mocha needs filepaths so you can't have any plugins before it
+    .pipe(mocha({reporter: 'spec'}))
+
+    // Creating the reports after tests ran
+    .pipe(istanbul.writeReports())
+    // Enforce a coverage of at least 90%
+    //.pipe(istanbul.enforceThresholds({ thresholds: { global: 90 } }))
+);
+
 // Based on https://gist.github.com/danharper/3ca2273125f500429945
 function compile(shouldWatch) {
   const bundler = watchify(browserify(resources+'js/main.js', { debug: true })
@@ -106,7 +139,7 @@ function compile(shouldWatch) {
   rebundle();
 }
 
-gulp.task('scripts', ['clean-scripts', 'lint-scripts'], () => (compile(false)));
+gulp.task('scripts', ['clean-scripts', 'test-scripts'], () => (compile(false)));
 gulp.task('watch-scripts', () => compile(true));
 
 gulp.task('clean-html', () =>
@@ -161,9 +194,12 @@ gulp.task('watchJava', () => {
   gulp.watch(paths.java, ['maven2']);
 });
 
+gulp.task('test', ['test-scripts']);
+
 gulp.task('watch', () => {
   gulp.watch(paths2.src.scss, ['scss']);
   gulp.watch(paths2.src.scripts, ['scripts']);
+  gulp.watch('src/test/*.js', ['test-scripts']);
   gulp.watch(paths2.src.html, ['html']);
   gulp.watch('.eslintrc.yml', ['lint-scripts']);
 

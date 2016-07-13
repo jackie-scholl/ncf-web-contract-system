@@ -21,6 +21,10 @@ clone https://github.com/raptortech-js/ncf-web-contract-system.git
 
 Note that this will start a local webserver running on port 4232, and also will start Grunt watching your files, looking for changes and updating the output resources real-time. If you just want to build everything, run `node node_modules/gulp/bin/gulp.js single`.
 
+## Testing
+
+To run javascript tests, run `npm test`. To run Java tests, you currently have to run the default gulp task and Maven will run the Java tests as part of that.
+
 ## Background
 
 The super-high-level overview is that we're replacing an existing paper form based process with a web app.

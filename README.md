@@ -21,6 +21,14 @@ clone https://github.com/raptortech-js/ncf-web-contract-system.git
 
 Note that this will start a local webserver running on port 4232, and also will start Grunt watching your files, looking for changes and updating the output resources real-time. If you just want to build everything, run `node node_modules/gulp/bin/gulp.js single`.
 
+## Testing
+
+Just run
+
+```
+mocha src/test/js/*
+```
+
 ## Background
 
 The super-high-level overview is that we're replacing an existing paper form based process with a web app.

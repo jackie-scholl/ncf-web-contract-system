@@ -149,6 +149,8 @@ LoginHandler.prototype.addListener = function(callback) {
   this.listeners.push(callback);
 };
 
+
+
 const renderLoginBar = function() {
   const loginHandler = new LoginHandler();
   const onUpdateListener = loginHandler.trigger.bind(loginHandler);
@@ -162,13 +164,5 @@ const renderLoginBar = function() {
 };
 
 module.exports = {
-  render: renderLoginBar,
-  _expose: {
-    LoginBar,
-    LoginLoadThing,
-    getLoginState,
-    GoogleLoginArea,
-    LoginHandler,
-    renderLoginBar
-  }
+  render: renderLoginBar
 };

@@ -6,9 +6,7 @@ node_js:
   - "4"
   - "4.2"
   - "4.2.6"
-  - "0.6"
   - "node"
-  - "iojs"
 before_script:
   - npm install -g gulp
 script: gulp single

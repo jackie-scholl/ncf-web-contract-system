@@ -14,6 +14,7 @@ const source = require('vinyl-source-stream');
 const eslint = require('gulp-eslint');
 const mocha = require('gulp-mocha');
 const babel = require('gulp-babel');
+const istanbul = require('gulp-istanbul');
 
 const resources = 'src/main/resources/';
 const paths = {
@@ -88,10 +89,23 @@ gulp.task('build-test-sources', () =>
     .pipe(gulp.dest(paths2.target.test_sources))
 );
 
-gulp.task('test-scripts', ['lint-scripts', 'build-test-sources'], () =>
+gulp.task('pre-scripts-test', ['build-test-sources'], () =>
+  gulp.src([paths2.target.test_sources+'main/resources/js/*'])
+    // Covering files
+    .pipe(istanbul())
+    // Force `require` to return covered files
+    .pipe(istanbul.hookRequire())
+);
+
+gulp.task('test-scripts', ['lint-scripts', 'pre-scripts-test'], () =>
   gulp.src(paths2.target.test_sources+'test/js/*', {read: false})
     // gulp-mocha needs filepaths so you can't have any plugins before it
     .pipe(mocha({reporter: 'spec'}))
+
+    // Creating the reports after tests ran
+    .pipe(istanbul.writeReports())
+    // Enforce a coverage of at least 90%
+    //.pipe(istanbul.enforceThresholds({ thresholds: { global: 90 } }))
 );
 
 // Based on https://gist.github.com/danharper/3ca2273125f500429945

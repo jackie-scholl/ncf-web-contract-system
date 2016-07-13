@@ -109,7 +109,7 @@ gulp.task('test-scripts', ['lint-scripts', 'pre-scripts-test'], () =>
 );
 
 // Based on https://gist.github.com/danharper/3ca2273125f500429945
-function compile(shouldWatch) {
+function compile() {
   const bundler = watchify(browserify(resources+'js/main.js', { debug: true })
       .transform('babelify', {presets: ['es2015', 'react']}));
 
@@ -119,28 +119,16 @@ function compile(shouldWatch) {
     this.emit('end');
   }
 
-  function rebundle() {
-    bundler.bundle()
-      .on('error', error)
-      .pipe(source('build.js'))
-      .pipe(buffer())
-      .pipe(sourcemaps.init({ loadMaps: true }))
-      .pipe(sourcemaps.write('./'))
-      .pipe(gulp.dest(paths2.target.scripts2));
-  }
-
-  if (shouldWatch) {
-    bundler.on('update', () => {
-      console.log('-> bundling...');
-      rebundle();
-    });
-  }
-
-  rebundle();
+  bundler.bundle()
+    .on('error', error)
+    .pipe(source('build.js'))
+    .pipe(buffer())
+    .pipe(sourcemaps.init({ loadMaps: true }))
+    .pipe(sourcemaps.write('./'))
+    .pipe(gulp.dest(paths2.target.scripts2));  
 }
 
-gulp.task('scripts', ['clean-scripts', 'test-scripts'], () => (compile(false)));
-gulp.task('watch-scripts', () => compile(true));
+gulp.task('scripts', ['clean-scripts', 'test-scripts'], () => compile());
 
 gulp.task('clean-html', () =>
   del(paths2.target.html)

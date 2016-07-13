@@ -12,6 +12,7 @@ const buffer = require('vinyl-buffer');
 const watchify = require('watchify');
 const source = require('vinyl-source-stream');
 const eslint = require('gulp-eslint');
+const mocha = require('gulp-mocha');
 
 const resources = 'src/main/resources/';
 const paths = {
@@ -75,6 +76,12 @@ gulp.task('lint-scripts', () =>
     .pipe(eslint.failAfterError())
 );
 
+gulp.task('test-scripts', ['lint-scripts'], () =>
+  gulp.src('src/test/js/test-contract-entry.js', {read: false})
+    // gulp-mocha needs filepaths so you can't have any plugins before it
+    .pipe(mocha({reporter: 'spec'}))
+);
+
 // Based on https://gist.github.com/danharper/3ca2273125f500429945
 function compile(shouldWatch) {
   const bundler = watchify(browserify(resources+'js/main.js', { debug: true })
@@ -106,7 +113,7 @@ function compile(shouldWatch) {
   rebundle();
 }
 
-gulp.task('scripts', ['clean-scripts', 'lint-scripts'], () => (compile(false)));
+gulp.task('scripts', ['clean-scripts', 'test-scripts'], () => (compile(false)));
 gulp.task('watch-scripts', () => compile(true));
 
 gulp.task('clean-html', () =>

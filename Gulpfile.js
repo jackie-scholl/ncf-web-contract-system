@@ -7,14 +7,15 @@ const del = require('del');
 //const babelify = require('babelify');
 const browserify = require('browserify');
 const child_process = require('child_process');
-//const uglify = require('gulp-uglify');
+const uglify = require('gulp-uglify');
 const buffer = require('vinyl-buffer');
-const watchify = require('watchify');
 const source = require('vinyl-source-stream');
 const eslint = require('gulp-eslint');
 const mocha = require('gulp-mocha');
 const babel = require('gulp-babel');
 const istanbul = require('gulp-istanbul');
+const gutil = require('gulp-util');
+const path = require('path');
 
 const resources = 'src/main/resources/';
 const paths = {
@@ -31,14 +32,14 @@ const paths2 = {
     resourcesBase : 'src/main/resources/',
     scss: resources+'scss/**/*.scss',
     scripts: resources+'js/**/*.js',
+    scripts_main: resources+'js/main.js',
     html: resources+'index.html',
     all: resources+'**',
     resources2: 'resources2/**'
   },
   target: {
     scss: target+'scss/**/*.scss',
-    scripts: target+'js/**/*.js',
-    scripts2: target+'js',
+    script: target+'js/build.js',
     html: target+'index.html',
     resources2: target+'resources2/',
     test_sources: 'target/generated-js-sources/'
@@ -59,7 +60,7 @@ gulp.task('scss', ['clean-scss'], () =>
 );
 
 gulp.task('clean-scripts', () =>
-  del(paths2.target.scripts)
+  del(path.dirname(paths2.target.script))
 );
 
 gulp.task('lint-scripts', () =>
@@ -108,39 +109,21 @@ gulp.task('test-scripts', ['lint-scripts', 'pre-scripts-test'], () =>
     //.pipe(istanbul.enforceThresholds({ thresholds: { global: 90 } }))
 );
 
-// Based on https://gist.github.com/danharper/3ca2273125f500429945
-function compile(shouldWatch) {
-  const bundler = watchify(browserify(resources+'js/main.js', { debug: true })
-      .transform('babelify', {presets: ['es2015', 'react']}));
-
-  /** @this idk?? */
-  function error(err) {
-    console.error(err);
-    this.emit('end');
-  }
-
-  function rebundle() {
-    bundler.bundle()
-      .on('error', error)
-      .pipe(source('build.js'))
-      .pipe(buffer())
-      .pipe(sourcemaps.init({ loadMaps: true }))
-      .pipe(sourcemaps.write('./'))
-      .pipe(gulp.dest(paths2.target.scripts2));
-  }
-
-  if (shouldWatch) {
-    bundler.on('update', () => {
-      console.log('-> bundling...');
-      rebundle();
-    });
-  }
-
-  rebundle();
-}
-
-gulp.task('scripts', ['clean-scripts', 'test-scripts'], () => (compile(false)));
-gulp.task('watch-scripts', () => compile(true));
+gulp.task('scripts', ['clean-scripts', 'test-scripts'], () =>
+  browserify(paths2.src.scripts_main, {
+    debug: true
+  })
+    .transform('babelify', {presets: ['es2015', 'react']})
+    .bundle()
+    .pipe(source(path.basename(paths2.target.script)))
+    .pipe(buffer())
+    .pipe(sourcemaps.init({loadMaps: true}))
+      // Add transformation tasks to the pipeline here.
+      //.pipe(uglify())
+      .on('error', gutil.log)
+    .pipe(sourcemaps.write())
+    .pipe(gulp.dest(path.dirname(paths2.target.script)))
+);
 
 gulp.task('clean-html', () =>
   del(paths2.target.html)

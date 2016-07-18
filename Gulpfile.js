@@ -173,10 +173,6 @@ gulp.task('maven2', (callback) => {
   callback();
 });
 
-gulp.task('watchJava', () => {
-  gulp.watch(paths.java, ['maven2']);
-});
-
 gulp.task('test', ['test-scripts']);
 
 gulp.task('watch', () => {
@@ -185,11 +181,12 @@ gulp.task('watch', () => {
   gulp.watch('src/test/*.js', ['test-scripts']);
   gulp.watch(paths2.src.html, ['html']);
   gulp.watch('.eslintrc.yml', ['lint-scripts']);
+  gulp.watch(paths.java, ['maven2']);
 
   gulp.watch(paths2.src.resources2, ['resources2']);
 });
 
 gulp.task('single', ['scss', 'scripts', 'html', 'resources2']);
 
-gulp.task('default', ['watch', 'scss', 'scripts', 'html', 'watchJava', 'maven2',
+gulp.task('default', ['watch', 'scss', 'scripts', 'html', 'maven2',
     'resources2']);

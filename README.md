@@ -1,5 +1,7 @@
 # ncf-web-contract-system
 
+[![Build Status](https://travis-ci.org/raptortech-js/ncf-web-contract-system.svg?branch=master)](https://travis-ci.org/raptortech-js/ncf-web-contract-system)
+
 ## Work in Progress
 
 This project is not ready for production use yet. There's still a massive amount of stuff to do. There is basically no testing, and this README is the only real documentation, and it's super informal. Let this be only a rough guide to where I am and where I'm aiming for. None of this is set in stone.

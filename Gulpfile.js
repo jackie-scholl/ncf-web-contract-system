@@ -18,7 +18,6 @@ const gutil = require('gulp-util');
 const path = require('path');
 const print = require('gulp-print');
 const identity = require('gulp-identity');
-const envify = require('gulp-envify');
 
 const resources = 'src/main/resources/';
 const target = 'target/resources/';

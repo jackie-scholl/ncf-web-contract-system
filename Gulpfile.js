@@ -17,6 +17,8 @@ const istanbul = require('gulp-istanbul');
 const gutil = require('gulp-util');
 const path = require('path');
 const print = require('gulp-print');
+const identity = require('gulp-identity');
+const envify = require('gulp-envify');
 
 const resources = 'src/main/resources/';
 const target = 'target/resources/';
@@ -128,12 +130,13 @@ gulp.task('scripts', ['clean-scripts', 'test-scripts'], () =>
     debug: true
   })
     .transform('babelify', {presets: ['es2015', 'react']})
+    .transform('envify', {'NODE_ENV': 'production'})
     .bundle()
     .pipe(source(path.basename(paths2.target.script)))
     .pipe(buffer())
     .pipe(sourcemaps.init({loadMaps: true}))
       // Add transformation tasks to the pipeline here.
-      .pipe(uglify())
+      .pipe(process.env.NODE_ENV === 'production' ? uglify() : identity())
       .on('error', gutil.log)
     .pipe(sourcemaps.write('./'))
     .pipe(gulp.dest(path.dirname(paths2.target.script)))

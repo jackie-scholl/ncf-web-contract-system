@@ -1,7 +1,7 @@
 'use strict';
 const assert = require('chai').assert;
 const expect = require('chai').expect;
-const contractEntry = require('../../main/resources/js/contract-entry.js');
+const contractEntry = require('../main/contract-entry.js');
 
 describe('contract-entry', () => {
   it('should succeed', () => {

@@ -528,6 +528,8 @@ const BasicComponent = React.createClass({
   }
 });
 
+console.log(`NODE_ENV: ${process.env.NODE_ENV}`);
+
 ReactDOM.render(
   <FullPage />,
   document.getElementById('content')

@@ -1,7 +1,7 @@
 'use strict';
 const assert = require('chai').assert;
 const expect = require('chai').expect;
-const login = require('../../main/resources/js/login.js');
+const login = require('../main/login.js');
 
 describe('login', () => {
   it('should succeed', () => {

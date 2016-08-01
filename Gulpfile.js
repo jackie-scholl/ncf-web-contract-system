@@ -16,42 +16,39 @@ const babel = require('gulp-babel');
 const istanbul = require('gulp-istanbul');
 const gutil = require('gulp-util');
 const path = require('path');
+const print = require('gulp-print');
+const identity = require('gulp-identity');
 
 const resources = 'src/main/resources/';
-const paths = {
-  scss: resources+'scss/**/*.scss',
-  scripts: resources+'js/**/*.js',
-  html: resources+'index.html',
-  all: resources+'**',
-  java: 'src/main/java/**/*'
-};
 const target = 'target/resources/';
 
 const paths2 = {
   src: {
-    resourcesBase : 'src/main/resources/',
-    scss: resources+'scss/**/*.scss',
-    scripts: resources+'js/**/*.js',
-    scripts_main: resources+'js/main.js',
-    html: resources+'index.html',
-    all: resources+'**',
-    resources2: 'resources2/**'
+    scss: path.join(resources, 'scss'),
+    scripts: path.join(resources, 'js'),
+    scripts_main: path.join(resources, 'js/main.js'),
+    test_scripts: path.join('src', 'test', 'js'),
+    java: path.join('src', 'main', 'java'),
+    html: path.join(resources, 'index.html'),
+    //all: resources+'**',
+    resources2: 'resources2'
   },
   target: {
-    scss: target+'scss/**/*.scss',
-    script: target+'js/build.js',
-    html: target+'index.html',
-    resources2: target+'resources2/',
-    test_sources: 'target/generated-js-sources/'
+    scss: path.join(target, 'scss'),
+    script: path.join(target, 'js', 'build.js'),
+    html: path.join(target, 'index.html'),
+    resources2: path.join(target, 'resources2'),
+    test_sources: path.join('target', 'generated-js-sources')
   }
 };
 
+const glob = (p) => ([path.join(p, '**'), '!'+p]);
 
 gulp.task('clean-scss', () => del(paths2.target.scss));
 
 gulp.task('scss', ['clean-scss'], () =>
   gulp
-    .src(paths.scss)
+    .src(glob(paths2.src.scss))
     .pipe(sourcemaps.init())
     .pipe(sass().on('error', sass.logError))
     .pipe(sourcemaps.write('./stylesheets/maps'))
@@ -68,7 +65,7 @@ gulp.task('lint-scripts', () =>
   // So, it's best to have gulp ignore the directory as well.
   // Also, Be sure to return the stream from the task;
   // Otherwise, the task may end before the stream has finished.
-  gulp.src([paths2.src.scripts, 'Gulpfile.js'])
+  gulp.src(glob(paths2.src.scripts).concat('Gulpfile.js'))
     // eslint() attaches the lint output to the 'eslint' property
     // of the file object so it can be used by other modules.
     .pipe(eslint())
@@ -84,14 +81,31 @@ gulp.task('clean-test-sources', () =>
   del(paths2.target.test_sources)
 );
 
-gulp.task('build-test-sources', () =>
-  gulp.src('src/**/*.js')
+/*gulp.task('build-test-sources', ['clean-test-sources'], () =>
+  gulp.src([glob(paths2.src.scripts), glob(paths2.src.test_scripts)])
     .pipe(babel({presets: ['react']}))
     .pipe(gulp.dest(paths2.target.test_sources))
+);*/
+
+gulp.task('build-test-sources-main', ['clean-test-sources'], () =>
+  gulp.src(glob(paths2.src.scripts))
+    .pipe(babel({presets: ['react']}))
+    .pipe(gulp.dest(path.join(paths2.target.test_sources, 'main')))
 );
 
+gulp.task('build-test-sources-test', ['clean-test-sources'], () =>
+  gulp.src(glob(paths2.src.test_scripts))
+    .pipe(babel({presets: ['react']}))
+    .pipe(gulp.dest(path.join(paths2.target.test_sources, 'test')))
+);
+
+gulp.task('build-test-sources',
+    ['build-test-sources-main', 'build-test-sources-test']);
+
 gulp.task('pre-scripts-test', ['build-test-sources'], () =>
-  gulp.src([paths2.target.test_sources+'main/resources/js/*'])
+  //gulp.src([paths2.target.test_sources+'main/resources/js/*'])
+  gulp.src(glob(path.join(paths2.target.test_sources, 'main')))
+    .pipe(print())
     // Covering files
     .pipe(istanbul())
     // Force `require` to return covered files
@@ -99,7 +113,8 @@ gulp.task('pre-scripts-test', ['build-test-sources'], () =>
 );
 
 gulp.task('test-scripts', ['lint-scripts', 'pre-scripts-test'], () =>
-  gulp.src(paths2.target.test_sources+'test/js/*', {read: false})
+  //gulp.src(paths2.target.test_sources+'test/js/*', {read: false})
+  gulp.src(glob(path.join(paths2.target.test_sources, 'test')), {read: false})
     // gulp-mocha needs filepaths so you can't have any plugins before it
     .pipe(mocha({reporter: 'spec'}))
 
@@ -114,14 +129,15 @@ gulp.task('scripts', ['clean-scripts', 'test-scripts'], () =>
     debug: true
   })
     .transform('babelify', {presets: ['es2015', 'react']})
+    .transform('envify', {'NODE_ENV': 'production'})
     .bundle()
     .pipe(source(path.basename(paths2.target.script)))
     .pipe(buffer())
     .pipe(sourcemaps.init({loadMaps: true}))
       // Add transformation tasks to the pipeline here.
-      //.pipe(uglify())
+      .pipe(process.env.NODE_ENV === 'production' ? uglify() : identity())
       .on('error', gutil.log)
-    .pipe(sourcemaps.write())
+    .pipe(sourcemaps.write('./'))
     .pipe(gulp.dest(path.dirname(paths2.target.script)))
 );
 
@@ -130,16 +146,16 @@ gulp.task('clean-html', () =>
 );
 
 gulp.task('html', ['clean-html'], () =>
-  gulp.src(paths.html)
+  gulp.src(paths2.src.html)
     .pipe(gulp.dest(target))
 );
 
 gulp.task('clean2', () =>
-  del([paths2.target.resources2])
+  del(paths2.target.resources2)
 );
 
 gulp.task('resources2', ['clean2'], () =>
-  gulp.src(paths2.src.resources2)
+  gulp.src(glob(paths2.src.resources2))
     .pipe(gulp.dest(paths2.target.resources2))
 );
 
@@ -173,23 +189,27 @@ gulp.task('maven2', (callback) => {
   callback();
 });
 
-gulp.task('watchJava', () => {
-  gulp.watch(paths.java, ['maven2']);
-});
-
 gulp.task('test', ['test-scripts']);
 
+gulp.task('test2', () => {
+  gulp.src(glob(path.join(paths2.target.test_sources, 'main')))
+    .pipe(print());
+  console.log(glob(path.join(paths2.target.test_sources, 'main')));
+});
+
 gulp.task('watch', () => {
-  gulp.watch(paths2.src.scss, ['scss']);
-  gulp.watch(paths2.src.scripts, ['scripts']);
-  gulp.watch('src/test/*.js', ['test-scripts']);
+  gulp.watch(glob(paths2.src.scss), ['scss']);
+  gulp.watch(glob(paths2.src.scripts), ['scripts']);
+  gulp.watch(glob(paths2.src.test_scripts), ['test-scripts']);
   gulp.watch(paths2.src.html, ['html']);
   gulp.watch('.eslintrc.yml', ['lint-scripts']);
 
-  gulp.watch(paths2.src.resources2, ['resources2']);
+  gulp.watch(glob(paths2.src.java), ['maven2']);
+
+  gulp.watch(glob(paths2.src.resources2), ['resources2']);
 });
 
 gulp.task('single', ['scss', 'scripts', 'html', 'resources2']);
 
-gulp.task('default', ['watch', 'scss', 'scripts', 'html', 'watchJava', 'maven2',
+gulp.task('default', ['watch', 'scss', 'scripts', 'html', 'maven2',
     'resources2']);

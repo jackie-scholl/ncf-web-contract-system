@@ -18,10 +18,10 @@ We use Maven for building/testing/running Java, npm for javascript package manag
 clone https://github.com/raptortech-js/ncf-web-contract-system.git
 && cd contract-form
 && npm install
-&& node node_modules/gulp/bin/gulp.js
+&& npm start
 ```
 
-Note that this will start a local webserver running on port 4232, and also will start Grunt watching your files, looking for changes and updating the output resources real-time. If you just want to build everything, run `node node_modules/gulp/bin/gulp.js single`.
+Note that this will start a local webserver running on port 4232, and also will start Grunt watching your files, looking for changes and updating the output resources real-time. If you just want to build everything, run `npm run-script build`.
 
 ## Testing
 

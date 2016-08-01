@@ -9,7 +9,7 @@
   "scripts": {
     "test": "gulp test",
     "build": "gulp single",
-    "run": "gulp default"
+    "start": "gulp default"
   },
   "author": "Jackie Scholl",
   "license": "copyright 2016 Jackie Scholl",

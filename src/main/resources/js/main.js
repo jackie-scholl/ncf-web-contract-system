@@ -41,7 +41,8 @@ const FullPage = React.createClass({
           <ContractBox
             contractEntry={this.state.contractMap.get(this.state.contractId)}
             handleUpdate={/*this.handleContractBoxUpdate*/
-                          this.state.contractStorageHandler.setContractEntry}
+                          this.state.contractStorageHandler.setContractEntry
+                            .bind(this.state.contractStorageHandler)}
             logins={this.state.logins}
             pollInterval={2000}
           />;

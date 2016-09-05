@@ -4,6 +4,7 @@ const React = require('react');
 const ReactDOM = require('react-dom');
 const loginHandler = require('./login.js').render();
 const contractStorageCognito = require('./contract-storage-cognito');
+const ContractEntry = require('./contract-entry.js').ContractEntry;
 
 const FullPage = React.createClass({
   getInitialState: function() {
@@ -22,6 +23,12 @@ const FullPage = React.createClass({
   changeContractId: function(contractId) {
     window.location.hash = '#' + contractId;
     this.setState({contractId: contractId});
+  },
+  createContract: function() {
+    const id = contractStorageCognito.getNewId();
+    const entry = new ContractEntry(id);
+    this.state.contractStorageHandler.setContractEntry(entry);
+    this.changeContractId(id);
   },
   componentWillMount: function() {
     loginHandler.addListener((x) => {this.setState({logins: x.logins});});

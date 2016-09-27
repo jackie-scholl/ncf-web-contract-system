@@ -11,6 +11,7 @@ ContractsNCF.db
 JSONContractsNCF.db
 node_modules
 /coverage/
+/out/
 
 dependency-reduced-pom.xml
 

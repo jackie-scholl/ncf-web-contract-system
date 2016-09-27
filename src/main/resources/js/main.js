@@ -6,7 +6,9 @@ const loginHandler = require('./login.js').render();
 const contractStorageCognito = require('./contract-storage-cognito');
 const ContractEntry = require('./contract-entry.js').ContractEntry;
 
+/** This contains the entire page of content. */
 const FullPage = React.createClass({
+  /** Called at initial creation. */
   getInitialState: function() {
     console.log('window.location.hash: '+window.location.hash);
     const h = window.location.hash;
@@ -20,10 +22,14 @@ const FullPage = React.createClass({
   updateContractMap: function(contractMap) {
     this.setState({contractMap: contractMap});
   },
+  /** Called when we switch to a new/different contract. */
   changeContractId: function(contractId) {
+    /* This line updates the "hash" in the URL bar so users can bookmark. */
     window.location.hash = '#' + contractId;
     this.setState({contractId: contractId});
   },
+  /** Creates a new contract entry and sets as current. Called when user presses
+      "new contract" button. */
   createContract: function() {
     const id = contractStorageCognito.getNewId();
     const entry = new ContractEntry(id);
@@ -37,6 +43,7 @@ const FullPage = React.createClass({
         loginHandler, this.updateContractMap);
     this.setState({contractStorageHandler: contractStorageHandler});
   },
+  /** Syncs local content with remote server. Called manually by user. */
   cognitoSync: function() {
     this.state.contractStorageHandler.contractStorage.sync();
   },
@@ -47,8 +54,7 @@ const FullPage = React.createClass({
       optionalContract =
           <ContractBox
             contractEntry={this.state.contractMap.get(this.state.contractId)}
-            handleUpdate={/*this.handleContractBoxUpdate*/
-                          this.state.contractStorageHandler.setContractEntry
+            handleUpdate={this.state.contractStorageHandler.setContractEntry
                             .bind(this.state.contractStorageHandler)}
             logins={this.state.logins}
             pollInterval={2000}
@@ -79,7 +85,10 @@ const FullPage = React.createClass({
   }
 });
 
+/** The sidebar that allows you to pick a contract to work on. */
 const ContractList = React.createClass({
+  /** Handles the "new contract" button. Just calls the new contract function
+      from FullPage. */
   createContract: function(e) {
     e.preventDefault();
     this.props.createContract();
@@ -108,6 +117,8 @@ const ContractList = React.createClass({
   }
 });
 
+/** I forget what this is for, but it gets a textual representation of time
+    since a given event; e.g., it might return "5 hours." */
 function timeSince(date) {
   const seconds = Math.floor((new Date() - date) / 1000);
   let interval = Math.floor(seconds / 31536000);
@@ -134,6 +145,7 @@ function timeSince(date) {
   //return Math.floor(seconds) + ' seconds';
 }
 
+/** Represents an individual clickable contract in the contract list. */
 const ContractElement = React.createClass({
   handleClick: function(e) {
     e.preventDefault();
@@ -161,6 +173,8 @@ const ContractElement = React.createClass({
   }
 });
 
+/** Creates an object that holds data about a class. We need to stop using
+    this and start using the one from contract-entry.js */
 function ClassData(courseCode, courseName, isInternship, instructorName,
     sessionName) {
   console.assert(isInternship === true || isInternship === false, 'bad value: '
@@ -173,11 +187,19 @@ const emptyClassData = function() {
   return new ClassData('', '', false, '', '');
 };
 
+/** Copies a given ClassData object. */
 const classDataFrom = function(data) {
   return new ClassData(data.courseCode, data.courseName, data.isInternship,
         data.instuctorName, data.sessionName);
 };
 
+/** Resizes an array, getting rid of unnecessary elements. This is used for the
+    list of classes inside the contract. The theory is that if you have 4
+    classes and then three blank rows, we should get rid of two of those rows
+    so it looks better. Also, if you have more classes than allowed, get rid of
+    extra classes. Also, if, e.g., there are two classes and two blanks, don't
+    get rid of the 'extra' blank. Wow, we really should fix this up at some
+    point. */
 const resizeArray = function(array, minSize, maxSize, testerCallback,
     spaceFillerCallback) {
   let i=0;
@@ -212,10 +234,13 @@ const resizeArray = function(array, minSize, maxSize, testerCallback,
   throw new Error('unreachable');
 };
 
+/** Hacky function to check if two arrays are the same. */
 function arraysEqual(a1,a2) {
   return JSON.stringify(a1) === JSON.stringify(a2);
 }
 
+/** Tests the resizeArray function. This should be moved to legit unit tests
+    now that we have those. */
 const testResizeArray = function() {
   const zeroTester = (x) => (x !== 0);
   const zeroFiller = () => (0);
@@ -224,10 +249,11 @@ const testResizeArray = function() {
   console.assert(arraysEqual(resizeArray([1, 0, 0, 6], 0, 100, zeroTester,
         zeroFiller), [1, 0, 0, 6, 0]));
 };
-
+/* Wow. */
 testResizeArray();
 
-
+/** This part of the page shows the contract the user is working on. It includes
+    the form section and the live PDF preview. */
 const ContractBox = React.createClass({
   handleUpdate: function(newData) {
     const updatedContractEntry = Object.assign({}, this.props.contractEntry);
@@ -252,6 +278,8 @@ const ContractBox = React.createClass({
   }
 });
 
+/** The live preview of the PDF. We will need to to alter this to avoid binary
+    stuff when working with Lambda + API Gateway. */
 const LivePreview = React.createClass({
   render: function() {
     const renderContractRequest = {
@@ -274,7 +302,8 @@ const LivePreview = React.createClass({
   }
 });
 
-
+/** This section of the page hosts the contract form, allowing users to view and
+    edit the state of the contract.*/
 const ContractForm = React.createClass({
   updateHandlerGenerator: function(identifier) {
     return ((value) => {
@@ -284,6 +313,7 @@ const ContractForm = React.createClass({
     });
   },
 
+  /** TODO: I really do need to explain these magic functions at some point. */
   magic: function(identifier) {
     return {value: this.props.value[identifier],
       handleUpdate: this.updateHandlerGenerator(identifier),
@@ -341,7 +371,6 @@ const ContractForm = React.createClass({
         <TextInput displayName='Advisor Name' placeHolder='Prezzy Oshea'
             magic={this.magic('advisorName')} />
       </form>
-      <div id='display-pdf' />
       </div>
     );
   }

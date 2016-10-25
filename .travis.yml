@@ -3,7 +3,7 @@ node_js:
   - "6"
   - "5"
   - "node"
-script: npm build
+script: npm run-script build
 
 notifications:
   email: false

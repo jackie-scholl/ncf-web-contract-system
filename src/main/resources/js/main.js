@@ -6,7 +6,7 @@ const loginHandler = require('./login.js').render();
 const contractStorageCognito = require('./contract-storage-cognito');
 const ContractEntry = require('./contract-entry.js').ContractEntry;
 const timeSince = require('./utility.js').timeSince;
-const resizeArray = require('.utility.js').resizeArray;
+const resizeArray = require('./utility.js').resizeArray;
 
 /** This contains the entire page of content. */
 const FullPage = React.createClass({

@@ -24,7 +24,6 @@ function timeSince(date) {
     return interval + ' minutes';
   }
   return 'just now';
-  //return Math.floor(seconds) + ' seconds';
 }
 
 /** Resizes an array, getting rid of unnecessary elements. This is used for the
@@ -83,12 +82,11 @@ const testResizeArray = function() {
   console.assert(arraysEqual(resizeArray([1, 0, 0, 6], 0, 100, zeroTester,
         zeroFiller), [1, 0, 0, 6, 0]));
 };
+
 /* Wow. */
 testResizeArray();
 
 module.exports = {
-  arraysEqual: arraysEqual,
-  testResizeArray: testResizeArray,
   resizeArray: resizeArray,
   timeSince: timeSince
 };

@@ -4,6 +4,8 @@
 const React = require('react');
 const ReactDOM = require('react-dom');
 
+/** The LoginBar is that header at the top that lets you know if you're logged
+    in and allows you to sign in and out. */
 const LoginBar = React.createClass({
   render: function() {
     return (
@@ -68,6 +70,8 @@ const getLoginState = function(googleUser) {
   }
 };
 
+/** A GoogleLoginArea specifically handles the interaction with the Google API
+    necessary to handle logins. */
 const GoogleLoginArea = React.createClass({
   updateLogin: function(googleUser) {
     const stateResult = getLoginState(googleUser);
@@ -134,6 +138,8 @@ const GoogleLoginArea = React.createClass({
   }
 });
 
+/** A loginHandler is basically an Observable of logins. It also allows you to
+    query the current login state. */
 function LoginHandler() {
   this.listeners = [];
   this.value = getLoginState(null);
@@ -150,7 +156,7 @@ LoginHandler.prototype.addListener = function(callback) {
 };
 
 
-
+/** A function to load and render the loginBar on the page. */
 const renderLoginBar = function() {
   const loginHandler = new LoginHandler();
   const onUpdateListener = loginHandler.trigger.bind(loginHandler);

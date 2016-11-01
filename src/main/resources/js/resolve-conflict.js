@@ -2,6 +2,9 @@
 'use strict';
 const CANNOT_RESOLVE2 = 'CANNOT_RESOLVE';
 
+/** resolveConflict is a function we define to handle sync conflicts, and
+    generally involves merging the two values in some way. */
+
 const resolveConflict = (conflict) => {
   // Take remote version.
   //resolved.push(conflicts[i].resolveWithRemoteRecord());

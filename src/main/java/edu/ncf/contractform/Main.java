@@ -21,7 +21,16 @@ public class Main {
 	 * a results url.
 	 */
 	private static void runSparkServer() {
-		Spark.setPort(4232);
+		int port = 4243; // default
+		try {
+			// If we're on Heroku, we need to accept the port given to us and run
+			// on that.
+			port = Integer.valueOf(System.getenv("PORT")));
+		} catch (NumberFormatException e) {
+			// If we can't get a port number from the environment, give up and use
+			// the default.
+		}
+		Spark.setPort(port);
 
 		// We need to serve some simple static files containing CSS and JavaScript.
 		// This tells Spark where to look for urls of the form "/static/*".

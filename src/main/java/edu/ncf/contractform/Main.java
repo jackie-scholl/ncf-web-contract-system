@@ -25,7 +25,7 @@ public class Main {
 		try {
 			// If we're on Heroku, we need to accept the port given to us and run
 			// on that.
-			port = Integer.valueOf(System.getenv("PORT")));
+			port = Integer.valueOf(System.getenv("PORT"));
 		} catch (NumberFormatException e) {
 			// If we can't get a port number from the environment, give up and use
 			// the default.

@@ -24,6 +24,7 @@ function CognitoStorage(logins, allowAnonymous, onUpdateCallback) {
 }
 
 CognitoStorage.prototype.setup = function(logins, callback) {
+  // this line creates a callback that does nothing in case none was passed in
   callback = callback || (()=>{});
   console.log('running Cognito setup; logins:');
   console.log(logins);

@@ -27,6 +27,13 @@ Note that this will start a local webserver running on port 4232, and also will 
 
 To run javascript tests, run `npm test`. To run Java tests, you currently have to run the default gulp task and Maven will run the Java tests as part of that.
 
+## Hosting
+
+- Run `aws --profile ncf s3 cp --recursive target/resources s3://contract-system-static --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers` to put resources on S3
+- Website is then available from http://contract-system-static.s3-website-us-east-1.amazonaws.com
+- Run `git push heroku master` to deploy PDF renderer portion to Heroku
+- Or just update master on Github, and Heroku should update itself
+
 ## Background
 
 The super-high-level overview is that we're replacing an existing paper form based process with a web app.

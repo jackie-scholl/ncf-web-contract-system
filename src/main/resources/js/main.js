@@ -207,8 +207,15 @@ const LivePreview = React.createClass({
         flatten_pdf: true
       }
     };
+
+    let baseURL = '';
+    if (Window.location.host ===
+          'contract-system-static.s3-website-us-east-1.amazonaws.com') {
+      // If we are hosted on AWS, then use Heroku for PDF
+      baseURL = 'https://ncf-web-contract-system.herokuapp.com';
+    }
     const requestJson = JSON.stringify(renderContractRequest);
-    const contractPdfUrl = '/render-contract?renderContractRequest='
+    const contractPdfUrl = baseURL + '/render-contract?renderContractRequest='
         + requestJson;
     return (
       <iframe src={contractPdfUrl} width='100%' height='1000px'>

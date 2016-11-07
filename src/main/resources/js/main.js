@@ -87,7 +87,6 @@ const FullPage = React.createClass({
   }
 });
 
-
 /** The sidebar that allows you to pick a contract to work on. */
 const ContractList = React.createClass({
   /** Handles the "new contract" button. Just calls the new contract function
@@ -148,7 +147,6 @@ const ContractElement = React.createClass({
     );
   }
 });
-
 
 /** Creates an object that holds data about a class. We need to stop using
     this and start using the one from contract-entry.js */

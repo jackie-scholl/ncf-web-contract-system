@@ -207,7 +207,7 @@ const LivePreview = React.createClass({
     };
 
     let baseURL = '';
-    if (Window.location.host ===
+    if (location.host ===
           'contract-system-static.s3-website-us-east-1.amazonaws.com') {
       // If we are hosted on AWS, then use Heroku for PDF
       baseURL = 'https://ncf-web-contract-system.herokuapp.com';

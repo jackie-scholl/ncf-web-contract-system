@@ -1,0 +1,32 @@
+[
+  {
+    "code": 8010,
+    "title": "Introduction to Programming in Python",
+    "instructor": "Matthew Lepinski",
+    "description": "This course is an interdisciplinary introduction to Programming in Python. It satisfies LAC curriculum requirements. The course introduces students to the most important programming concepts such as algorithms, sequences, selections, loops, functions, methods, numeric and string types, file processing, collections, classes and object-oriented programming, and recursion. This course serves as an informal prerequisite for many science classes which require programming. Students enrolled in this course MUST also attend the mandatory workshop.\nPrerequisites: The course is at the introductory – freshman level. It has no prerequisitesand no prior programming experience is assumed. However, it requires a large time commitment and the ability to work with computers for extended periods of time."
+  },
+  {
+    "code": 80102,
+    "title": "Introduction to Data Mining",
+    "instructor": "John Anthony Doucette",
+    "description": "This course will provide an introductory overview to the field of data mining. After taking the course, students will be able to describe example applications of data mining, and explain their importance throughout the modern economy; prepare and sanitize raw data; implement simple algorithms for association mining, clustering, and classification; and apply and interpret the results of common data mining algorithms. Background knowledge in basic probability is recommended, and at least one term of introductory programming is essential."
+  },
+  {
+    "code": 80121,
+    "title": "Object Oriented Design",
+    "instructor": "Matthew Lepinski",
+    "description": "The course will introduce the students to common design patterns in the object oriented framework (e.g., abstraction, encapsulation, polymorphism, and inheritance). All assignments and implementation will be done via the Java programming language which is custom suited to objected oriented programming. Prerequisites: successful completion of a programming class or permission of the instructor."
+  },
+  {
+    "code": 80103,
+    "title": "Computer Architecture and Digital Hardware",
+    "instructor": "John Anthony Doucette",
+    "description": "This course provides a detailed look into the inner workings of a modern computer. After taking the course, students will be able to describe the core components that make up a computer and their functions; explain how a computer operates in detail at several different levels of abstraction; design digital circuits to accomplish new tasks; design and implement an entire modern computer in a simple hardware definition language; and write simple programs in assembly. Additional topics will include implementing a simple operating system and programming language on student-designed computers. Background knowledge in computer programming is an asset, but only basic algebra is required."
+  },
+  {
+    "code": ,
+    "title": ,
+    "instructor": ,
+    "description":
+  }
+]

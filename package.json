@@ -7,9 +7,9 @@
     "url": "git+https://jackie_scholl@bitbucket.org/tmir-chan/contract-form.git"
   },
   "scripts": {
-    "test": "gulp test",
-    "build": "gulp single",
-    "start": "gulp default"
+    "test": "node node_modules/gulp/bin/gulp.js test",
+    "build": "node node_modules/gulp/bin/gulp.js single",
+    "start": "node node_modules/gulp/bin/gulp.js default"
   },
   "author": "Jackie Scholl",
   "license": "copyright 2016 Jackie Scholl",

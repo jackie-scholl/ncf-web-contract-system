@@ -301,20 +301,53 @@ const ContractForm = React.createClass({
 });
 
 const SearchBar = React.createClass({
-
+  getInitialState: function() {
+    return {searchTerm: ''};
+  },
   handleUpdate: function(newValue) {
-    //updateSearchStuff();
     this.setState({searchTerm: newValue});
   },
   render: function() {
     const htmlId = this.props.magic.id;
-    return (<input
-      type='text'
-      onChange={(e) => {this.handleUpdate(e.target.value);}}
-      placeholder='Search'
-      id={htmlId}
-      className='form-control'
-    />);
+    return (
+      <div>
+        <input
+        type='text'
+        onChange={(e) => {this.handleUpdate(e.target.value);}}
+        placeholder='Search for Classes'
+        id={htmlId}
+        className='form-control'
+        />
+        <div className='result-box2'>
+          {/*<table className="table">
+            <tbody>
+            <tr>
+              <td>Introduction to Programming in Python</td>
+              <td>Matthew Lepinski</td>
+              <td>8010</td>
+            </tr>
+            <tr>
+              <td>Introduction to Data Mining</td>
+              <td>John Anthony Doucette</td>
+              <td>80102</td>
+            </tr>
+            </tbody>
+          </table>*/}
+          <div className='suggestion'>
+            Introduction to Programming in Python
+          </div>
+          <div className='suggestion'>
+            Introduction to Data Mining
+          </div>
+          {/*<div display='inline'>
+            {this.state.searchTerm} 1
+          </div>
+          <div display='inline'>
+            {this.state.searchTerm} 2
+          </div>*/}
+        </div>
+      </div>
+    );
   }
 });
 

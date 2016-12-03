@@ -7,6 +7,7 @@ const contractStorageCognito = require('./contract-storage-cognito');
 const ContractEntry = require('./contract-entry.js').ContractEntry;
 const timeSince = require('./utility.js').timeSince;
 const resizeArray = require('./utility.js').resizeArray;
+const classes_search = require('./class-search.js').search;
 
 /** This contains the entire page of content. */
 const FullPage = React.createClass({
@@ -302,13 +303,23 @@ const ContractForm = React.createClass({
 
 const SearchBar = React.createClass({
   getInitialState: function() {
-    return {searchTerm: ''};
+    return {query: '', results: []};
   },
   handleUpdate: function(newValue) {
-    this.setState({searchTerm: newValue});
+    console.log('new value: ' + newValue);
+    this.setState({query: newValue});
+    classes_search(newValue).then((results) => {
+      console.log(results);
+      this.setState({results: results});
+    }).catch((err) => {
+      console.log('err: ' + err);
+    });
   },
   render: function() {
     const htmlId = this.props.magic.id;
+    const results = this.state.results.map((el) => (
+      <SearchResult value={el} key={el.ref}/>
+    ));
     return (
       <div>
         <input
@@ -319,26 +330,27 @@ const SearchBar = React.createClass({
         className='form-control'
         />
         <div className='result-box2'>
-          {/*<table className="table">
-            <tbody>
-            <tr>
-              <td>Introduction to Programming in Python</td>
-              <td>Matthew Lepinski</td>
-              <td>8010</td>
-            </tr>
-            <tr>
-              <td>Introduction to Data Mining</td>
-              <td>John Anthony Doucette</td>
-              <td>80102</td>
-            </tr>
-            </tbody>
-          </table>*/}
-          <div className='suggestion'>
-            Introduction to Programming in Python
-          </div>
-          <div className='suggestion'>
-            Introduction to Data Mining
-          </div>
+        {/*<table className="table">
+          <tbody>
+          <tr>
+            <td>Introduction to Programming in Python</td>
+            <td>Matthew Lepinski</td>
+            <td>8010</td>
+          </tr>
+          <tr>
+            <td>Introduction to Data Mining</td>
+            <td>John Anthony Doucette</td>
+            <td>80102</td>
+          </tr>
+          </tbody>
+        </table>*/}
+        <div className='suggestion'>
+          Introduction to Programming in Python
+        </div>
+        <div className='suggestion'>
+          Introduction to Data Mining
+        </div>
+          {results}
           {/*<div display='inline'>
             {this.state.searchTerm} 1
           </div>
@@ -346,6 +358,16 @@ const SearchBar = React.createClass({
             {this.state.searchTerm} 2
           </div>*/}
         </div>
+      </div>
+    );
+  }
+});
+
+const SearchResult = React.createClass({
+  render: function() {
+    return (
+      <div className='suggestion'>
+        {this.props.value.source.title}
       </div>
     );
   }

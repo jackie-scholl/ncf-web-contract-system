@@ -1,4 +1,4 @@
-[
+{"classes": [
   {
     "code": 8010,
     "title": "Introduction to Programming in Python",
@@ -24,9 +24,9 @@
     "description": "This course provides a detailed look into the inner workings of a modern computer. After taking the course, students will be able to describe the core components that make up a computer and their functions; explain how a computer operates in detail at several different levels of abstraction; design digital circuits to accomplish new tasks; design and implement an entire modern computer in a simple hardware definition language; and write simple programs in assembly. Additional topics will include implementing a simple operating system and programming language on student-designed computers. Background knowledge in computer programming is an asset, but only basic algebra is required."
   },
   {
-    "code": ,
-    "title": ,
-    "instructor": ,
-    "description":
+    "code": 0,
+    "title": "test",
+    "instructor": "test",
+    "description": "test"
   }
-]
+]}

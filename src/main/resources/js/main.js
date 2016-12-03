@@ -279,6 +279,7 @@ const ContractForm = React.createClass({
       </div>
       </div>
 
+        <SearchBar magic={this.magic('search')} />
 
         <ClassesTable magic={this.magic('classes')}/>
 
@@ -298,6 +299,24 @@ const ContractForm = React.createClass({
     );
   }
 });
+
+const SearchBar = React.createClass({
+
+  handleUpdate: function(newValue) {
+    //updateSearchStuff();
+    this.setState({searchTerm: newValue});
+  },
+  render: function() {
+    const htmlId = this.props.magic.id;
+    return (<input
+      type='text'
+      onChange={(e) => {this.handleUpdate(e.target.value);}}
+      placeholder='Search'
+      id={htmlId}
+      className='form-control'
+    />);
+  }
+})
 
 const ClassesTable = React.createClass({
   updateHandlerGenerator: function(index) {

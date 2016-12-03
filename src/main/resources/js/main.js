@@ -316,7 +316,7 @@ const SearchBar = React.createClass({
       className='form-control'
     />);
   }
-})
+});
 
 const ClassesTable = React.createClass({
   updateHandlerGenerator: function(index) {

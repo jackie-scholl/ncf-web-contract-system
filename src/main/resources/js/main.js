@@ -7,6 +7,7 @@ const contractStorageCognito = require('./contract-storage-cognito');
 const ContractEntry = require('./contract-entry.js').ContractEntry;
 const timeSince = require('./utility.js').timeSince;
 const resizeArray = require('./utility.js').resizeArray;
+const classes_search = require('./class-search.js').search;
 
 /** This contains the entire page of content. */
 const FullPage = React.createClass({
@@ -279,7 +280,6 @@ const ContractForm = React.createClass({
       </div>
       </div>
 
-
         <ClassesTable magic={this.magic('classes')}/>
 
         <TextArea displayName='Goals' placeHolder='live the good life'
@@ -300,13 +300,16 @@ const ContractForm = React.createClass({
 });
 
 const ClassesTable = React.createClass({
+  normalizeArray: function(array) {
+    const testerCallback = (x) => (x.courseCode || x.courseName
+      || x.isInternship || x.instructorName );
+    return resizeArray(array, 4, 9, testerCallback, emptyClassData);
+  },
   updateHandlerGenerator: function(index) {
     return ((value) => {
       let newState = this.props.magic.value.slice();
       newState[index] = value;
-      const testerCallback = (x) => (x.courseCode || x.courseName
-        || x.isInternship || x.instructorName );
-      newState = resizeArray(newState, 4, 9, testerCallback, emptyClassData);
+      newState = this.normalizeArray(newState);
       this.props.magic.handleUpdate(newState);
     });
   },
@@ -321,11 +324,22 @@ const ClassesTable = React.createClass({
   handleUpdate: function(newValue) {
     this.props.magic.handleUpdate(newValue);
   },
+  addClass: function(classObj) {
+    let newState = this.props.magic.value.slice();
+    const classData = {courseCode: classObj.code, courseName: classObj.title,
+      isInternship: false, instructorName: classObj.instructor,
+      sessionName: 'A'};
+    newState.splice(0, 0, classData);
+    newState = this.normalizeArray(newState);
+    this.handleUpdate(newState);
+  },
   render: function() {
     const classNodes = this.props.magic.value.map(
       ((_, i) => (<Class number={i} magic={this.magic(i)} key={i}/>))
     );
     return (
+      <div>
+      <SearchBar magic={this.magic('search')} addClass={this.addClass} />
       <div className='table-responsive'>
       <table className='table table-striped'>
         <thead>
@@ -341,6 +355,64 @@ const ClassesTable = React.createClass({
           {classNodes}
         </tbody>
       </table>
+      </div>
+      </div>
+    );
+  }
+});
+
+const SearchBar = React.createClass({
+  getInitialState: function() {
+    return {query: '', results: []};
+  },
+  handleUpdate: function(newValue) {
+    //console.log('new value: ' + newValue);
+    this.setState({query: newValue});
+    classes_search(newValue).then((results) => {
+      //console.log(results);
+      this.setState({results: results});
+    }).catch((err) => {
+      console.log('err: ' + err);
+    });
+  },
+  render: function() {
+    const htmlId = this.props.magic.id;
+    const results = this.state.results.map((el) => (
+      <SearchResult value={el} key={el.ref}
+        selectClass={() => {this.props.addClass(el.source);}}/>
+    ));
+    return (
+      <div>
+        <input
+        type='text'
+        onChange={(e) => {this.handleUpdate(e.target.value);}}
+        placeholder='Search for Classes'
+        id={htmlId}
+        className='form-control'
+        />
+        <div className='result-box2'>
+          {results}
+        </div>
+      </div>
+    );
+  }
+});
+
+const SearchResult = React.createClass({
+  render: function() {
+    return (
+      <div className='suggestion'>
+        <div className='summary'>
+          <button className='btn btn-default' type='button'
+              onClick={this.props.selectClass}>
+            {this.props.value.source.title}
+          </button>
+        </div>
+        <ul className='detail'>
+          <li> Course Code: {this.props.value.source.code} </li>
+          <li> Instructor: {this.props.value.source.instructor} </li>
+          <li> {this.props.value.source.description} </li>
+        </ul>
       </div>
     );
   }

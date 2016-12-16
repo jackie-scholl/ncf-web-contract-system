@@ -49,7 +49,7 @@ rules:
         |FullPage|ContractList|ContractElement|LivePreview|ContractBox|
         |ContractForm|ClassesTable|Class|GenericInput|TextInput|TextArea|
         |CheckBox|SelectInput|SelectOption|BasicComponent|
-        |LoginBar|LoginLoadThing|GoogleLoginArea|
+        |LoginBar|LoginLoadThing|GoogleLoginArea|SearchBar|SearchResult|
         )$
   no-undef-init:
     - error
